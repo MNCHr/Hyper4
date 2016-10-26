@@ -62,7 +62,7 @@ control ingress {
   if (meta_ctrl.stage == NORM) {
     [+ sloop +]
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == [+X+]) {
-      stage[+X+]();
+      stage[+X+](); // stages.p4
     }
     [+ endsloop +]
   }
@@ -125,9 +125,9 @@ control egress {
   if(meta_ctrl.mc_flag == 1) {
     apply(tegr_multicast);
   }
-  apply(tegr_csum16);
-  apply(tegr_resize_pr);
-  apply(tegr_pr_SEB);
+  apply(tegr_csum16); // checksums.p4
+  apply(tegr_resize_pr); // resize_pr.p4
+  apply(tegr_pr_SEB); // deparse_prep.p4 but names are different!
   if(parse_ctrl.numbytes > 20) {
     apply(tegr_pr_20_39);
     if(parse_ctrl.numbytes > 40) {
