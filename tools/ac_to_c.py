@@ -10,6 +10,8 @@ parser.add_argument('--output', help='Where to write hp4-ready commands file',
                     type=str, action="store", required=True)
 parser.add_argument('--progID', help='Program ID',
                     type=str, action="store", default='1')
+parser.add_argument('--context', help='Context (physical ports) for which program applies',
+                    type=str, nargs='*', action="store", default=['1'])
 parser.add_argument('--virt_ports', help='Numbers to assign to virtual ports 0-3',
                     type=str, nargs='*', action="store", default=['65', '66', '67', '68'])
 
@@ -73,7 +75,36 @@ if(found_sr):
 
 f_ac.seek(0)
 
+# WARNING this is not meant to be used as is... borrowed from p4t
+def handle_loop(startmarker):
+  body = []
+  x = len(args.context)
+  conditionalbreak = "\n"
+  directive_a = startmarker.split("+")[1].strip().upper().split()
+
+  while :
+    line = self.lines[self.nextline]
+    self.nextline += 1
+    if line.strip().startswith("[+"):
+      directive = line.split("+")[1].strip().upper()
+      if directive == "ENDLOOP":
+        break
+      elif self.nextline == len(self.lines):
+        print("Error: missing ENDLOOP directive")
+        exit()
+    body.append(line)
+    
+  linebreak = ""
+  for i in range(1, x + 1):
+    self.out += linebreak
+    linebreak = conditionalbreak
+    for line in body:
+      line = line.replace("[+X+]", str(i))
+      line = line.replace("[+ X +]", str(i))
+      self.out += line
+
 for line in f_ac:
+  # strip out comments and white space
   if line[0] == '#' or line[0] == '\n':
     continue
   i = line.find('#')
@@ -82,6 +113,7 @@ for line in f_ac:
     while line.endswith(' '):
       line = line[0:-1]
     line += '\n'
+
   for key in sr.keys():
     line = line.replace(key, sr[key])
   for token in re.findall("\[.*?\]", line):
@@ -90,6 +122,10 @@ for line in f_ac:
       numzeros = int(re.search("[0-9]+", token).group())
       for i in range(numzeros):
         replace += "00"
+    elif re.search("\[[lL][oO][oO][pP] ", token):
+      ltarget = re.search("(?<=\[[lL][oO][oO][pP] )[a-zA-Z]*", token).group()
+      # TODO: finish this off...
+      
     else:
       print("Unrecognized token: %s" % token)
       exit()
