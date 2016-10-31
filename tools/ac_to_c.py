@@ -10,7 +10,7 @@ parser.add_argument('--output', help='Where to write hp4-ready commands file',
                     type=str, action="store", required=True)
 parser.add_argument('--progID', help='Program ID',
                     type=str, action="store", default='1')
-parser.add_argument('--context', help='Context (physical ports) for which program applies',
+parser.add_argument('--phys_ports', help='Physical ports for which program applies',
                     type=str, nargs='*', action="store", default=['1'])
 parser.add_argument('--virt_ports', help='Numbers to assign to virtual ports 0-3',
                     type=str, nargs='*', action="store", default=['65', '66', '67', '68'])
@@ -121,15 +121,30 @@ for line in f_ac:
     if re.search("\[[0-9]*x00s\]", token):
       numzeros = int(re.search("[0-9]+", token).group())
       for i in range(numzeros):
-        replace += "00"
-    elif re.search("\[[lL][oO][oO][pP] ", token):
-      ltarget = re.search("(?<=\[[lL][oO][oO][pP] )[a-zA-Z]*", token).group()
-      # TODO: finish this off...
+        replace += "00"   
+      line = line.replace(token, replace)
+  # Another pass for PPORT, VPORT, other markers producing multiple lines:
+  lines = []
+  # TODO: 
+  # 1. add line to lines[]
+  # 2. while done == FALSE:
+  #      done = TRUE
+  #      for every line in lines[]:
+  #        look for marker ([PPORT] | [VPORT]); if found:
+  #          replace line with multiple lines, where each new line has the marker
+  #           substituted for one of the values in the corresponding args object
+  #          done = FALSE
+  for token in re.findall("\[.*?\]", line):
+    if re.search("\[[pP][pP][oO][rR][tT]\]", token):
+
+      for i in range(len(args.phys_ports)):
+        lines.add( line.replace( token, str(args.phys_ports[i]) ) )
+    elif re.search("\[[vV][pP][oO][rR][tT]\]", token):
+
       
     else:
       print("Unrecognized token: %s" % token)
       exit()
-    line = line.replace(token, replace)
   f_c.write(line)
 
 f_c.close()
