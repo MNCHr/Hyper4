@@ -124,27 +124,25 @@ for line in f_ac:
         replace += "00"   
       line = line.replace(token, replace)
   # Another pass for PPORT, VPORT, other markers producing multiple lines:
-  lines = []
-  # TODO: 
-  # 1. add line to lines[]
-  # 2. while done == FALSE:
-  #      done = TRUE
-  #      for every line in lines[]:
-  #        look for marker ([PPORT] | [VPORT]); if found:
-  #          replace line with multiple lines, where each new line has the marker
-  #           substituted for one of the values in the corresponding args object
-  #          done = FALSE
-  for token in re.findall("\[.*?\]", line):
-    if re.search("\[[pP][pP][oO][rR][tT]\]", token):
+  build = []
+  if re.search("\[[pP][pP][oO][rR][tT]\]", line):
+    for port in args.phys_ports:
+      build.add(re.sub(r'\[[pP][pP][oO][rR][tT]\]', str(port), line))
+  lines = build
+  build = []
+  for l in lines:
+    if re.search("\[[vV][pP][oO][rR][tT]\]", l):
+      for port in args.virt_ports:
+        build.add(re.sub(r'\[[vV][pP][oO][rR][tT]\]', str(port), l))
+  for l in build:
+    lines.append(l)
+  if(len(lines) > 0):
+    line = ''
+    for l in lines:
+      line += l + '\n'
+    # strip out final \n
+    line = line[0:-1]
 
-      for i in range(len(args.phys_ports)):
-        lines.add( line.replace( token, str(args.phys_ports[i]) ) )
-    elif re.search("\[[vV][pP][oO][rR][tT]\]", token):
-
-      
-    else:
-      print("Unrecognized token: %s" % token)
-      exit()
   f_c.write(line)
 
 f_c.close()
