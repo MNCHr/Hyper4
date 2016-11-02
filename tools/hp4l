@@ -75,34 +75,6 @@ if(found_sr):
 
 f_ac.seek(0)
 
-# WARNING this is not meant to be used as is... borrowed from p4t
-def handle_loop(startmarker):
-  body = []
-  x = len(args.context)
-  conditionalbreak = "\n"
-  directive_a = startmarker.split("+")[1].strip().upper().split()
-
-  while :
-    line = self.lines[self.nextline]
-    self.nextline += 1
-    if line.strip().startswith("[+"):
-      directive = line.split("+")[1].strip().upper()
-      if directive == "ENDLOOP":
-        break
-      elif self.nextline == len(self.lines):
-        print("Error: missing ENDLOOP directive")
-        exit()
-    body.append(line)
-    
-  linebreak = ""
-  for i in range(1, x + 1):
-    self.out += linebreak
-    linebreak = conditionalbreak
-    for line in body:
-      line = line.replace("[+X+]", str(i))
-      line = line.replace("[+ X +]", str(i))
-      self.out += line
-
 for line in f_ac:
   # strip out comments and white space
   if line[0] == '#' or line[0] == '\n':
@@ -127,21 +99,19 @@ for line in f_ac:
   build = []
   if re.search("\[[pP][pP][oO][rR][tT]\]", line):
     for port in args.phys_ports:
-      build.add(re.sub(r'\[[pP][pP][oO][rR][tT]\]', str(port), line))
+      build.append(re.sub(r'\[[pP][pP][oO][rR][tT]\]', str(port), line))
   lines = build
   build = []
   for l in lines:
     if re.search("\[[vV][pP][oO][rR][tT]\]", l):
       for port in args.virt_ports:
-        build.add(re.sub(r'\[[vV][pP][oO][rR][tT]\]', str(port), l))
+        build.append(re.sub(r'\[[vV][pP][oO][rR][tT]\]', str(port), l))
   for l in build:
     lines.append(l)
   if(len(lines) > 0):
     line = ''
     for l in lines:
-      line += l + '\n'
-    # strip out final \n
-    line = line[0:-1]
+      line += l
 
   f_c.write(line)
 
