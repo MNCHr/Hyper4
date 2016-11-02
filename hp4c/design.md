@@ -15,25 +15,37 @@ HP4C accepts a .p4 and converts it to a .hp4t, or a template file preparatory to
 ## Data Structures
 
 ### actionUIDs
-Dictionary associating each action in the .p4 with a unique number referred to in HP4 source as the _action\_ID_ field in the _meta\_primitive\_state_ metadata header (set by match::tXX\_\[match type\]->init\_program\_state and stages::tstgXY\_update\_state->update\_state, read by stages:tstgXY\_update\_state).
+Dictionary associating each action in the .p4 with a unique number referred to in HP4 source as the _action\_ID_ field in the _meta\_primitive\_state_ metadata header (set by match::tXX\_\[match type\]->init\_program\_state and stages::tstgXY\_update\_state->update\_state, read by stages::tstgXY\_update\_state).
 
 ### parseStateUIDs
-Dictionary associating each parser function with a unique number referred to in HP4 source as the _state_ field in the _parse\_ctrl_ metadata header (set and read by setup::tset\_control|tset\_inspect\_XX->set\_next\_action|set\_next\_action\_chg\_program, also read by setup::tset\_pipeline).
+Dictionary associating each parser function in the .p4 with a unique number referred to in HP4 source as the _state_ field in the _parse\_ctrl_ metadata header (set and read by setup::tset\_control|tset\_inspect\_XX->set\_next\_action|set\_next\_action\_chg\_program, also read by setup::tset\_pipeline).
+
+### tableUIDs
+Ordered dictionary associating each table in the .p4 with a unique number.  This is being populated but it is not clear how it will be used.
+
+### bits\_needed\_local
+Dictionary associating each parse state in the .p4 with a (numbits, maxcurr) tuple.  This dictionary stores the local bit requirement for the parse state, where maxcurr tracks the number of bits required by all uses of the 'current' function, and numbits is the total, including maxcurr as well as bits required by all invocations of 'extract'.
+
+### bits\_needed\_total
+
+### tset\_control\_state\_nextbits
+
+### commands
 
 ## Parsing and Setup
 
 Tables:
-tset_context
-tset_virtnet
-tset_recirc
-tset_control
-tset_inspect_SEB
-tset_inspect_20_29
-...
-tset_pr_SEB
-tset_pr_20_39
-...
-tset_pipeline
+* tset_context
+* tset_virtnet
+* tset_recirc
+* tset_control
+* tset_inspect_SEB
+* tset_inspect_20_29
+* ...
+* tset_pr_SEB
+* tset_pr_20_39
+* ...
+* tset_pipeline
 
 Let's look at the inputs/outputs for each table separately.
 
