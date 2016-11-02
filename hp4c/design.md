@@ -1,13 +1,24 @@
 # HP4C (HyPer4 Compiler) Design
 
 ## Contents
-* [Preparatory](Preparatory)
-* [Parsing and Setup](Parsing and Setup)
+* [Overview](#Overview)
+* [Data Structures](#Data Structures)
+* [Parsing and Setup](#Parsing and Setup)
 * Stages
 
 More sections will be added as the work progresses.  The strategy is to tackle all of the commands associated with the tables in pieces, according to the header file in which the tables are defined.
 
-## Preparatory
+## Overview
+
+HP4C accepts a .p4 and converts it to a .hp4t, or a template file preparatory to the final instantiation of a set of commands (a .hp4) to send to a switch running HyPer4.  It is the job of HP4L ('L' for 'Loader') to convert the .hp4t to the .hp4.
+
+## Data Structures
+
+### actionUIDs
+Dictionary associating each action in the .p4 with a unique number referred to in HP4 source as the _action\_ID_ field in the _meta\_primitive\_state_ metadata header (set by match::tXX\_\[match type\]->init\_program\_state and stages::tstgXY\_update\_state->update\_state, read by stages:tstgXY\_update\_state).
+
+### parseStateUIDs
+Dictionary associating each parser function with a unique number referred to in HP4 source as the _state_ field in the _parse\_ctrl_ metadata header (set and read by setup::tset\_control|tset\_inspect\_XX->set\_next\_action|set\_next\_action\_chg\_program, also read by setup::tset\_pipeline).
 
 ## Parsing and Setup
 
