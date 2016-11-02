@@ -1,4 +1,15 @@
-PARSING / SETUP
+# HP4C (HyPer4 Compiler) Design
+
+## Contents
+* [Preparatory](Preparatory)
+* [Parsing and Setup](Parsing and Setup)
+* Stages
+
+More sections will be added as the work progresses.  The strategy is to tackle all of the commands associated with the tables in pieces, according to the header file in which the tables are defined.
+
+## Preparatory
+
+## Parsing and Setup
 
 Tables:
 tset_context
