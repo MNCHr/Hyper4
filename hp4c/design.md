@@ -12,6 +12,27 @@ More sections will be added as the work progresses.  The strategy is to tackle a
 
 HP4C accepts a .p4 and converts it to a .hp4t, or a template file preparatory to the final instantiation of a set of commands (a .hp4) to send to a switch running HyPer4.  It is the job of HP4L ('L' for 'Loader') to convert the .hp4t to the .hp4.
 
+### Workflow
+
+1. Initialize data structures
+2. Build the HLIR
+3. Collect all parse states  
+   Associate a UID with every parse state in the HLIR
+4. Collect all actions  
+   Associate a UID with every action in the HLIR
+5. Collect all tables  
+   Associate a UID with every table in the HLIR and establish a sequential order for table emulation in HyPer4.
+6. Parsing and Setup  
+   a. Identify _parse control_ states (not to be confused with _parse states_ in the HLIR - each HLIR _parse state_ may be associated with multiple _parse control_ states, as a _parse control_ state identifies not only a specific _parse state_, but how the parser arrived at that state) required.  This activity prepares HP4C to generate tset\_control and tset\_inspect\_XX commands.  
+   b. Output tset\_control and tset\_inspect\_XX commands?
+7. ...
+
+### Limitations
+
+HP4C does not yet have a clear path for:
+* conditionals in control functions
+* multiple match fields in tables
+
 ## Data Structures
 
 ### actionUIDs
