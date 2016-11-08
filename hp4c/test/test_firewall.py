@@ -20,7 +20,6 @@ def test_collection():
     if state.name == 'start' and hp4compiler.parseStateUIDs[state] == 0:
       passed += 1
     elif state.name == 'parse_ipv4' and hp4compiler.parseStateUIDs[state] == 1:
-      print('parse_ipv4')
       passed += 1
     elif state.name == 'parse_tcp' and hp4compiler.parseStateUIDs[state] == 2:
       passed += 1
@@ -28,4 +27,32 @@ def test_collection():
       passed += 1
     else:
       assert 0
-  assert passed == 4
+  actionkeys = [1, 2, 3, 4, 5, 6, 7]
+  for action in hp4compiler.actionUIDs.keys():
+    if len(actionkeys) <= 0:
+      assert 0
+    elif action.name == '_no_op' or \
+         action.name == 'tcp_present' or \
+         action.name == 'tcp_not_present' or \
+         action.name == 'udp_present' or \
+         action.name == 'udp_not_present' or \
+         action.name == '_drop' or \
+         action.name == 'a_fwd':
+      actionkeys.remove(hp4compiler.actionUIDs[action])
+      passed += 1
+  for table in hp4compiler.tableUIDs.keys():
+    if table.name == 'fwd' and hp4compiler.tableUIDs[table] == 1:
+      passed += 1
+    elif table.name == 'is_tcp_valid' and hp4compiler.tableUIDs[table] == 2:
+      passed += 1
+    elif table.name == 'is_udp_valid' and hp4compiler.tableUIDs[table] == 3:
+      passed += 1
+    elif table.name == 'udp_src_block' and hp4compiler.tableUIDs[table] == 4:
+      passed += 1
+    elif table.name == 'udp_dst_block' and hp4compiler.tableUIDs[table] == 5:
+      passed += 1
+    elif table.name == 'tcp_src_block' and hp4compiler.tableUIDs[table] == 6:
+      passed += 1
+    elif table.name == 'tcp_dst_block' and hp4compiler.tableUIDs[table] == 7:
+      passed += 1
+  assert passed == 18
