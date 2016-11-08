@@ -241,7 +241,7 @@ class HP4C:
           print("ERROR: conditional nodes not yet supported")
           exit()
         if len(node.match_fields) > 1:
-          print("ERROR: multiple match fields (%s) not yet supported" % first.name)
+          print("ERROR: multiple match fields (%s) not yet supported" % node.name)
           exit()
         order.append(node)
 

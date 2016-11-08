@@ -57,20 +57,11 @@ header_type udp_t {
     checksum : 16;
   } // 8 B / 64 b
 }
-/*
-header_type meta_t {
-  fields {
-    cond_block : 8;  // when block requires match on both ipv4 as well as
-                     // tcp/udp fields
-  }
-}
-*/
 
 header ethernet_t ethernet;
 header ipv4_t ipv4;
 header tcp_t tcp;
 header udp_t udp;
-// metadata meta_t meta;
 
 parser start {
     extract(ethernet);
@@ -108,79 +99,83 @@ action tcp_present() {
 }
 
 // action ID: 3
+action tcp_not_present() {
+}
+
+// action ID: 4
 action udp_present() {
 }
 
-table is_tcp_or_udp_valid {
+// action ID: 5
+action udp_not_present() {
+}
+
+table is_tcp_valid {
   reads {
     tcp : valid;
-    udp : valid;
   }
   actions {
     tcp_present;
-    udp_present;
+    tcp_not_present;
     _no_op;
   }
 }
 
-// action ID: 4
+table is_udp_valid {
+  reads {
+    udp : valid;
+  }
+  actions {
+    udp_present;
+    udp_not_present;
+    _no_op;
+  }
+}
+
+// action ID: 6
 action _drop() {
   drop();
 }
-/*
-action conditional_block(val) {
-  modify_field(meta.cond_block, val);
-}
-*/
-table tcp_block {
+
+table tcp_src_block {
   reads {
     tcp.src_port : ternary;
+  }
+  actions {
+    _drop;
+    _no_op;
+  }
+}
+
+table tcp_dst_block {
+  reads {
     tcp.dst_port : ternary;
   }
   actions {
     _drop;
     _no_op;
-    // conditional_block;
   }
 }
 
-table udp_block {
+table udp_src_block {
   reads {
     udp.src_port : ternary;
+  }
+  actions {
+    _drop;
+    _no_op;
+  }
+}
+
+table udp_dst_block {
+  reads {
     udp.dst_port : ternary;
   }
   actions {
     _drop;
     _no_op;
-    // conditional_block;
   }
 }
-/*
-action ipv4_present() {
-}
-
-table is_ipv4_valid {
-  reads {
-    ipv4 : valid;
-  }
-  actions {
-    ipv4_present;
-    _no_op;
-  }
-}
-
-table ipv4_block {
-  reads {
-    ipv4.srcAddr : ternary;
-    ipv4.dstAddr : ternary;
-    meta.cond_block : ternary;
-  }
-  actions {
-    _drop;
-    _no_op;
-  }
-}
-*/
 
 // action ID: 5
 action a_fwd(port) {
@@ -200,21 +195,29 @@ control ingress {
   // stage 1
   apply(fwd);
   // stage 2
-  apply(is_tcp_or_udp_valid) {
+  apply(is_tcp_valid) {
     tcp_present {
       // stage 3
-      apply(tcp_block);
+      apply(tcp_src_block) {
+        _no_op {
+          // stage 4
+          apply(tcp_dst_block);
+        }
+      }
     }
-    udp_present {
-      // stage 4
-      apply(udp_block);
+    tcp_not_present {
+      // stage 5
+      apply(is_udp_valid) {
+        udp_present {
+          // stage 6
+          apply(udp_src_block) {
+            _no_op {
+              // stage 7
+              apply(udp_dst_block);
+            }
+          }
+        }
+      }
     }
   }
-/* let's keep it simple for now
-  apply(is_ipv4_valid) {
-    ipv4_present {
-      apply(ipv4_block);
-    }
-  }
-*/
 }
