@@ -48,6 +48,7 @@ Ordered dictionary associating each table in the .p4 with a unique number.  This
 Dictionary associating each parse state in the .p4 with a (numbits, maxcurr) tuple.  This dictionary stores the local bit requirement for the parse state, where maxcurr tracks the number of bits required by all uses of the 'current' function, and numbits is the total, including maxcurr as well as bits required by all invocations of 'extract'.
 
 ### bits\_needed\_total
+Dictionary associating each possible (parse state, tuple of preceding states) tuple in the .p4 with a total number of bits that should be extracted from the packet to handle the parse state.  Inuitively, every path that ends up at the parse state could have a different bit extraction requirement as identified in bits\_needed\_local.
 
 ### tset\_control\_state\_nextbits
 

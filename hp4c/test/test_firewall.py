@@ -56,3 +56,11 @@ def test_collection():
     elif table.name == 'tcp_dst_block' and hp4compiler.tableUIDs[table] == 7:
       passed += 1
   assert passed == 18
+
+
+def test_parsing():
+  args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
+  hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
+  hp4compiler.collectParseStatesBitsNeeded()
+  # TODO: examine hp4compiler.bits_needed_total
+
