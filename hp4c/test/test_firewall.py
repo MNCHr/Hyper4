@@ -57,10 +57,29 @@ def test_collection():
       passed += 1
   assert passed == 18
 
-
 def test_parsing():
   args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
   hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
   hp4compiler.collectParseStatesBitsNeeded()
-  # TODO: examine hp4compiler.bits_needed_total
-
+  passed = [0, 0, 0, 0]
+  for key in hp4compiler.bits_needed_total.keys():
+    if key[0].name == 'start':
+      if key[1] == ():
+        if hp4compiler.bits_needed_total[key] == 112:
+          passed[0] = 1
+    elif key[0].name == 'parse_ipv4':
+      if len(key[1]) == 1:
+        if key[1][0].name == 'start':
+          if hp4compiler.bits_needed_total[key] == 272:
+            passed[1] = 1
+    elif key[0].name == 'parse_tcp':
+      if len(key[1]) == 2:
+        if key[1][0].name == 'start' and key[1][1].name == 'parse_ipv4':
+          if hp4compiler.bits_needed_total[key] == 432:
+            passed[2] = 1
+    elif key[0].name == 'parse_udp':
+      if len(key[1]) == 2:
+        if key[1][0].name == 'start' and key[1][1].name == 'parse_ipv4':
+          if hp4compiler.bits_needed_total[key] == 336:
+            passed[3] = 1
+  assert passed == [1, 1, 1, 1]

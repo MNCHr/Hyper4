@@ -34,6 +34,7 @@ class HP4_Command:
     ret += ' =>'
     for param in self.action_params:
       ret += ' ' + param
+    return ret
 
 class HP4C:
   def __init__(self, h, args):
@@ -66,34 +67,48 @@ class HP4C:
       for state in key[1]:
         precstates.append(state.name)
       print('%s, %s: %i' % (key[0].name, str(precstates), mydict[key]))
-    
+  
+  def gen_tset_context_entry(self):
+    self.commands.append(HP4_Command("table_add",
+                                       "tset_context",
+                                       "set_program",
+                                       ["[PPORT]"],
+                                       ["[program ID]", "[VPORT_0]"]))  
 
   """
-  - We must assign a pc.state to each parse function.  '0' for start.
+  - We must assign a pc_state (parse_ctrl.state in HP4 source) to each parse
+    function.  '0' for start.
+  - Comments and code below confusing because parse_ctrl.state or pc_state is NOT the same
+    thing as a parse_state: a pc_state includes the parse_state as well as the ordered
+    list of preceding states traversed before arriving at the parse_state.  I.e., there
+    are one to many pc_states for every parse_state: one for every valid path ending at
+    the parse_state.
   - Determine bit requirements for each path (inc. partial paths) through the parse tree:
-    explicit = {(pc.state, [start, ..., state immediately preceding pc.state]): numbits}
-    total = {(pc.state, [start, ..., state immediately preceding pc.state]): numbits}
+    explicit = {(parse_state, [start, ..., state immediately preceding parse_state]): numbits}
+    total = {(parse_state, [start, ..., state immediately preceding parse_state]): numbits}
     # 'total' includes current(X, Y)-imposed extraction requirements.
     # Two steps: explicit -> total
     # Start at 'start'.  E.g., exp_parse_tree_traverse(h.p4_parse_states['start'], [], 0)
     # Then total_parse_tree_traverse(h.p4_parse_states['start'], [])
-  - Use total to populate {(pc.state, numbits): next_numbits} dictionary
+  - Use total to populate {(pc_state, numbits): next_numbits} dictionary
   """  
   def collectParseStatesBitsNeeded(self):
     for state in self.h.p4_parse_states.values():
       self.collect_local_bits_needed(state)
     self.collect_total_bits_needed(self.h.p4_parse_states['start'], [])
 
-    # Build the {(state, numbits): next_numbits} dictionary:
+    # Build the {(pc_state, numbits): next_numbits} dictionary:
     # - numbits: the number of bits extracted prior to entering the state
     # - next_numbits: comes directly from bits_needed_total
+    pc_state = 0
     for state in self.h.p4_parse_states.values():
       if state == self.h.p4_parse_states['start']:
         nextnumbitskey = (state, ())
         nextnumbits = self.bits_needed_total[nextnumbitskey]
-        self.tset_control_state_nextbits[(state, 0)] = nextnumbits
+        self.tset_control_state_nextbits[(pc_state, 0)] = nextnumbits
       else:
         paths = []
+        pc_state += 1
         for key in self.bits_needed_total.keys():
           if key[0] == state:
             paths.append(key[1])
@@ -102,13 +117,13 @@ class HP4C:
           numbits = self.bits_needed_total[numbitskey]
           nextnumbitskey = (state, path)
           nextnumbits = self.bits_needed_total[nextnumbitskey]
-          if (state, numbits) in self.tset_control_state_nextbits:
-            if self.tset_control_state_nextbits[(state, numbits)] != nextnumbits:
+          if (pc_state, numbits) in self.tset_control_state_nextbits:
+            if self.tset_control_state_nextbits[(pc_state, numbits)] != nextnumbits:
               print("ERROR: tset_control_states_nextbits contradicting entries")
-              print("  %s == %i; new value == %i" % (str((state, numbits)),
-                    self.tset_control_state_nextbits[(state, numbits)], nextnumbits))
+              print("  %s == %i; new value == %i" % (str((pc_state, numbits)),
+                    self.tset_control_state_nextbits[(pc_state, numbits)], nextnumbits))
           else:
-            self.tset_control_state_nextbits[(state, numbits)] = nextnumbits
+            self.tset_control_state_nextbits[(pc_state, numbits)] = nextnumbits
 
     # now output tset_control table entries? use self.parseStateUIDs and
     #  self.tset_control_state_nextbits
@@ -256,6 +271,12 @@ class HP4C:
     for table in self.tableUIDs.keys():
       print(table.name)
 
+  def outputCommands(self):
+    hp4t_out = open(self.args.output, 'w')
+    for command in self.commands:
+      hp4t_out.write(str(command))
+    hp4t_out.close()
+
 def main():
   args = parse_args(sys.argv[1:])
   hp4compiler = HP4C(HLIR(args.input), args)
@@ -263,9 +284,11 @@ def main():
   hp4compiler.collectActions()
   hp4compiler.collectTables()
   hp4compiler.collectParseStatesBitsNeeded()
-  code.interact(local=locals())
+  hp4compiler.gen_tset_context_entry()
   #hp4compiler.gen_tset_control_entries()
-  hp4compiler.printTables()
+  hp4compiler.outputCommands()
+  code.interact(local=locals())
+  #hp4compiler.printTables()
 
 if __name__ == '__main__':
   main()

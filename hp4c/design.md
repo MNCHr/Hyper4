@@ -73,13 +73,11 @@ Let's look at the inputs/outputs for each table separately.
 
 tset_context:
 - input:
-  - Need to know which ports should be assigned to this program.  But we should not require this set of ports to be specified at compile time.  This will be supplied at load time.  Our requirement is to produce a line in hp4t that may become multiple lines, one for every ingress port specified at load time (just like the program ID).
-  - The virtual ingress port used by this program should also be supplied at load time.
+  - We don't know which ports should be assigned to this program at compile time; output [PPORT] and let the loader (hp4l) handle replicating commands for every physical port that applies.
+  - The virtual ingress port used by this program should also be supplied at load time; output [VPORT_0] and let the loader substitute the actual number.  We *could* change this to VPORT_INGRESS and let the loader pick from any of the virtual ports available via comman option.  That seems unnecessary though.
   - Program ID also.
 - output:
-  [+ dup sm.ingress_port, program ID, virt_ingress_port +]
-  table_add tset_context set_program [sm.ingress_port] => [program ID] [virt_ingress_port]
-  [+ enddup +]
+  table\_add tset\_context set\_program [PPORT] => [program ID] [virt\_ingress\_port]
 
 tset_virtnet: SKIP FOR NOW
 
