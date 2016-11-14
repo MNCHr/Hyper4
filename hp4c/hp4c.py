@@ -45,6 +45,7 @@ class HP4C:
     self.bits_needed_total = {}
     self.tset_control_state_nextbits = {}
     self.commands = []
+    self.pc_state = 0
     self.h = h
     self.h.build()
     if len(self.h.p4_ingress_ptr) > 1:
@@ -100,15 +101,14 @@ class HP4C:
     # Build the {(pc_state, numbits): next_numbits} dictionary:
     # - numbits: the number of bits extracted prior to entering the state
     # - next_numbits: comes directly from bits_needed_total
-    pc_state = 0
     for state in self.h.p4_parse_states.values():
       if state == self.h.p4_parse_states['start']:
         nextnumbitskey = (state, ())
         nextnumbits = self.bits_needed_total[nextnumbitskey]
-        self.tset_control_state_nextbits[(pc_state, 0)] = nextnumbits
+        self.tset_control_state_nextbits[(self.pc_state, 0)] = nextnumbits
       else:
         paths = []
-        pc_state += 1
+        self.pc_state += 1
         for key in self.bits_needed_total.keys():
           if key[0] == state:
             paths.append(key[1])
@@ -117,13 +117,13 @@ class HP4C:
           numbits = self.bits_needed_total[numbitskey]
           nextnumbitskey = (state, path)
           nextnumbits = self.bits_needed_total[nextnumbitskey]
-          if (pc_state, numbits) in self.tset_control_state_nextbits:
-            if self.tset_control_state_nextbits[(pc_state, numbits)] != nextnumbits:
+          if (self.pc_state, numbits) in self.tset_control_state_nextbits:
+            if self.tset_control_state_nextbits[(self.pc_state, numbits)] != nextnumbits:
               print("ERROR: tset_control_states_nextbits contradicting entries")
-              print("  %s == %i; new value == %i" % (str((pc_state, numbits)),
-                    self.tset_control_state_nextbits[(pc_state, numbits)], nextnumbits))
+              print("  %s == %i; new value == %i" % (str((self.pc_state, numbits)),
+                    self.tset_control_state_nextbits[(self.pc_state, numbits)], nextnumbits))
           else:
-            self.tset_control_state_nextbits[(pc_state, numbits)] = nextnumbits
+            self.tset_control_state_nextbits[(self.pc_state, numbits)] = nextnumbits
 
     # now output tset_control table entries? use self.parseStateUIDs and
     #  self.tset_control_state_nextbits
@@ -137,7 +137,9 @@ class HP4C:
     for key in self.tset_control_state_nextbits.keys():
       state = key[0]
       numbits = key[1] # numbits already extracted upon entering the state (or '0')
-      # mparams: program, numbytes, state
+      if numbits == 0:
+        numbits = self.args.seb * 8
+      # mparams: program, numbytes, pc_state
       mparams = ['[program ID]', str(self.tset_control_state_nextbits[key]),
                  str(self.parseStateUIDs[state])]
       aparams = []
@@ -157,6 +159,10 @@ class HP4C:
             if criteria[0] + criteria[1] > 80:
               print("ERROR: unsupported criteria width in %s" % state.name)
               exit()
+            print("ERROR: parser return block: unsupported use of tuple for selection criteria")
+            exit()
+          field = criteria[0]
+          
           # to determine start/end bit positions we need to know what the
           # current offset from start of packet we would be at, which doesn't
           # necessarily match numbits, due to preceding states having

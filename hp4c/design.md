@@ -1,5 +1,9 @@
 # HP4C (HyPer4 Compiler) Design
 
+## Current Effort
+
+Need to revise the design to account for parse function return statements that include selection criteria.  We need a dictionary of the form {(pc\_state, fieldname): offset} mapping offsets to every field for every parse control state.  This is required for tset\_control because set\_next\_action needs the next\_action parameter, which is one of INSPECT\_SEB | INSPECT\_20\_29 | ... | INSPECT\_90\_99.  
+
 ## Contents
 * [Overview](#Overview)
 * [Data Structures](#Data Structures)
@@ -57,21 +61,21 @@ Dictionary associating each possible (parse state, tuple of preceding states) tu
 ## Parsing and Setup
 
 Tables:
-* tset_context
-* tset_virtnet
-* tset_recirc
-* tset_control
-* tset_inspect_SEB
-* tset_inspect_20_29
+* tset\_context
+* tset\_virtnet
+* tset\_recirc
+* tset\_control
+* tset\_inspect\_SEB
+* tset\_inspect\_20\_29
 * ...
-* tset_pr_SEB
-* tset_pr_20_39
+* tset\_pr\_SEB
+* tset\_pr\_20\_39
 * ...
-* tset_pipeline
+* tset\_pipeline
 
 Let's look at the inputs/outputs for each table separately.
 
-tset_context:
+tset\_context:
 - input:
   - We don't know which ports should be assigned to this program at compile time; output [PPORT] and let the loader (hp4l) handle replicating commands for every physical port that applies.
   - The virtual ingress port used by this program should also be supplied at load time; output [VPORT_0] and let the loader substitute the actual number.  We *could* change this to VPORT_INGRESS and let the loader pick from any of the virtual ports available via comman option.  That seems unnecessary though.
@@ -99,57 +103,33 @@ tset_control:
 	  }
 	}
 
-- SKIP FOR NOW: set_next_action_chg_program and extract_more_chg_program
+- SKIP FOR NOW: set\_next\_action\_chg\_program and extract\_more\_chg\_program
 - input:
-  - We must assign a pc.state to each parse function.  '0' for start.
+  - We must assign at least one, but perhaps more than one, pc.state to each P4 parse state.  '0' for start.  Within the set of pc.states associated with a parse state, each corresponds to a different path taken through the parse tree to arrive at the parse state.
   - Determine byte requirements for each path (inc. partial paths) through the parse tree:
     explicit = {(pc.state, [start, ..., state immediately preceding pc.state]): numbytes}
     total = {(pc.state, [start, ..., state immediately preceding pc.state]): numbytes}
     # 'total' includes current(X, Y)-imposed extraction requirements.
-    # Do in two steps.  First, explicit.
-    def exp_parse_tree_traverse(pc.state, list_of_preceding_states, so_far):
-      if pc.state == 'ingress':
-        return
-      numbytes = so_far
-      for extract_statement in call_sequence:
-        numbytes += extract_statement.header.total_width (e.g., for field in header, += field.width)
-      explicit[(pc.state, list_of_preceding_states)] = numbytes
-      for next_state in pc.state.return_select_exp:
-        exp_parse_tree_traverse(next_state, list_of_preceding_states.append(pc.state), numbytes)
-    def total_parse_tree_traverse(pc.state, list_of_preceding_states):
-      if pc.state == 'ingress':
-        return
-      numbytes = explicit[(pc.state, list_of_preceding_states)]
-
-      maxcurr = 0
-      for current_exp in return statement:
-        if current_exp.offset + current_exp.width > maxcurr:
-          maxcurr = current_exp.offset + current_exp.width
-      numbytes += maxcurr
-
-      total[(pc.state, list_of_preceding_states)] = numbytes
-      for next_state in pc.state.return_select_exp:
-        total_parse_tree_traverse(next_state, list_of_preceding_states.append(pc.state))
-    # Start at 'start'.  E.g., exp_parse_tree_traverse(h.p4_parse_states['start'], [], 0)
-    # Then total_parse_tree_traverse(h.p4_parse_states['start'], [], 0)
-  - Use total to populate {(pc.state, numbytes): next_numbytes} dictionary
+    # Do in two steps.  First, explicit, then total.
+  - Use total to populate {(pc.state, numbytes): next\_numbytes} dictionary.
+  - 
 
 - tasks
-  1. Figure out whether output is set_next_action or extract_more.
+  1. Figure out whether output is set\_next\_action or extract\_more.
 - output:
 
-  table_add tset_control set_next_action [program ID] [numbytes] [pc.state] => [next_action] [next pc.state]
+  table\_add tset\_control set\_next\_action [program ID] [numbytes] [pc.state] => [next\_action] [next pc.state]
   OR
-  table_add tset_control extract_more [program ID] [numbytes] [pc.state] => [next numbytes]
+  table\_add tset\_control extract\_more [program ID] [numbytes] [pc.state] => [next numbytes]
 
-  - We need to produce one table entry for every possible number of bytes that could have been extracted before arriving at this parse state.  Each entry will either have action = set_next_action or action = extract_more as follows:
+  - We need to produce one table entry for every possible number of bytes that could have been extracted before arriving at this parse state.  Each entry will either have action = set\_next\_action or action = extract\_more as follows:
       If the parse state does not include extraction nor current(X,Y) beyond what has been extracted:
         If the parse state includes a select expression in the return statement:
-          action: set_next_action; [next_action]: INSPECT
+          action: set\_next\_action; [next\_action]: INSPECT
         Else:
-          action: set_next_action; [next_action]: PROCEED
+          action: set\_next\_action; [next\_action]: PROCEED
       Else:
-        action: extract_more;
+        action: extract\_more;
 		[next numbytes]: (pc.state, numbytes) should be used as a key to look up the value
 
 At the end, we could have multiple possible offsets into extracted.data where a particular field may be stored.  This could multiply the number of table entries required where such table entries include a match for such a field.  And it would mean the validbits or final parse_ctrl.state must be included in the reads sections of tables implementing the ingress pipeline.
