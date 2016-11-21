@@ -1,5 +1,3 @@
-table_add t_multicast mod_and_clone 1 1 3 2&&&0xFF => 1 1
-table_add t_multicast mod_and_clone 1 1 3 0&&&0 => 2 2
 table_add t_multicast _no_op 1 1 2 1&&&0xFF => 1
 table_add t_multicast mod_and_clone 1 1 2 0&&&0 => 1 2
 table_add t_multicast _no_op 1 1 1 0&&&0 => 1
@@ -14,11 +12,11 @@ table_add t1_extracted_exact init_program_state 1 0xffffffffffff0000000000000000
 table_add set_primitive_metadata_11 a_set_primitive_metadata 1 2 1 => 0 8
 table_add set_primitive_metadata_11 a_set_primitive_metadata 1 3 1 => 19 0
 table_add t_multicast_11 a_multicast 1 => 1 2
-table_add set_program_state_11 set_program_state 1 2 1 => 2 2 2 0
-table_add set_primitive_metadata_12 a_set_primitive_metadata 1 2 2 => 0 7
+table_add set_program_state_11 set_program_state 1 2 1 => 2 2 1 0
 table_add set_program_state_11 set_program_state 1 3 1 => 0 0 1 0
 table_add set_program_state_12 set_program_state 1 2 2 => 0 0 1 0
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 1 => 1
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 2 => 1
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 3 => 2
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 4 => 2
+table_add t_set_validbits _no_op 1 0 =>
