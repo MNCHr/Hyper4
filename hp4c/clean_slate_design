@@ -7,9 +7,10 @@ action set_next_action(next_action, state) {
   modify_field(parse_ctrl.state, state);
 }
 
-action extract_more(numbytes) {
+action extract_more(numbytes, state) {
   modify_field(parse_ctrl.numbytes, numbytes);
   modify_field(parse_ctrl.next_action, EXTRACT_MORE);
+  modify_field(parse_ctrl.state, state);
   resubmit(fl_extract_more);
 }
 
@@ -31,15 +32,19 @@ Ignore set_next_action_chg_program and extract_more_chg_program for now.
 
 parse_ctrl.state: an integer corresponding to a (current, list of preceding states) tuple.  It identifies a unique path through the parse tree from the start parse_state to the current parse_state.
 
-parseControlStateUIDs (dictionary):
+parseControlStates (dictionary):
 - key:   tuple   - (parse_state, list of preceding states)
 - value: integer - parse_ctrl.state
+
+bits_needed_local (dictionary):
+- key: parse_state
+- value: numbits
 
 bits_needed_total (dictionary):
 - key: (parse_state, list of preceding states)
 - value: numbits
 
-TBD (dictionary):
+field_offsets (dictionary):
 - key: (field name (string), parse_ctrl.state (integer))
 - value: offset (integer)
 
@@ -57,3 +62,51 @@ A set_next_action comes from:
   An unconditional return statement referencing another parse_state that does not require more bytes.
   An unconditional return to ingress.
   A tset_inspect_XX_YY that identifies the next parse_ctrl.state to transition to, and it does not require more bytes than have been extracted.
+
+[reminder]
+table_add tset_control <set_next_action | extract_more> [program ID] <numbytes> <parse_ctrl.state> => <APARAMS>
+
+Let's look at the parse_ctrl.state associated with the 'start' parse_state first.
+- Is the bits_needed_total[('start', [])] > args.SEB?
+  -- yes:
+     ACTION: extract_more
+     MPARAMS:
+       numbytes: bits_needed_total[('start', [])] (i.e., 0 for this case)
+       parse_ctrl.state: parseControlStates[('start', [])] (i.e., 0 for this case)
+     APARAMS:
+       numbytes: bits_needed_total[('start', [])]
+       state: parseControlStates[('start', [])] (i.e., don't change)
+  -- no:
+     Does the return statement include a select statement?
+     --- yes
+         ACTION: set_next_action
+         MPARAMS:
+           numbytes: bits_needed_total[('start', [])] (i.e., 0 for this case)
+           parse_ctrl.state: parseControlStates[('start', [])] (i.e., 0 for this case)
+         APARAMS:
+           next_action: INSPECT_XX_YY <-- replace as appropriate after looking at field_offsets
+           state: parseControlStates[('start', [])] (i.e., don't change)
+     --- no
+         Does the return statement go straight to ingress?
+         ---- yes:
+              ACTION: set_next_action
+              MPARAMS:
+                numbytes: bits_needed_total[('start', [])] (i.e., 0 for this case)
+                parse_ctrl.state: parseControlStates[('start', [])] (i.e., 0 for this case)
+              APARAMS:
+                next_action: [PROCEED]
+                state: parseControlStates[('start', [])] (i.e., don't change)
+         ---- no:
+              get the next_state
+              bits_needed_total[('start', [])] < bits_needed_total[(next_state, ['start'])]?
+              ----- yes:
+                    ACTION: extract_more
+                    MPARAMS:
+                      numbytes: bits_needed_total[('start', [])] (i.e., 0 for this case)
+                      parse_ctrl.state: parseControlStates[('start', [])] (i.e., 0 for this case)
+                    APARAMS:
+                      numbytes: bits_needed_total[(next_state, ['start'])]
+                      state: parseControlStates[(next_state, ['start'])]
+              ----- no:
+                    set_next_action
+                    ???

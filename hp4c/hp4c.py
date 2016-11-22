@@ -8,8 +8,6 @@ import argparse
 import code
 import sys
 
-p4_match_types = p4_enum.collection['p4_match_type']
-
 def parse_args(args):
   parser = argparse.ArgumentParser(description='HP4 Compiler')
   parser.add_argument('input', help='path for input .p4',
@@ -38,14 +36,12 @@ class HP4_Command:
 
 class HP4C:
   def __init__(self, h, args):
-    self.actionUIDs = {}
-    self.parseStateUIDs = {}
-    self.tableUIDs = OrderedDict()
+    self.parseControlStates = {}
     self.bits_needed_local = {}
     self.bits_needed_total = {}
-    self.tset_control_state_nextbits = {}
+    self.field_offsets = {}
     self.commands = []
-    self.pc_state = 0
+    self.pc_state_id = 1
     self.h = h
     self.h.build()
     if len(self.h.p4_ingress_ptr) > 1:
@@ -53,142 +49,19 @@ class HP4C:
       for node in h.p4_ingress_ptr.keys():
         print('  ' + node)
       exit()
-    self.args = args        
+    self.args = args
 
-  def collectParseStates(self):
-    i = 0
-    for state in self.h.p4_parse_states.values():
-      self.parseStateUIDs[state] = i
-      i += 1
-
-  def print_bits_needed_total(self):
-    # {(state, tuple([precedingstate1, precedingstate2, ...]): numbits
-    for key in self.bits_needed_total:
-      precstates = []
-      for state in key[1]:
-        precstates.append(state.name)
-      print('%s, %s: %i' % (key[0].name, str(precstates), mydict[key]))
-  
   def gen_tset_context_entry(self):
     self.commands.append(HP4_Command("table_add",
                                        "tset_context",
                                        "set_program",
                                        ["[PPORT]"],
-                                       ["[program ID]", "[VPORT_0]"]))  
+                                       ["[program ID]", "[VPORT_0]"]))
 
-  """
-  - We must assign a pc_state (parse_ctrl.state in HP4 source) to each parse
-    function.  '0' for start.
-  - Comments and code below confusing because parse_ctrl.state or pc_state is NOT the same
-    thing as a parse_state: a pc_state includes the parse_state as well as the ordered
-    list of preceding states traversed before arriving at the parse_state.  I.e., there
-    are one to many pc_states for every parse_state: one for every valid path ending at
-    the parse_state.
-  - Determine bit requirements for each path (inc. partial paths) through the parse tree:
-    explicit = {(parse_state, [start, ..., state immediately preceding parse_state]): numbits}
-    total = {(parse_state, [start, ..., state immediately preceding parse_state]): numbits}
-    # 'total' includes current(X, Y)-imposed extraction requirements.
-    # Two steps: explicit -> total
-    # Start at 'start'.  E.g., exp_parse_tree_traverse(h.p4_parse_states['start'], [], 0)
-    # Then total_parse_tree_traverse(h.p4_parse_states['start'], [])
-  - Use total to populate {(pc_state, numbits): next_numbits} dictionary
-  """  
-  def collectParseStatesBitsNeeded(self):
-    for state in self.h.p4_parse_states.values():
-      self.collect_local_bits_needed(state)
-    self.collect_total_bits_needed(self.h.p4_parse_states['start'], [])
-
-    # Build the {(pc_state, numbits): next_numbits} dictionary:
-    # - numbits: the number of bits extracted prior to entering the state
-    # - next_numbits: comes directly from bits_needed_total
-    for state in self.h.p4_parse_states.values():
-      if state == self.h.p4_parse_states['start']:
-        nextnumbitskey = (state, ())
-        nextnumbits = self.bits_needed_total[nextnumbitskey]
-        self.tset_control_state_nextbits[(self.pc_state, 0)] = nextnumbits
-      else:
-        paths = []
-        self.pc_state += 1
-        for key in self.bits_needed_total.keys():
-          if key[0] == state:
-            paths.append(key[1])
-        for path in paths:
-          numbitskey = (path[-1], path[0:-1]) # will this result in a tuple as required?
-          numbits = self.bits_needed_total[numbitskey]
-          nextnumbitskey = (state, path)
-          nextnumbits = self.bits_needed_total[nextnumbitskey]
-          if (self.pc_state, numbits) in self.tset_control_state_nextbits:
-            if self.tset_control_state_nextbits[(self.pc_state, numbits)] != nextnumbits:
-              print("ERROR: tset_control_states_nextbits contradicting entries")
-              print("  %s == %i; new value == %i" % (str((self.pc_state, numbits)),
-                    self.tset_control_state_nextbits[(self.pc_state, numbits)], nextnumbits))
-          else:
-            self.tset_control_state_nextbits[(self.pc_state, numbits)] = nextnumbits
-
-    # now output tset_control table entries? use self.parseStateUIDs and
-    #  self.tset_control_state_nextbits
-    # for key in self.tset_control_state_nextbits.keys():
-      # action: extract_more or set_next_action
-      
-      # HP4_Command(command, table, action, mparams, aparams)
-      # command = HP4_Command("table_add", "tset_control", "
-
-  def gen_tset_control_entries(self):
-    for key in self.tset_control_state_nextbits.keys():
-      state = key[0]
-      numbits = key[1] # numbits already extracted upon entering the state (or '0')
-      if numbits == 0:
-        numbits = self.args.seb * 8
-      # mparams: program, numbytes, pc_state
-      mparams = ['[program ID]', str(self.tset_control_state_nextbits[key]),
-                 str(self.parseStateUIDs[state])]
-      aparams = []
-      action = "set_next_action"
-      # determine whether we need to extract more
-      if (numbits < self.tset_control_state_nextbits[key]
-          and self.tset_control_state_nextbits[key] > (self.args.seb * 8)):
-        action = "extract_more"
-        aparams = [str(self.tset_control_state_nextbits[key])]
-      elif state.return_statement[0] == 'select':
-        # aparams: next_action, state
-        # next_action: determine which byte ranges must be inspected based on
-        #              the select criteria list (state.return_statement[1])
-        inspect_ranges = []
-        for criteria in state.return_statement[1]:
-          if isinstance(criteria, tuple):
-            if criteria[0] + criteria[1] > 80:
-              print("ERROR: unsupported criteria width in %s" % state.name)
-              exit()
-            print("ERROR: parser return block: unsupported use of tuple for selection criteria")
-            exit()
-          field = criteria[0]
-          
-          # to determine start/end bit positions we need to know what the
-          # current offset from start of packet we would be at, which doesn't
-          # necessarily match numbits, due to preceding states having
-          # current expressions.  We can just take numbits and subtract the
-          # currents in preceding states like was done in
-          # collect_total_bits_needed except we don't have the preceding states
-          # here.  We can get them by looking at bits_needed_total and pulling
-          # out all entries where the first element of the key tuple matches
-          # state here (key[0]).  The second element of each such key tuples
-          # is a valid path for reaching state / key[0].  But also need to make
-          # sure following the path results in the numbits found in key[1]
-          # here.  For each such path, look at any currents.  Across paths, we
-          # might run into cases where we have differing amounts of currents.
-          # That means we need to split the parse state so we have different
-          # IDs as necessary.
-      
-      self.commands.append(HP4_Command("table_add",
-                                       "tset_control",
-                                       mparams,
-                                       aparams))
-
-  def collect_local_bits_needed(self, state):
+  def collect_local_bits_needed(self, parse_state):
     numbits = 0
-    
     # collect total number of bits to extract in the state
-    for call in state.call_sequence:
+    for call in parse_state.call_sequence:
       if call[0].value != 'extract':
         print("ERROR: unsupported call %s" % call[0].value)
         exit()
@@ -197,104 +70,70 @@ class HP4C:
 
     maxcurr = 0
     # look for 'current' instances in the return statement
-    if state.return_statement[0] == 'select':
-      for criteria in state.return_statement[1]:
+    if parse_state.return_statement[0] == 'select':
+      for criteria in parse_state.return_statement[1]:
         if isinstance(criteria, tuple): # tuple indicates use of 'current'
+          # criteria[0]: start offset from current position
+          # criteria[1]: width of 'current' call
           if criteria[0] + criteria[1] > maxcurr:
             maxcurr = criteria[0] + criteria[1]
       numbits += maxcurr
-    elif state.return_statement[0] != 'immediate':
-      print("ERROR: Unknown directive in return statement: %s" % state.return_statement[0])
+    elif parse_state.return_statement[0] != 'immediate':
+      print("ERROR: Unknown directive in return statement: %s" % parse_state.return_statement[0])
       exit()
+    self.bits_needed_local[parse_state] = (numbits, maxcurr)
 
-    self.bits_needed_local[state] = (numbits, maxcurr)
-
-  def collect_total_bits_needed(self, state, preceding_states):
-    numbits = self.bits_needed_local[state][0]
-    for precstate in preceding_states:
+  def collect_total_bits_needed(self, parse_state, preceding_parse_states):
+    numbits = self.bits_needed_local[parse_state][0]
+    for precstate in preceding_parse_states:
       numbits += self.bits_needed_local[precstate][0]
+      # deduct for instances of 'current':
       numbits -= self.bits_needed_local[precstate][1]
-    self.bits_needed_total[(state, tuple(preceding_states))] = numbits
+    self.bits_needed_total[(parse_state, tuple(preceding_parse_states))] = numbits
 
+    # build queue of parse_states
     next_states = []
-    if state.return_statement[0] == 'immediate':
-      if state.return_statement[1] != 'ingress':
-        next_states.append(self.h.p4_parse_states[state.return_statement[1]])
+    if parse_state.return_statement[0] == 'immediate':
+      if parse_state.return_statement[1] != 'ingress':
+        next_states.append(self.h.p4_parse_states[parse_state.return_statement[1]])
       else:
         return
-    elif state.return_statement[0] == 'select':
-      for selectopt in state.return_statement[2]:
+    elif parse_state.return_statement[0] == 'select':
+      for selectopt in parse_state.return_statement[2]:
         if selectopt[1] != 'ingress':
           next_states.append(self.h.p4_parse_states[selectopt[1]])
     else:
-      print("ERROR: Unknown directive in return statement: %s" % state.return_statement[0])
+      print("ERROR: Unknown directive in return statement: %s" % parse_state.return_statement[0])
       exit()
-    
+
     # recurse for every next state reachable from this state
     for next_state in next_states:
-      next_preceding_states = list(preceding_states)
-      next_preceding_states.append(state)
+      next_preceding_states = list(preceding_parse_states)
+      next_preceding_states.append(parse_state)
       self.collect_total_bits_needed(next_state, next_preceding_states)
 
-  def collectActions(self):
-    i = 0
-    for table in self.h.p4_tables.values():
-      for action in table.actions:
-        if action not in self.actionUIDs:
-          i += 1
-          self.actionUIDs[action] = i
-
-  # if first.match_fields[0][1] == p4_match_types.P4_MATCH_EXACT:
-
-  # credit: http://eli.thegreenplace.net/2015/directed-graph-traversal-orderings-and-applications-to-data-flow-analysis/
-  def collectTables(self):
-    visited = set()
-    order = []
-    
-    def dfs_walk(node):
-      if node:
-        visited.add(node)
-        for i in range(len(node.next_)):
-          succ = node.next_[node.next_.keys()[i]]
-          if not succ in visited:
-            dfs_walk(succ)
-        if isinstance(node, p4_hlir.hlir.p4_tables.p4_conditional_node):
-          print("ERROR: conditional nodes not yet supported")
-          exit()
-        if len(node.match_fields) > 1:
-          print("ERROR: multiple match fields (%s) not yet supported" % node.name)
-          exit()
-        order.append(node)
-
-    dfs_walk(self.h.p4_ingress_ptr.keys()[0])   
-    order.reverse()
-    i = 0
-    for table in order:
-      i += 1
-      self.tableUIDs[table] = i
+  def collectParseControlStates(self):
+    for parse_state in self.h.p4_parse_states.values():
+      self.collect_local_bits_needed(parse_state)
+    self.collect_total_bits_needed(self.h.p4_parse_states['start'], [])
+    for key in self.bits_needed_total.keys():
+      if key[0] == self.h.p4_parse_states['start']:
+        self.parseControlStates[key] = 0
+      else:
+        self.parseControlStates[key] = self.pc_state_id
+        self.pc_state_id += 1
   
-  def printTables(self):
-    for table in self.tableUIDs.keys():
-      print(table.name)
-
-  def outputCommands(self):
-    hp4t_out = open(self.args.output, 'w')
-    for command in self.commands:
-      hp4t_out.write(str(command))
-    hp4t_out.close()
+  def gen_tset_control_entries(self):
+    for pc_state in self.parseControlStates.keys():
+      
 
 def main():
   args = parse_args(sys.argv[1:])
-  hp4compiler = HP4C(HLIR(args.input), args)
-  hp4compiler.collectParseStates()
-  hp4compiler.collectActions()
-  hp4compiler.collectTables()
-  hp4compiler.collectParseStatesBitsNeeded()
+  hp4c = HP4C(HLIR(args.input), args)
   hp4compiler.gen_tset_context_entry()
-  #hp4compiler.gen_tset_control_entries()
-  hp4compiler.outputCommands()
+  hp4c.collectParseControlStates()
+  hp4c.gen_tset_control_entries()
   code.interact(local=locals())
-  #hp4compiler.printTables()
 
 if __name__ == '__main__':
   main()
