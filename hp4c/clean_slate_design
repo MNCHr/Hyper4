@@ -39,17 +39,21 @@ bits_needed_total (dictionary):
 - key: (parse_state, list of preceding states)
 - value: numbits
 
+TBD (dictionary):
+- key: (field name (string), parse_ctrl.state (integer))
+- value: offset (integer)
+
 1. set_next_action | extract_more ...
 
 HP4 does a resubmit for every parse_state that requires more bytes than what have previously been extracted.
 
 For parse_ctrl.state == 0 ('start'), the question is whether the combined usage of 'current' and 'select' statements (bits_needed_total) require more than the SEB number of bytes.
 
-For all other parse_ctrl.states, we should assume the required number of bytes have already been extracted.  An extract_more comes from a tset_inspect_XX_YY result that identifies the next parse_ctrl.state to transition to.  But once we have extracted more, should we not be in a new parse_ctrl.state?  We should - this implies we need to change setup.p4t's extract_more definition to include the new pc.state as a parameter.
-
-What happens next depends on the return statement.
-- select:
-    apply tset_inspect_XX_YY
-      set_next_action 
-- unconditional return to another parse_state:
-- unconditional return to ingress
+For all other parse_ctrl.states, we should assume the required number of bytes have already been extracted.  An extract_more comes from one of two things:
+  1. a tset_inspect_XX_YY result that identifies the next parse_ctrl.state to transition to, and it requires more bytes than have been extracted.  We extract what is required and update the parse_ctrl.state.
+  2. an unconditional return statement referencing another parse_state that requires more bytes.  We extract what is required and update the parse_ctrl.state.
+A set_next_action comes from:
+  The need to carry out a tset_inspect_XX_YY (i.e., we are in a parse_state after having extracted everything necessary and now we need to handle a select statement).
+  An unconditional return statement referencing another parse_state that does not require more bytes.
+  An unconditional return to ingress.
+  A tset_inspect_XX_YY that identifies the next parse_ctrl.state to transition to, and it does not require more bytes than have been extracted.

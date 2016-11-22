@@ -180,9 +180,10 @@ field_list fl_extract_more {
   standard_metadata;
 }
 
-action extract_more(numbytes) {
+action extract_more(numbytes, state) {
   modify_field(parse_ctrl.numbytes, numbytes);
   modify_field(parse_ctrl.next_action, EXTRACT_MORE);
+  modify_field(parse_ctrl.state, state);
   resubmit(fl_extract_more);
 }
 
