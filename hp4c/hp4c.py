@@ -123,16 +123,16 @@ class HP4C:
         self.parseControlStates[key] = self.pc_state_id
         self.pc_state_id += 1
   
-  def gen_tset_control_entries(self):
-    for pc_state in self.parseControlStates.keys():
+  #def gen_tset_control_entries(self):
+    #for pc_state in self.parseControlStates.keys():
       
 
 def main():
   args = parse_args(sys.argv[1:])
   hp4c = HP4C(HLIR(args.input), args)
-  hp4compiler.gen_tset_context_entry()
+  hp4c.gen_tset_context_entry()
   hp4c.collectParseControlStates()
-  hp4c.gen_tset_control_entries()
+  #hp4c.gen_tset_control_entries()
   code.interact(local=locals())
 
 if __name__ == '__main__':

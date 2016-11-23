@@ -67,15 +67,26 @@ A set_next_action comes from:
 table_add tset_control <set_next_action | extract_more> [program ID] <numbytes> <parse_ctrl.state> => <APARAMS>
 
 Let's look at the parse_ctrl.state associated with the 'start' parse_state first.
+# NOTE: this question can be more generically applied by asking whether
+  the number of bits needed in the next parse_state yet to be entered is
+  greater than what we've already extracted.
+  This implies we should consider pc.state == 0 as the state prior to
+  entering the 'start' node (parseControlStates key value: (NULL, []).
+  We make a state transition once we've checked the requirement.
 - Is the bits_needed_total[('start', [])] > args.SEB?
   -- yes:
+     we need two table entries.  One with MPARAMS numbytes == 0, the other
+     with MPARAMS numbytes = bits_needed_total[('start'), [])].
+     #1:
      ACTION: extract_more
      MPARAMS:
-       numbytes: bits_needed_total[('start', [])] (i.e., 0 for this case)
+       numbytes: 0
        parse_ctrl.state: parseControlStates[('start', [])] (i.e., 0 for this case)
      APARAMS:
        numbytes: bits_needed_total[('start', [])]
        state: parseControlStates[('start', [])] (i.e., don't change)
+     #2:
+     Continue as if bits_needed_total[('start', [])] <= args.SEB
   -- no:
      Does the return statement include a select statement?
      --- yes
