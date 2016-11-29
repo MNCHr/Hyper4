@@ -197,7 +197,6 @@ action extract_more_chg_program(numbytes, programID) {
 table tset_control {
   reads {
     meta_ctrl.program : exact;
-    parse_ctrl.numbytes : exact;
     parse_ctrl.state : exact;
   }
   actions {
