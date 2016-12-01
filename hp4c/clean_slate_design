@@ -11,7 +11,11 @@ A pc.state corresponds to a path segment in the parse tree of the source P4.  A 
 
 We refer to the jump to ingress (action: PROCEED) or to the select statement (action: INSPECT_XX_YY) as the path segment terminator.
 
-So pc.state == 0 corresponds to the initial state of HP4 after a packet has been received.  We can reserve pc.state == 1 to the state of HP4 when prepared to carry out the inital path segment terminator, if more bytes had to be extracted than SEB.
+So pc.state == 0 corresponds to the initial state of HP4 after a packet has been received.  We can reserve pc.state == 1 to the state of HP4 when prepared to carry out the inital path segment terminator.  Whether the action in tset_control [action] [program ID] 0 => [numbytes | next_action] 1 is extract_more or set_next_action, the action's state parameter should always be 1.
+
+The number of pc.states should be upper bounded by 1 + the total number of entries across all select statements.
+
+Remember that the tset_inspect_XX_YY table handling the select statement is responsible for extracting more bytes and updating the pc.state, so that by the time HP4 applies tset_control again, pc.state will be updated and enough bytes will have been extracted to handle the next path segment terminator.
 
 action set_next_action(next_action, state) {
   modify_field(parse_ctrl.next_action, next_action);
@@ -61,9 +65,34 @@ We have bits_extracted[0] = args.SEB, always.  HP4C traverses the parse tree unt
 
 HP4C First Task: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  For conditional jump terminators, identify the byte range to inspect to properly handle the select statement.
 
+A. Identify all path segments, i.e., pc.states:
+   We have the key set from bits_needed_total: tuples in the form (parse_state, list of preceding parse_states).  For each key, we can traverse the list of preceding parse_states until we encounter a terminator (return to ingress or return select).
+  I don't know about this...
+
+  TODO: FINISH THIS OFF - THIS IS LOOKING GOOD SO FAR:
+  Start at pc.state = 0, (parse_state) ps = p4_parse_states['start'], currbits_prev = 0, (global integer) next_pc_state = 2
+  func( (integer) pc.state, (parse_state) ps, (integer) currbits_prev):
+    bits_extracted[pc.state] = bits_needed_local[ps] - currbits_prev.
+    currbits_prev = bits required by any 'current' calls
+    if ps' return statement == Unconditional jump to ingress:
+      issue tset_control set_next_action [program ID] [pc.state] => [PROCEED] [pc.state]
+      return
+    elif ps' return statement == Unconditional jump to another parse_state:
+      update ps (but not pc.state) and recurse
+    else ps' return statement == Conditional jump:
+      issue tset_control set_next_action [program ID] [pc.state] => [INSPECT_XX_YY] [pc.state]
+      issue tset_inspect_XX_YY
+      for each branch:
+        if branch target == another parse_state:
+          ps = target
+          pc.state = next_pc_state
+          next_pc_state += 1
+          recurse
+        elif branch target == ingress:
+
 HP4C Second Task: Issue tset_control entries for each path segment:
 - pc.state == 0:
-  if args.SEB < bits_needed_total[0] / if bits_extracted[0] < bits_needed_total[0]:
+  if args.SEB < bits_needed_total[0] / if bits_extracted[0] < bits_needed_total[0, ()]:
     tset_control extract_more "[program ID]" [pc.state] => [bits_needed_total[0]] 1
   else:
     terminator == unconditional jump to ingress
