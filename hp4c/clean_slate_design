@@ -61,16 +61,15 @@ field_offsets (dictionary):
 - key: (integer) pc.state
 - value: (integer) offset
 
+There is only one case where the tset_control entry will have extract_more as the action: pc.state is 0 and the number of bytes extracted prior to the first path segment terminator is more than SEB.
+
 We have bits_extracted[0] = args.SEB, always.  HP4C traverses the parse tree until the first terminator, having populated bits_needed_total such that we have an entry for the key consisting of the terminator's parse_state and all preceding parse_states.  Then HP4C can determine the first tset_control entry to issue: extract_more or set_next_action (for a PROCEED or INSPECT_XX_YY as appropriate).
 
-HP4C First Task: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  For conditional jump terminators, identify the byte range to inspect to properly handle the select statement.
+HP4C First Task: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  Each extract statement should update field_offsets and bits_extracted.  For conditional jump terminators, use field_offsets to identify the byte range to inspect to properly handle the select statement.  Also for conditional jump terminators, look for the use of 'current' and update bits_extracted accordingly.  Prior to recursing for each condition of a conditional jump terminator, update the current pc.state, and set bits_extracted to that of the previous pc.state minus any bits required by 'current'.
 
-A. Identify all path segments, i.e., pc.states:
-   We have the key set from bits_needed_total: tuples in the form (parse_state, list of preceding parse_states).  For each key, we can traverse the list of preceding parse_states until we encounter a terminator (return to ingress or return select).
-  I don't know about this...
+Text below this point may not be 100% consistent with text above.  Defer to text above.
 
-  TODO: FINISH THIS OFF - THIS IS LOOKING GOOD SO FAR:
-  Start at pc.state = 0, (parse_state) ps = p4_parse_states['start'], currbits_prev = 0, (global integer) next_pc_state = 2
+Start at pc.state = 0, (parse_state) ps = p4_parse_states['start'], currbits_prev = 0, (global integer) next_pc_state = 2
   func( (integer) pc.state, (parse_state) ps, (integer) currbits_prev):
     bits_extracted[pc.state] = bits_needed_local[ps] - currbits_prev.
     currbits_prev = bits required by any 'current' calls
