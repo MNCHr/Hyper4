@@ -58,8 +58,8 @@ class HP4C:
                                        "set_program",
                                        ["[PPORT]"],
                                        ["[program ID]", "[VPORT_0]"]))
-      
-  def walk_parse_tree(self, parse_state, pc_state):
+
+  def process_parse_state(self, parse_state, pc_state):
     numbits = self.offset
     for call in parse_state.call_sequence:
       if call[0].value != 'extract':
@@ -70,17 +70,10 @@ class HP4C:
         self.field_offsets[call[1].name + '.' + field.name] = self.offset
         self.offset += field.width # advance current offset
         numbits += field.width
-    self.pc_bits_extracted[pc_state] = numbits 
-  
-    # traverse parse tree
-    next_states = []
+    self.pc_bits_extracted[pc_state] = numbits
     if parse_state.return_statement[0] == 'immediate':
-      if parse_state.return_statement[1] != 'ingress':
-        next_state = self.h.p4_parse_states[parse_state.return_statement[1]]
-        self.walk_parse_tree(next_state, pc_state)
-      else:
+      if parse_state.return_statement[1] == 'ingress':
         self.pc_action[pc_state] = '[PROCEED]'
-        return
     elif parse_state.return_statement[0] == 'select':
       # account for 'current' instances
       maxcurr = 0
@@ -135,7 +128,20 @@ class HP4C:
       if pc_state not in self.pc_action:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
-    
+  
+  # TODO: resolve concern that direct jumps not merged properly  
+  def walk_parse_tree(self, parse_state, pc_state):
+    self.process_parse_state(parse_state, pc_state)
+  
+    # traverse parse tree
+    next_states = []
+    if parse_state.return_statement[0] == 'immediate':
+      if parse_state.return_statement[1] != 'ingress':
+        next_state = self.h.p4_parse_states[parse_state.return_statement[1]]
+        self.walk_parse_tree(next_state, pc_state)
+      else:
+        return
+    elif parse_state.return_statement[0] == 'select':
       for selectopt in parse_state.return_statement[2]:
         # selectopt: (list of values, next parse_state)
         if selectopt[1] != 'ingress':
@@ -155,7 +161,32 @@ class HP4C:
       self.offset = save_offset
 
   def gen_tset_control_entries(self):
-    self.walk_parse_tree(self.h.p4_parse_states['start'], 0)
+    # TODO: handle start, pc_state 0:
+    parse_state = self.h.p4_parse_states['start']
+    self.process_parse_state(parse_state, 0)
+    if self.pc_bits_extracted[0] > self.args.seb:
+      self.commands.append(HP4_Command("table_add",
+                                       "tset_control",
+                                       "extract_more",
+                                       ["[program ID]", "0"],
+                                       [str(self.pc_bits_extracted[0]), 1]))
+    else:
+      self.commands.append(HP4_Command("table_add",
+                                       "tset_control",
+                                       "set_next_action",
+                                       ["[program ID]", "0"],
+                                       [self.pc_action[0], "1"]))
+
+    next_states = []
+    # TODO: complete / fix below
+
+    self.walk_parse_tree(self.h.p4_parse_states['start'], 1)
+    for key in self.pc_action.keys():
+      self.commands.append(HP4_Command("table_add",
+                                       "tset_control",
+                                       "set_next_action",
+                                       ["[program ID]", str(key)],
+                                       [self.pc_action[key], str(key)]))
 
 def main():
   args = parse_args(sys.argv[1:])
