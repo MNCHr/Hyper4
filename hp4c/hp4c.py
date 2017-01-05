@@ -154,6 +154,8 @@ class HP4C:
       exit()
 
     save_offset = self.offset
+    if pc_state == 0:
+      pc_state += 1
     for next_state in next_states:
       pc_state += 1
       self.pc_bits_extracted[pc_state] = save_offset
@@ -161,32 +163,39 @@ class HP4C:
       self.offset = save_offset
 
   def gen_tset_control_entries(self):
-    # TODO: handle start, pc_state 0:
-    parse_state = self.h.p4_parse_states['start']
-    self.process_parse_state(parse_state, 0)
-    if self.pc_bits_extracted[0] > self.args.seb:
-      self.commands.append(HP4_Command("table_add",
-                                       "tset_control",
-                                       "extract_more",
-                                       ["[program ID]", "0"],
-                                       [str(self.pc_bits_extracted[0]), 1]))
-    else:
-      self.commands.append(HP4_Command("table_add",
-                                       "tset_control",
-                                       "set_next_action",
-                                       ["[program ID]", "0"],
-                                       [self.pc_action[0], "1"]))
+    self.walk_parse_tree(self.h.p4_parse_states['start'], 0)
 
-    next_states = []
-    # TODO: complete / fix below
-
-    self.walk_parse_tree(self.h.p4_parse_states['start'], 1)
     for key in self.pc_action.keys():
-      self.commands.append(HP4_Command("table_add",
-                                       "tset_control",
-                                       "set_next_action",
-                                       ["[program ID]", str(key)],
-                                       [self.pc_action[key], str(key)]))
+      # special handling for pc_state 0
+      if key == 0:
+        if self.pc_bits_extracted[0] > (self.args.seb * 8):
+          self.commands.append(HP4_Command("table_add",
+                                           "tset_control",
+                                           "extract_more",
+                                           ["[program ID]", "0"],
+                                           [str(self.pc_bits_extracted[0]), "1"]))
+          self.commands.append(HP4_Command("table_add",
+                                           "tset_control",
+                                           "set_next_action",
+                                           ["[program ID]", "1"],
+                                           [self.pc_action[0], "1"]))
+        else:
+          self.commands.append(HP4_Command("table_add",
+                                           "tset_control",
+                                           "set_next_action",
+                                           ["[program ID]", "0"],
+                                           [self.pc_action[0], "1"]))
+        self.pc_bits_extracted[1] = self.pc_bits_extracted[0]
+        self.pc_bits_extracted[0] = self.args.seb
+        self.pc_action[1] = self.pc_action[0]
+        self.pc_action[0] = "extract_more"
+
+      else:
+        self.commands.append(HP4_Command("table_add",
+                                         "tset_control",
+                                         "set_next_action",
+                                         ["[program ID]", str(key)],
+                                         [self.pc_action[key], str(key)]))
 
 def main():
   args = parse_args(sys.argv[1:])
