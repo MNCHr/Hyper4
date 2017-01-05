@@ -2,7 +2,7 @@ CLEAN SLATE DESIGN
 
 Ultimately we need the offsets for any source P4 program's fields represented in HP4's extracted.data field.  In support of this goal we need to ensure that the final time HP4 exits the setup control function, it has identified the path taken through the parser, corresponding to the parse control state.
 
-OBJECTIVE 1: determine all steps necessary to generate tset_control table entries
+OBJECTIVE 1: generate tset_control table entries
 (Later objectives will handle tset_inspect_XX_YY entries and other tables in setup.p4.)
 
 HP4's task is to apply tset_control for every pc.state to determine whether to extract more, inspect extracted bytes, or proceed to ingress.
@@ -57,6 +57,53 @@ There is only one case where the tset_control entry will have extract_more as th
 
 We have bits_extracted[0] = args.SEB, always.  HP4C traverses the parse tree until the first terminator, having populated bits_needed_total such that we have an entry for the key consisting of the terminator's parse_state and all preceding parse_states.  Then HP4C can determine the first tset_control entry to issue: extract_more or set_next_action (for a PROCEED or INSPECT_XX_YY as appropriate).
 
-HP4C First Task: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  Each extract statement should update field_offsets and bits_extracted.  For conditional jump terminators, use field_offsets to identify the byte range to inspect to properly handle the select statement.  Also for conditional jump terminators, look for the use of 'current' and update bits_extracted accordingly.  Prior to recursing for each condition of a conditional jump terminator, update the current pc.state, and set bits_extracted to that of the previous pc.state minus any bits required by 'current'.
+Objective 1 Algorithm: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  Each extract statement should update field_offsets and bits_extracted.  For conditional jump terminators, use field_offsets to identify the byte range to inspect to properly handle the select statement.  Also for conditional jump terminators, look for the use of 'current' and update bits_extracted accordingly.  Prior to recursing for each condition of a conditional jump terminator, update the current pc.state, and set bits_extracted to that of the previous pc.state minus any bits required by 'current'.
 
+OBJECTIVE 2: generate tset_inspect_XX_YY entries
 
+In most cases, tset_inspect_XX_YY matches will trigger a set_next_action: PROCEED (direct jump to ingress) or an extract_more (next parse_state requires more bytes than what have been extracted so far).  The exception is a direct jump to another parse_state that does not extract any additional bytes nor employ 'current' beyond what has been extracted, in which case the action is determined by the terminator of the next parse_state.
+
+We need a tset_inspect_XX_YY entry for each selectopt in each conditional return statement.
+
+Challenges:
+- identifying next pc_state
+  - take advantage of walk_parse_tree that already does some handling for each 'selectopt' in the conditional return statement
+- producing the ternary match strings
+  - take advantage of process_parse_state that already does some handling for each 'criteria' for the conditional return statement
+
+action set_next_action(next_action, state) {
+  modify_field(parse_ctrl.next_action, next_action);
+  modify_field(parse_ctrl.state, state);
+}
+
+action extract_more(numbytes, state) {
+  modify_field(parse_ctrl.numbytes, numbytes);
+  modify_field(parse_ctrl.next_action, EXTRACT_MORE);
+  modify_field(parse_ctrl.state, state);
+  resubmit(fl_extract_more);
+}
+
+table tset_inspect_XX_YY {
+  reads {
+    meta_ctrl.program : exact;
+    parse_ctrl.state: exact;
+    ext[XX].data : ternary;
+    // ...
+    ext[YY].data : ternary;
+  }
+  actions {
+    set_next_action;
+    set_next_action_chg_program;
+    extract_more;
+    extract_more_chg_program;
+  }
+}
+
+Ignore set_next_action_chg_program and extract_more_chg_program for now.
+
+tset_inspect_commands (dictionary):
+- key: (string) table_name
+- val: [command1, command2, ...]
+where each command is a list: [action, [mparams], [aparams]]
+
+Objective 2 Algorithm: Augment algorithm for objective 1:  To walk the parse tree, we are already collecting next parse_states identified by the selectopts present where the current parse_state ends in a conditional return statement.  Each such parse_state is the start (or, in most cases, the entirety) of a pc_state.  So we will make the association explicit at the time the next parse_state is collected.  This handles the second action parameter for each entry.
