@@ -1,0 +1,2 @@
+table_add tset_context set_program [PPORT] => [program ID] [VPORT_0]
+table_add tset_control set_next_action [program ID] 0 => [PROCEED] 1

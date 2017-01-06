@@ -138,6 +138,7 @@ class HP4C:
   
     # traverse parse tree
     next_states = []
+    next_states_pcs = {}
     if parse_state.return_statement[0] == 'immediate':
       if parse_state.return_statement[1] != 'ingress':
         next_state = self.h.p4_parse_states[parse_state.return_statement[1]]
@@ -153,6 +154,7 @@ class HP4C:
             if pc_state == 0:
               pc_state += 1
             pc_state += 1
+            next_states_pcs[next_state] = pc_state
             self.pc_bits_extracted[pc_state] = self.offset
             next_states.append(next_state)
     else:
@@ -162,7 +164,7 @@ class HP4C:
 
     save_offset = self.offset
     for next_state in next_states:
-      self.walk_parse_tree(next_state, pc_state)
+      self.walk_parse_tree(next_state, next_states_pcs[next_state])
       self.offset = save_offset
 
   def gen_tset_control_entries(self):
@@ -188,8 +190,10 @@ class HP4C:
                                            "set_next_action",
                                            ["[program ID]", "0"],
                                            [self.pc_action[0], "1"]))
+          self.pc_bits_extracted[0] = self.args.seb * 8
+
         self.pc_bits_extracted[1] = self.pc_bits_extracted[0]
-        self.pc_bits_extracted[0] = self.args.seb
+        self.pc_bits_extracted[0] = self.args.seb * 8
         self.pc_action[1] = self.pc_action[0]
         self.pc_action[0] = "extract_more"
 
@@ -199,13 +203,19 @@ class HP4C:
                                          "set_next_action",
                                          ["[program ID]", str(key)],
                                          [self.pc_action[key], str(key)]))
+  def write_output(self):
+    out = open(self.args.output, 'w')
+    for command in self.commands:
+      out.write(str(command) + '\n')
+    out.close()
 
 def main():
   args = parse_args(sys.argv[1:])
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.gen_tset_context_entry()
   hp4c.gen_tset_control_entries()
-  code.interact(local=locals())
+  hp4c.write_output()
+  # code.interact(local=locals())
 
 if __name__ == '__main__':
   main()

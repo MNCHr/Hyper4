@@ -2,17 +2,20 @@ from hp4c import hp4c
 from p4_hlir.main import HLIR
 
 class TestFirewall:
-  def __init__(self):
-    self.args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
-    self.hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
   def test_tset_control_entry_A(self):
-    cmd_type = 'table_add'
-    table = 'tset_control'
-    action = 'set_next_action'
-    mparams = ['[program ID]', '0']
-    aparams = ['[INSPECT_SEB]', '1']
-    command = hp4c.HP4_Command(cmd_type, table, action, mparams, aparams)
-    assert command in self.hp4compiler.commands
+    args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
+    hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
+    hp4compiler.gen_tset_control_entries()
+    passed = False
+    for command in hp4compiler.commands:
+      if (command.command == 'table_add' and
+          command.table == 'tset_control' and
+          command.action == 'set_next_action' and
+          command.match_params == ['[program ID]', '0'] and
+          command.action_params == ['[INSPECT_SEB]', '1']):
+        passed = True
+        break
+    assert passed
 
 """
 def test_firewall():
