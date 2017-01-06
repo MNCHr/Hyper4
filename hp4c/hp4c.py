@@ -42,6 +42,7 @@ class HP4C:
     self.pc_action = {}
     self.field_offsets = {}
     self.offset = 0
+    self.next_pc_states = {}
     self.tset_inspect_commands = {}
     self.commands = []
     self.h = h
@@ -146,6 +147,10 @@ class HP4C:
       else:
         return
     elif parse_state.return_statement[0] == 'select':
+      curr_pc_state = pc_state
+      if curr_pc_state == 0:
+        curr_pc_state += 1
+      self.next_pc_states[curr_pc_state] = []
       for selectopt in parse_state.return_statement[2]:
         # selectopt: (list of values, next parse_state)
         if selectopt[1] != 'ingress':
@@ -155,6 +160,7 @@ class HP4C:
               pc_state += 1
             pc_state += 1
             next_states_pcs[next_state] = pc_state
+            self.next_pc_states[curr_pc_state].append(pc_state)
             self.pc_bits_extracted[pc_state] = self.offset
             next_states.append(next_state)
     else:
@@ -214,8 +220,8 @@ def main():
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.gen_tset_context_entry()
   hp4c.gen_tset_control_entries()
-  hp4c.write_output()
-  # code.interact(local=locals())
+  #hp4c.write_output()
+  code.interact(local=locals())
 
 if __name__ == '__main__':
   main()

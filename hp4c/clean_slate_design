@@ -101,9 +101,33 @@ table tset_inspect_XX_YY {
 
 Ignore set_next_action_chg_program and extract_more_chg_program for now.
 
-tset_inspect_commands (dictionary):
-- key: (string) table_name
-- val: [command1, command2, ...]
-where each command is a list: [action, [mparams], [aparams]]
+next_pc_states (dictionary):
+- key: (integer) pc_state
+- val: [pc_state, pc_state, ...]
+
+tics_match_offsets (dictionary):
+- key: (integer) pc_state
+- val: [(offset, width), (offset, width), ...]
+- populated: process_parse_state (within 'for criteria in parse_state.return_statement[1]:' block)
+
+tics_table_name (dictionary):
+- key: (integer) pc_state
+- val: (string) specific instance of tset_inspect_XX_YY
+- populated: process_parse_state (where pc_action is determined)
+
+tics (class):
+- instance created: walk_parse_tree (within 'for selectopt in parse_state.return_statement[2]:' block)
+- (integer) current pc_state
+  - use curr_pc_state
+- (string) table
+  - use tics_table_name[curr_pc_state]
+- (string) match
+  - create using tics_match_offsets[curr_pc_state] and selectopt
+- (string) action
+  - DELAY filling this in until parse tree has been walked.  THEN either set_next_action / [PROCEED] (in the case of a direct jump to ingress) or compare pc_bits_extracted (in the case of a jump to another parse_state) for current vs next state; if less than, extract_more; otherwise, use pc_action[next_pc_state]
+- (integer) next_pc_state
+
+tics_list (list)
+- populated: walk_parse_tree (after each instance of tics created)
 
 Objective 2 Algorithm: Augment algorithm for objective 1:  To walk the parse tree, we are already collecting next parse_states identified by the selectopts present where the current parse_state ends in a conditional return statement.  Each such parse_state is the start (or, in most cases, the entirety) of a pc_state.  So we will make the association explicit at the time the next parse_state is collected.  This handles the second action parameter for each entry.
