@@ -42,6 +42,7 @@ class HP4C:
     self.pc_action = {}
     self.field_offsets = {}
     self.offset = 0
+    self.tset_inspect_commands = {}
     self.commands = []
     self.h = h
     self.h.build()
@@ -114,6 +115,7 @@ class HP4C:
           unsupported(startbytes, endbytes)
         else:
           self.pc_action[pc_state] = '[INSPECT_SEB]'
+          self.tset_inspect_commands['tset_inspect_SEB'] = []
       else:
         bound = self.args.seb + 10
         while bound <= 100:
@@ -121,8 +123,9 @@ class HP4C:
             if endbytes >= bound:
               unsupported(startbytes, endbytes)
             else:
-              self.pc_action[pc_state] = '[INSPECT_' + str(bound - 10) + '_' \
-                                    + str(bound - 1) + ']'
+              namecore = 'inspect_' + str(bound - 10) + '_' + str(bound - 1)
+              self.pc_action[pc_state] = '[' + namecore.upper() + ']'
+              self.tset_inspect_commands['tset_' + namecore] = []
               break
           bound += 10
       if pc_state not in self.pc_action:
@@ -147,6 +150,10 @@ class HP4C:
         if selectopt[1] != 'ingress':
           next_state = self.h.p4_parse_states[selectopt[1]]
           if next_state not in next_states:
+            if pc_state == 0:
+              pc_state += 1
+            pc_state += 1
+            self.pc_bits_extracted[pc_state] = self.offset
             next_states.append(next_state)
     else:
       print("ERROR: Unknown directive in return statement: %s" \
@@ -154,11 +161,7 @@ class HP4C:
       exit()
 
     save_offset = self.offset
-    if pc_state == 0:
-      pc_state += 1
     for next_state in next_states:
-      pc_state += 1
-      self.pc_bits_extracted[pc_state] = save_offset
       self.walk_parse_tree(next_state, pc_state)
       self.offset = save_offset
 

@@ -1,66 +1,65 @@
 from hp4c import hp4c
 from p4_hlir.main import HLIR
 
-def firewall():
-  args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
-  hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
-  return True
+class TestFirewall:
+  def __init__(self):
+    self.args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
+    self.hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
+  def test_tset_control_entry_A(self):
+    cmd_type = 'table_add'
+    table = 'tset_control'
+    action = 'set_next_action'
+    mparams = ['[program ID]', '0']
+    aparams = ['[INSPECT_SEB]', '1']
+    command = hp4c.HP4_Command(cmd_type, table, action, mparams, aparams)
+    assert command in self.hp4compiler.commands
 
+"""
 def test_firewall():
-  assert firewall()
-
-def test_collection():
   args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
   hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
-  hp4compiler.collectParseStates()
-  hp4compiler.collectActions()
-  hp4compiler.collectTables()
+  hp4compiler.gen_tset_control_entries()
   passed = 0
-  for state in hp4compiler.parseStateUIDs.keys():
-    if state.name == 'start' and hp4compiler.parseStateUIDs[state] == 0:
+  for command in hp4compiler.commands:
+    if (command.table == 'tset_control' and
+        command.action == 'set_next_action' and
+        command.match_params == ['[program ID]', '0'] and
+        command.action_params == ['[INSPECT_SEB]', '1']):
       passed += 1
-    elif state.name == 'parse_ipv4' and hp4compiler.parseStateUIDs[state] == 1:
+    elif (command.table == 'tset_control' and
+          command.action == 'set_next_action' and
+          command.match_params == ['[program ID]', '2'] and
+          command.action_params == ['[INSPECT_20_29]', '2']):
       passed += 1
-    elif state.name == 'parse_tcp' and hp4compiler.parseStateUIDs[state] == 2:
+    elif (command.table == 'tset_control' and
+          command.action == 'set_next_action' and
+          command.match_params == ['[program ID]', '3'] and
+          command.action_params == ['[PROCEED]', '3']):
       passed += 1
-    elif state.name == 'parse_udp' and hp4compiler.parseStateUIDs[state] == 3:
+    elif (command.table == 'tset_control' and
+          command.action == 'set_next_action' and
+          command.match_params == ['[program ID]', '4'] and
+          command.action_params == ['[PROCEED]', '4']):
       passed += 1
-    else:
-      assert 0
-  actionkeys = [1, 2, 3, 4, 5, 6, 7]
-  for action in hp4compiler.actionUIDs.keys():
-    if len(actionkeys) <= 0:
-      assert 0
-    elif action.name == '_no_op' or \
-         action.name == 'tcp_present' or \
-         action.name == 'tcp_not_present' or \
-         action.name == 'udp_present' or \
-         action.name == 'udp_not_present' or \
-         action.name == '_drop' or \
-         action.name == 'a_fwd':
-      actionkeys.remove(hp4compiler.actionUIDs[action])
-      passed += 1
-  for table in hp4compiler.tableUIDs.keys():
-    if table.name == 'fwd' and hp4compiler.tableUIDs[table] == 1:
-      passed += 1
-    elif table.name == 'is_tcp_valid' and hp4compiler.tableUIDs[table] == 2:
-      passed += 1
-    elif table.name == 'is_udp_valid' and hp4compiler.tableUIDs[table] == 3:
-      passed += 1
-    elif table.name == 'udp_src_block' and hp4compiler.tableUIDs[table] == 4:
-      passed += 1
-    elif table.name == 'udp_dst_block' and hp4compiler.tableUIDs[table] == 5:
-      passed += 1
-    elif table.name == 'tcp_src_block' and hp4compiler.tableUIDs[table] == 6:
-      passed += 1
-    elif table.name == 'tcp_dst_block' and hp4compiler.tableUIDs[table] == 7:
-      passed += 1
-  assert passed == 18
+  assert passed == 4
 
+def tset_control_entry_A(hp4compiler):
+  cmd_type = 'table_add'
+  table = 'tset_control'
+  action = 'set_next_action'
+  mparams = ['[program ID]', '0']
+  aparams = ['[INSPECT_SEB]', '1']
+  command = hp4c.HP4_Command(cmd_type, table, action, mparams, aparams)
+  assert command in hp4compiler.commands
+"""
+
+#def test_firewall():
+#  assert firewall()
+
+"""
 def test_parsing():
   args = hp4c.parse_args(['-o', 'firewall.hp4t', 'test/firewall.p4'])
   hp4compiler = hp4c.HP4C(HLIR("test/firewall.p4"), args)
-  hp4compiler.collectParseStatesBitsNeeded()
   passed = [0, 0, 0, 0]
   for key in hp4compiler.bits_needed_total.keys():
     if key[0].name == 'start':
@@ -83,3 +82,4 @@ def test_parsing():
           if hp4compiler.bits_needed_total[key] == 336:
             passed[3] = 1
   assert passed == [1, 1, 1, 1]
+"""
