@@ -110,7 +110,7 @@ tics_match_offsets (dictionary):
 - val: [(offset, width), (offset, width), ...]
 - populated: process_parse_state (within 'for criteria in parse_state.return_statement[1]:' block)
 
-tics_table_name (dictionary):
+tics_table_names (dictionary):
 - key: (integer) pc_state
 - val: (string) specific instance of tset_inspect_XX_YY
 - populated: process_parse_state (where pc_action is determined)
@@ -126,8 +126,11 @@ tics (class):
 - (string) action
   - DELAY filling this in until parse tree has been walked.  THEN either set_next_action / [PROCEED] (in the case of a direct jump to ingress) or compare pc_bits_extracted (in the case of a jump to another parse_state) for current vs next state; if less than, extract_more; otherwise, use pc_action[next_pc_state]
 - (integer) next_pc_state
+- (string) next_parse_state
 
 tics_list (list)
 - populated: walk_parse_tree (after each instance of tics created)
+
+We also need to generate the default entry, which will use match string consisting of a series of '0&&&0' values.  This can then be handled like any other tics, where the action is determined after the parse tree has been walked and depends on the next_parse_state and possibly pc_bits_extracted comparison.
 
 Objective 2 Algorithm: Augment algorithm for objective 1:  To walk the parse tree, we are already collecting next parse_states identified by the selectopts present where the current parse_state ends in a conditional return statement.  Each such parse_state is the start (or, in most cases, the entirety) of a pc_state.  So we will make the association explicit at the time the next parse_state is collected.  This handles the second action parameter for each entry.

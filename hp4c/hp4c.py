@@ -35,6 +35,14 @@ class HP4_Command:
       ret += ' ' + param
     return ret
 
+# TODO: make this a subclass of HP4_Command
+# needs all attributes of HP4_Command as well as __str__
+class TICS:
+  def __init__(self):
+    self.curr_pc_state = 0
+    self.next_pc_state = 0
+    self.next_parse_state = '' 
+
 class HP4C:
   def __init__(self, h, args):
     self.pc_bits_extracted = {}
@@ -43,7 +51,10 @@ class HP4C:
     self.field_offsets = {}
     self.offset = 0
     self.next_pc_states = {}
-    self.tset_inspect_commands = {}
+    # self.tset_inspect_commands = {}
+    self.tics_match_offsets = {}
+    self.tics_table_names = {}
+    self.tics_list = []
     self.commands = []
     self.h = h
     self.h.build()
