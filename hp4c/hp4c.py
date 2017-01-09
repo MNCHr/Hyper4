@@ -127,7 +127,7 @@ class HP4C:
           unsupported(startbytes, endbytes)
         else:
           self.pc_action[pc_state] = '[INSPECT_SEB]'
-          self.tset_inspect_commands['tset_inspect_SEB'] = []
+          # self.tset_inspect_commands['tset_inspect_SEB'] = []
       else:
         bound = self.args.seb + 10
         while bound <= 100:
@@ -137,7 +137,7 @@ class HP4C:
             else:
               namecore = 'inspect_' + str(bound - 10) + '_' + str(bound - 1)
               self.pc_action[pc_state] = '[' + namecore.upper() + ']'
-              self.tset_inspect_commands['tset_' + namecore] = []
+              #self.tset_inspect_commands['tset_' + namecore] = []
               break
           bound += 10
       if pc_state not in self.pc_action:
