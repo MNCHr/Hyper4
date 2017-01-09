@@ -3,7 +3,7 @@ from p4_hlir.main import HLIR
 import pytest
 
 class TestArpProxy:
-  function = 'arp_proxy'
+  function = 'hp4t_l2_switch'
   args = hp4c.parse_args(['-o', function+'.hp4t', 'test/'+function+'.p4'])
   hp4compiler = hp4c.HP4C(HLIR('test/'+function+'.p4'), args)
   hp4compiler.gen_tset_context_entry()

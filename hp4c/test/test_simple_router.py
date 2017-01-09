@@ -3,13 +3,12 @@ from p4_hlir.main import HLIR
 import pytest
 
 class TestArpProxy:
-  function = 'arp_proxy'
-  args = hp4c.parse_args(['-o', function+'.hp4t', 'test/'+function+'.p4'])
-  hp4compiler = hp4c.HP4C(HLIR('test/'+function+'.p4'), args)
+  args = hp4c.parse_args(['-o', 'simple_router.hp4t', 'test/simple_router/simple_router.p4'])
+  hp4compiler = hp4c.HP4C(HLIR('test/simple_router/simple_router.p4'), args)
   hp4compiler.gen_tset_context_entry()
   hp4compiler.gen_tset_control_entries()
   expected = []
-  fin = open('test/expected_outputs/'+function+'.hp4t', 'r')
+  fin = open('test/expected_outputs/simple_router.hp4t', 'r')
   for line in fin:
     expected.append(line[:-1])
   testflags = [False]*len(expected)
