@@ -12,7 +12,7 @@ import math
 RETURN_TYPE = 0
 CRITERIA = 1
 NEXT_PARSE_STATE = 1
-SELECTOPTS = 2
+CASE_ENTRIES = 2
 
 def parse_args(args):
   parser = argparse.ArgumentParser(description='HP4 Compiler')
@@ -151,6 +151,29 @@ class HP4C:
       if pc_state not in self.pc_action:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
+
+  def fill_tics_match_params(criteria_fields, values):
+    if len(criteria_fields) != len(values):
+      print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
+      exit()
+    # looking at a single criteria field is sufficient to determine the byte
+    #  range for the inspection, which affects the size of the match
+    #  parameters string (20 bytes for SEB, 10 bytes for everything else)
+    if self.field_offsets[criteria_fields[0]] / 8 < self.args.seb:
+      mparams = ['0&&&0']*20
+    else:
+      mparams = ['0&&&0']*10
+    for i in range(len(criteria_fields)):
+      j = self.field_offsets[criteria_fields[i]] / 8
+      fieldend = self.field_offsets[criteria_fields[i]] + self.h.p4_fields[criteria_fields[i]].width
+      end_j = int(math.ceil(fieldend / 8.0))
+      
+    
+    for value in values:
+      if value[0] != 'value':
+        print("Not yet supported: non-value type %s in case entry" % value[0])
+        exit()
+      # value[1] must be broken up into bytes
   
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -170,16 +193,17 @@ class HP4C:
       if curr_pc_state == 0:
         curr_pc_state += 1
       self.next_pc_states[curr_pc_state] = []
-      # return_statement[SELECTOPTS]: list of tuples (see selectopt below)
-      for selectopt in parse_state.return_statement[SELECTOPTS]:
+      # return_statement[CASE_ENTRIES]: list of tuples (see case_entry below)
+      for case_entry in parse_state.return_statement[CASE_ENTRIES]:
         t = TICS()
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
         self.tics_list.append(t)
-        # selectopt: (list of values, next parse_state)
+        # case_entry: (list of values, next parse_state)
         # TODO: fill in match params
-        if selectopt[1] != 'ingress':
-          next_state = self.h.p4_parse_states[selectopt[1]]
+        self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
+        if case_entry[1] != 'ingress':
+          next_state = self.h.p4_parse_states[case_entry[1]]
           if next_state not in next_states:
             if pc_state == 0:
               pc_state += 1
