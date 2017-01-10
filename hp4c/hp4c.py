@@ -9,6 +9,11 @@ import code
 import sys
 import math
 
+RETURN_TYPE = 0
+CRITERIA = 1
+NEXT_PARSE_STATE = 1
+SELECTOPTS = 2
+
 def parse_args(args):
   parser = argparse.ArgumentParser(description='HP4 Compiler')
   parser.add_argument('input', help='path for input .p4',
@@ -35,10 +40,9 @@ class HP4_Command:
       ret += ' ' + param
     return ret
 
-# TODO: make this a subclass of HP4_Command
-# needs all attributes of HP4_Command as well as __str__
-class TICS:
+class TICS(HP4_Command):
   def __init__(self):
+    HP4_Command.__init__(self, '', '', '', [], [])
     self.curr_pc_state = 0
     self.next_pc_state = 0
     self.next_parse_state = '' 
@@ -51,7 +55,6 @@ class HP4C:
     self.field_offsets = {}
     self.offset = 0
     self.next_pc_states = {}
-    # self.tset_inspect_commands = {}
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
@@ -84,16 +87,20 @@ class HP4C:
         self.offset += field.width # advance current offset
         numbits += field.width
     self.pc_bits_extracted[pc_state] = numbits
-    if parse_state.return_statement[0] == 'immediate':
-      if parse_state.return_statement[1] == 'ingress':
+    if parse_state.return_statement[RETURN_TYPE] == 'immediate':
+      if parse_state.return_statement[NEXT_PARSE_STATE] == 'ingress':
         self.pc_action[pc_state] = '[PROCEED]'
-    elif parse_state.return_statement[0] == 'select':
+    elif parse_state.return_statement[RETURN_TYPE] == 'select':
+      tics_pc_state = pc_state
+      if tics_pc_state == 0:
+        tics_pc_state += 1
       # account for 'current' instances
       maxcurr = 0
       # identify range of bytes to examine
       startbytes = 100
       endbytes = 0
-      for criteria in parse_state.return_statement[1]:
+      self.tics_match_offsets[tics_pc_state] = []
+      for criteria in parse_state.return_statement[CRITERIA]:
         if isinstance(criteria, tuple): # tuple indicates use of 'current'
           # criteria[0]: start offset from current position
           # criteria[1]: width of 'current' call
@@ -103,6 +110,7 @@ class HP4C:
           if (endbytes * 8) < self.offset + maxcurr:
             endbytes = int(math.ceil((self.offset + maxcurr) / 8.0))
         else: # single field
+          self.tics_match_offsets[tics_pc_state].append((self.field_offsets[criteria],self.h.p4_fields[criteria].width))
           fieldstart = self.field_offsets[criteria] / 8
           fieldend = int(math.ceil((fieldstart * 8
                                     + self.h.p4_fields[criteria].width) / 8.0))
@@ -127,7 +135,7 @@ class HP4C:
           unsupported(startbytes, endbytes)
         else:
           self.pc_action[pc_state] = '[INSPECT_SEB]'
-          # self.tset_inspect_commands['tset_inspect_SEB'] = []
+          self.tics_table_names[tics_pc_state] = 'tset_inspect_SEB'
       else:
         bound = self.args.seb + 10
         while bound <= 100:
@@ -137,7 +145,7 @@ class HP4C:
             else:
               namecore = 'inspect_' + str(bound - 10) + '_' + str(bound - 1)
               self.pc_action[pc_state] = '[' + namecore.upper() + ']'
-              #self.tset_inspect_commands['tset_' + namecore] = []
+              self.tics_table_names[tics_pc_state] = 'tset_' + namecore
               break
           bound += 10
       if pc_state not in self.pc_action:
@@ -151,19 +159,25 @@ class HP4C:
     # traverse parse tree
     next_states = []
     next_states_pcs = {}
-    if parse_state.return_statement[0] == 'immediate':
-      if parse_state.return_statement[1] != 'ingress':
+    if parse_state.return_statement[RETURN_TYPE] == 'immediate':
+      if parse_state.return_statement[NEXT_PARSE_STATE] != 'ingress':
         next_state = self.h.p4_parse_states[parse_state.return_statement[1]]
         self.walk_parse_tree(next_state, pc_state)
       else:
         return
-    elif parse_state.return_statement[0] == 'select':
+    elif parse_state.return_statement[RETURN_TYPE] == 'select':
       curr_pc_state = pc_state
       if curr_pc_state == 0:
         curr_pc_state += 1
       self.next_pc_states[curr_pc_state] = []
-      for selectopt in parse_state.return_statement[2]:
+      # return_statement[SELECTOPTS]: list of tuples (see selectopt below)
+      for selectopt in parse_state.return_statement[SELECTOPTS]:
+        t = TICS()
+        t.curr_pc_state = curr_pc_state
+        t.table = self.tics_table_names[curr_pc_state]
+        self.tics_list.append(t)
         # selectopt: (list of values, next parse_state)
+        # TODO: fill in match params
         if selectopt[1] != 'ingress':
           next_state = self.h.p4_parse_states[selectopt[1]]
           if next_state not in next_states:
