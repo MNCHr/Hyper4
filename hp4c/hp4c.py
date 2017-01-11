@@ -164,10 +164,14 @@ class HP4C:
     else:
       mparams = ['0&&&0']*10
     for i in range(len(criteria_fields)):
-      j = self.field_offsets[criteria_fields[i]] / 8
-      fieldend = self.field_offsets[criteria_fields[i]] + self.h.p4_fields[criteria_fields[i]].width
-      end_j = int(math.ceil(fieldend / 8.0))
-      
+      fo = self.field_offsets[criteria_fields[i]]
+      j = (fo / 8) % len(mparams)
+      fieldend = fo + self.h.p4_fields[criteria_fields[i]].width
+      end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams)
+      while j <= end_j:
+        mask = ~(0xFF << 8 - (fo % 8))
+        values[i] >> # TODO
+        j += 1
     
     for value in values:
       if value[0] != 'value':
