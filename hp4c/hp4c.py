@@ -159,6 +159,7 @@ class HP4C:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
 
+  # TODO: mparams[j].value not being populated properly
   def fill_tics_match_params(self, criteria_fields, values):
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
@@ -166,29 +167,39 @@ class HP4C:
     # looking at a single criteria field is sufficient to determine the byte
     #  range for the inspection, which affects the size of the match
     #  parameters string (20 bytes for SEB, 10 bytes for everything else)
+    mparams = []
+    mparams_count = 10
     if self.field_offsets[criteria_fields[0]] / 8 < self.args.seb:
-      mparams = [MatchParam()]*20
-    else:
-      mparams = [MatchParam()]*10
+      mparams_count = 20
+    for i in range(mparams_count):
+      mparams.append(MatchParam())
+
     for i in range(len(criteria_fields)):
-      if values[i][0] != 'value':
-        print("Not yet supported: non-value type %s in case entry" % values[i][0])
+      if values[i][0] != 'value' and values[i][0] != 'default':
+        print("Not yet supported: type %s in case entry" % values[i][0])
         exit()
       fo = self.field_offsets[criteria_fields[i]]
-      j = (fo / 8) % len(mparams) - 1
+      j = (fo / 8) % len(mparams)
       width = self.h.p4_fields[criteria_fields[i]].width
       fieldend = fo + width
-      end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams) - 1
-      value = values[i][1]
+      end_j = (int(math.ceil(fieldend / 8.0)) - 1) % len(mparams)
+      value = 0
+      if values[i][0] == 'value':
+        value = values[i][1]
       while j <= end_j:
-        # TODO: fix these statements to handle left-aligned values
-        # question: is fo + width > start of next byte?  if so, >>
-        if fo + width > (j + 1) * 8:
-          mask = ~((0xFF << (8 - (fo % 8)) % 256)) & 0xFF
-          val = value >> (width - (8 - (fo % 8)))
-        elif fo % 8 == 0:
-          mask = (0xFF << (8 - (width % 8))) % 256
-          val = value << (8 - (width % 8))
+        mask = 0b00000000
+        pos = fo % 8
+        end = min(fo + width, 8)
+        if values[i][0] == 'value':
+          bit = 128 >> pos
+          while pos < end:
+            mask = mask | bit
+            bit = bit >> 1
+            pos += 1
+        # truncate bits outside current byte boundary
+        val = value >> ((fo + width) - end)
+        # lshift to place value in correct position within current byte
+        val = val << (8 - end)
         
         mparams[j].mask = mparams[j].mask | mask
         mparams[j].value = mparams[j].value | val
@@ -199,7 +210,8 @@ class HP4C:
         # reduce width
         width = width - advance
         # change values[i]
-        value = value % (1 << width)
+        if width > 0:
+          value = value % (1 << width)
     ret = []
     for mparam in mparams:
       ret.append(str(mparam))
@@ -229,10 +241,9 @@ class HP4C:
         t = TICS()
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
+        t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
         self.tics_list.append(t)
         # case_entry: (list of values, next parse_state)
-        # TODO: fill in match params
-        t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]
           if next_state not in next_states:
