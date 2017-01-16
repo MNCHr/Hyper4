@@ -159,7 +159,7 @@ class HP4C:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
 
-  def fill_tics_match_params(criteria_fields, values):
+  def fill_tics_match_params(self, criteria_fields, values):
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
       exit()
@@ -167,18 +167,29 @@ class HP4C:
     #  range for the inspection, which affects the size of the match
     #  parameters string (20 bytes for SEB, 10 bytes for everything else)
     if self.field_offsets[criteria_fields[0]] / 8 < self.args.seb:
-      mparams = [MatchParams()]*20
+      mparams = [MatchParam()]*20
     else:
-      mparams = [MatchParams()]*10
+      mparams = [MatchParam()]*10
     for i in range(len(criteria_fields)):
+      if values[i][0] != 'value':
+        print("Not yet supported: non-value type %s in case entry" % values[i][0])
+        exit()
       fo = self.field_offsets[criteria_fields[i]]
       j = (fo / 8) % len(mparams) - 1
       width = self.h.p4_fields[criteria_fields[i]].width
       fieldend = fo + width
       end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams) - 1
+      value = values[i][1]
       while j <= end_j:
-        mask = ~((0xFF << (8 - (fo % 8)) % 256)) & 0xFF
-        val = values[i] >> (width - (8 - (fo % 8)))
+        # TODO: fix these statements to handle left-aligned values
+        # question: is fo + width > start of next byte?  if so, >>
+        if fo + width > (j + 1) * 8:
+          mask = ~((0xFF << (8 - (fo % 8)) % 256)) & 0xFF
+          val = value >> (width - (8 - (fo % 8)))
+        elif fo % 8 == 0:
+          mask = (0xFF << (8 - (width % 8))) % 256
+          val = value << (8 - (width % 8))
+        
         mparams[j].mask = mparams[j].mask | mask
         mparams[j].value = mparams[j].value | val
         j += 1
@@ -188,13 +199,12 @@ class HP4C:
         # reduce width
         width = width - advance
         # change values[i]
-        values[i] = values[i] % (1 << width)
-    
-    for value in values:
-      if value[0] != 'value':
-        print("Not yet supported: non-value type %s in case entry" % value[0])
-        exit()
-      # value[1] must be broken up into bytes
+        value = value % (1 << width)
+    ret = []
+    for mparam in mparams:
+      ret.append(str(mparam))
+    return ret
+
   
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -222,7 +232,7 @@ class HP4C:
         self.tics_list.append(t)
         # case_entry: (list of values, next parse_state)
         # TODO: fill in match params
-        self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
+        t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]
           if next_state not in next_states:
