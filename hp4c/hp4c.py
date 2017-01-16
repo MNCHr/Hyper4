@@ -165,13 +165,16 @@ class HP4C:
       mparams = ['0&&&0']*10
     for i in range(len(criteria_fields)):
       fo = self.field_offsets[criteria_fields[i]]
-      j = (fo / 8) % len(mparams)
-      fieldend = fo + self.h.p4_fields[criteria_fields[i]].width
-      end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams)
+      j = (fo / 8) % len(mparams) - 1
+      width = self.h.p4_fields[criteria_fields[i]].width
+      fieldend = fo + width
+      end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams) - 1
       while j <= end_j:
-        mask = ~(0xFF << 8 - (fo % 8))
-        values[i] >> # TODO
+        mask = format( ~((0xFF << (8 - (fo % 8)) % 256) & 0xFF, '#04x')
+        val = format( values[i] >> (width - (8 - (fo % 8))), '#04x')
+        mparams[j] = val + '&&&' + mask
         j += 1
+        # TODO: figure out how to advance to next part of values[i] (probably bit shift)
     
     for value in values:
       if value[0] != 'value':
