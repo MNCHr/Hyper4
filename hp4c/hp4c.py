@@ -47,6 +47,13 @@ class TICS(HP4_Command):
     self.next_pc_state = 0
     self.next_parse_state = '' 
 
+class MatchParam():
+  def __init__(self):
+    self.value = 0
+    self.mask = 0
+  def __str__(self):
+    return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
+
 class HP4C:
   def __init__(self, h, args):
     self.pc_bits_extracted = {}
@@ -160,9 +167,9 @@ class HP4C:
     #  range for the inspection, which affects the size of the match
     #  parameters string (20 bytes for SEB, 10 bytes for everything else)
     if self.field_offsets[criteria_fields[0]] / 8 < self.args.seb:
-      mparams = ['0&&&0']*20
+      mparams = [MatchParams()]*20
     else:
-      mparams = ['0&&&0']*10
+      mparams = [MatchParams()]*10
     for i in range(len(criteria_fields)):
       fo = self.field_offsets[criteria_fields[i]]
       j = (fo / 8) % len(mparams) - 1
@@ -170,11 +177,18 @@ class HP4C:
       fieldend = fo + width
       end_j = (int(math.ceil(fieldend / 8.0))) % len(mparams) - 1
       while j <= end_j:
-        mask = format( ~((0xFF << (8 - (fo % 8)) % 256) & 0xFF, '#04x')
-        val = format( values[i] >> (width - (8 - (fo % 8))), '#04x')
-        mparams[j] = val + '&&&' + mask
+        mask = ~((0xFF << (8 - (fo % 8)) % 256)) & 0xFF
+        val = values[i] >> (width - (8 - (fo % 8)))
+        mparams[j].mask = mparams[j].mask | mask
+        mparams[j].value = mparams[j].value | val
         j += 1
-        # TODO: figure out how to advance to next part of values[i] (probably bit shift)
+        advance = 8 - (fo % 8)
+        # advance fo
+        fo = fo + advance
+        # reduce width
+        width = width - advance
+        # change values[i]
+        values[i] = values[i] % (1 << width)
     
     for value in values:
       if value[0] != 'value':
