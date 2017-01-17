@@ -159,7 +159,6 @@ class HP4C:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
 
-  # TODO: mparams[j].value not being populated properly
   def fill_tics_match_params(self, criteria_fields, values):
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
@@ -197,7 +196,6 @@ class HP4C:
             bit = bit >> 1
             pos += 1
         # truncate bits outside current byte boundary
-        # TODO: fix this line right here, this is bad:
         val = value >> (((fo % 8) + width) - end)
         # lshift to place value in correct position within current byte
         val = val << (8 - end)
@@ -243,18 +241,27 @@ class HP4C:
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
         t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
-        self.tics_list.append(t)
         # case_entry: (list of values, next parse_state)
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]
+          t.next_parse_state = next_state
           if next_state not in next_states:
             if pc_state == 0:
               pc_state += 1
             pc_state += 1
             next_states_pcs[next_state] = pc_state
             self.next_pc_states[curr_pc_state].append(pc_state)
+            # TODO: verify this line is correct; does it account for 'current'?
             self.pc_bits_extracted[pc_state] = self.offset
             next_states.append(next_state)
+            t.next_pc_state = pc_state
+          else:
+            t.next_pc_state = next_states_pcs[next_state]
+        else:
+          t.next_pc_state = t.curr_pc_state
+          t.action = 'set_next_action'
+          t.action_params = ['0', str(t.next_pc_state)]
+        self.tics_list.append(t)
     else:
       print("ERROR: Unknown directive in return statement: %s" \
             % parse_state.return_statement[0])
