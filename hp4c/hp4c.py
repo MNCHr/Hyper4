@@ -159,7 +159,7 @@ class HP4C:
         print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
 
-  def fill_tics_match_params(self, criteria_fields, values):
+  def fill_tics_match_params(self, criteria_fields, values, pc_state):
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
       exit()
@@ -211,7 +211,7 @@ class HP4C:
         # change values[i]
         if width > 0:
           value = value % (1 << width)
-    ret = []
+    ret = ['[program ID]', str(pc_state)]
     for mparam in mparams:
       ret.append(str(mparam))
     return ret
@@ -241,7 +241,7 @@ class HP4C:
         t.command = "table_add"
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
-        t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
+        t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0], t.curr_pc_state)
         # case_entry: (list of values, next parse_state)
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]

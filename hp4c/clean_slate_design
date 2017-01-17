@@ -68,7 +68,7 @@ We need a tset_inspect_XX_YY entry for each selectopt in each conditional return
 Challenges:
 - identifying next pc_state
   - take advantage of walk_parse_tree that already does some handling for each 'selectopt' in the conditional return statement
-- producing the ternary match strings
+- [DONE] producing the ternary match strings
   - take advantage of process_parse_state that already does some handling for each 'criteria' for the conditional return statement
 
 action set_next_action(next_action, state) {
