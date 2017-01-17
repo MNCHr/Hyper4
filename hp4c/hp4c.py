@@ -189,7 +189,7 @@ class HP4C:
       while j <= end_j:
         mask = 0b00000000
         pos = fo % 8
-        end = min(fo + width, 8)
+        end = min(pos + width, 8)
         if values[i][0] == 'value':
           bit = 128 >> pos
           while pos < end:
@@ -197,7 +197,8 @@ class HP4C:
             bit = bit >> 1
             pos += 1
         # truncate bits outside current byte boundary
-        val = value >> ((fo + width) - end)
+        # TODO: fix this line right here, this is bad:
+        val = value >> (((fo % 8) + width) - end)
         # lshift to place value in correct position within current byte
         val = val << (8 - end)
         
@@ -312,6 +313,7 @@ def main():
   hp4c.gen_tset_context_entry()
   hp4c.gen_tset_control_entries()
   #hp4c.write_output()
+  mp = MatchParam()
   code.interact(local=locals())
 
 if __name__ == '__main__':
