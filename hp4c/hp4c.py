@@ -238,6 +238,7 @@ class HP4C:
       # return_statement[CASE_ENTRIES]: list of tuples (see case_entry below)
       for case_entry in parse_state.return_statement[CASE_ENTRIES]:
         t = TICS()
+        t.command = "table_add"
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
         t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0])
@@ -258,9 +259,10 @@ class HP4C:
           else:
             t.next_pc_state = next_states_pcs[next_state]
         else:
+          t.next_parse_state = 'ingress'
           t.next_pc_state = t.curr_pc_state
           t.action = 'set_next_action'
-          t.action_params = ['0', str(t.next_pc_state)]
+          t.action_params = ['[PROCEED]', str(t.next_pc_state)]
         self.tics_list.append(t)
     else:
       print("ERROR: Unknown directive in return statement: %s" \
@@ -300,7 +302,8 @@ class HP4C:
         self.pc_bits_extracted[1] = self.pc_bits_extracted[0]
         self.pc_bits_extracted[0] = self.args.seb * 8
         self.pc_action[1] = self.pc_action[0]
-        self.pc_action[0] = "extract_more"
+        # TODO: eliminate this line?  Don't think it does anything useful
+        #self.pc_action[0] = "[EXTRACT_MORE]"
 
       else:
         self.commands.append(HP4_Command("table_add",
@@ -308,6 +311,18 @@ class HP4C:
                                          "set_next_action",
                                          ["[program ID]", str(key)],
                                          [self.pc_action[key], str(key)]))
+
+  def gen_tset_inspect_entries(self):
+    for t in self.tics_list:
+      if t.next_parse_state != 'ingress':
+        if self.pc_bits_extracted[t.next_pc_state] > self.pc_bits_extracted[t.curr_pc_state]:
+          t.action = "extract_more"
+          t.action_params = [str(self.pc_bits_extracted[t.next_pc_state]), str(t.next_pc_state)]
+        else:
+          print("TODO: support direct jump to new parse node without extracting more")
+          exit()
+      self.commands.append(t)
+
   def write_output(self):
     out = open(self.args.output, 'w')
     for command in self.commands:
@@ -319,9 +334,9 @@ def main():
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.gen_tset_context_entry()
   hp4c.gen_tset_control_entries()
-  #hp4c.write_output()
-  mp = MatchParam()
-  code.interact(local=locals())
+  hp4c.gen_tset_inspect_entries()
+  hp4c.write_output()
+  #code.interact(local=locals())
 
 if __name__ == '__main__':
   main()
