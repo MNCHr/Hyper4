@@ -35,7 +35,11 @@ class HP4_Command:
     ret = self.command + ' ' + self.table + ' ' + self.action
     for param in self.match_params:
       ret += ' ' + param
-    ret += ' =>'
+    if self.command == 'table_add':
+      ret += ' =>'
+    elif self.command != 'table_set_default':
+      print("ERROR: incorrect table command %s, table %s" % (self.command, self.table))
+      exit()
     for param in self.action_params:
       ret += ' ' + param
     return ret
@@ -323,6 +327,32 @@ class HP4C:
           exit()
       self.commands.append(t)
 
+  def gen_tset_pr_entries(self):
+    # table_set_default <table name> <action name> <action parameters>
+    self.commands.append(HP4_Command("table_set_default",
+                                     "tset_pr_SEB",
+                                     "a_pr_import_SEB",
+                                     [],
+                                     []))
+
+    # 1) identify highest byte range extracted anywhere in the parse tree
+    # 2) for SEB and all later byte ranges up to and including the one identified
+    #    in step 1, generate default table entry
+    max_extracted = int(math.ceil(max(self.pc_bits_extracted.values()) / 8.0))
+    bound = self.args.seb
+    while bound < max_extracted:
+      if bound >= 100:
+        print("ERROR: unsupported max extraction of %i bytes" % max_extracted)
+        exit()
+      tablename = 'tset_pr_' + str(bound) + '_' + str(bound + 9)
+      action = 'a_pr_import_' + str(bound) + '_' + str(bound + 9)
+      self.commands.append(HP4_Command("table_set_default",
+                                       tablename,
+                                       action,
+                                       [],
+                                       []))
+      bound += 10
+
   def write_output(self):
     out = open(self.args.output, 'w')
     for command in self.commands:
@@ -335,6 +365,7 @@ def main():
   hp4c.gen_tset_context_entry()
   hp4c.gen_tset_control_entries()
   hp4c.gen_tset_inspect_entries()
+  hp4c.gen_tset_pr_entries()
   hp4c.write_output()
   #code.interact(local=locals())
 

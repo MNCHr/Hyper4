@@ -9,6 +9,7 @@ class TestArpProxy:
   hp4compiler.gen_tset_context_entry()
   hp4compiler.gen_tset_control_entries()
   hp4compiler.gen_tset_inspect_entries()
+  hp4compiler.gen_tset_pr_entries()
   expected = []
   fin = open('test/expected_outputs/'+function+'.hp4t', 'r')
   for line in fin:
