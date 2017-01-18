@@ -143,4 +143,15 @@ First task is trivial if we assume that there can be only one entry point for th
 
 The second task is more complicated but shouldn't be too bad.  We can look at every pc_state that points at ingress and the ordered set of extract statements leading up to it.  Then we look at all of these ordered sets together one element at a time.  What is the set of unique header types covering the first elements?  The size of this set determines how many bits are required in extracted.validbits for the first element, with each bit corresponding to one of the header types.  This is not a very efficient method spacewise, but computation-wise is amenable to bitmasking to check for presence of a header in the parsed representation.
 
-We need an entry for every pc_state that points at ingress.  Conveniently we have h.p4_ingress_ptr, a dictionary with the first table in the ingress pipeline as the key and the set of parse_states that include jumps to it as the value.
+We need an entry for every pc_state that points at ingress.  Conveniently we have h.p4_ingress_ptr, a dictionary with the first table in the ingress pipeline as the key and the set of parse_states that include jumps to it as the value.  But remember that we may have multiple pc_states for each parse_state, so we need some help - we can collect the pc_states associated with every parse_state, for example.
+
+Starting to think we need a pc_state class:
+- ID (int, used in table entries)
+- parse_state
+- list of preceding parse_states
+
+OK maybe not a class but rather a couple of dictionaries.
+
+And in HP4C we could have a dictionary ps_to_pc where parse_state is the key and a list of pc_states is the value.
+
+With the current and preceding parse_states we could accomplish task #2.

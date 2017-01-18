@@ -58,6 +58,15 @@ class MatchParam():
   def __str__(self):
     return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
 
+# TODO: Eliminate this, I think, in favor of a couple more dictionaries in HP4C
+# dicts will have pc_state (int) as key, and parse_state or list of preceding
+# parse_states as values
+class PC_State():
+  def __init__(self, ID):
+    self.ID = ID
+    self.parse_state = ''
+    self.preceding_parse_states = set()
+
 class HP4C:
   def __init__(self, h, args):
     self.pc_bits_extracted = {}
@@ -66,6 +75,7 @@ class HP4C:
     self.field_offsets = {}
     self.offset = 0
     self.next_pc_states = {}
+    self.ps_to_pc = {}
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
@@ -255,6 +265,12 @@ class HP4C:
               pc_state += 1
             pc_state += 1
             next_states_pcs[next_state] = pc_state
+
+            #TODO: rethink this - I don't think we'll use PC_State class after all
+            if self.ps_to_pc.has_key(parse_state) is False:
+              self.ps_to_pc[parse_state] = set()
+            self.ps_to_pc[parse_state].add(PC_State(pc_state))
+
             self.next_pc_states[curr_pc_state].append(pc_state)
             # TODO: verify this line is correct; does it account for 'current'?
             self.pc_bits_extracted[pc_state] = self.offset
@@ -355,6 +371,7 @@ class HP4C:
 
   # TODO: write this method.
   def tset_pipeline_entries(self):
+    
     pass
 
   def write_output(self):
