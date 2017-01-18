@@ -353,6 +353,10 @@ class HP4C:
                                        []))
       bound += 10
 
+  # TODO: write this method.
+  def tset_pipeline_entries(self):
+    pass
+
   def write_output(self):
     out = open(self.args.output, 'w')
     for command in self.commands:
@@ -366,6 +370,7 @@ def main():
   hp4c.gen_tset_control_entries()
   hp4c.gen_tset_inspect_entries()
   hp4c.gen_tset_pr_entries()
+  hp4c.gen_tset_pipeline_entries()
   hp4c.write_output()
   #code.interact(local=locals())
 
