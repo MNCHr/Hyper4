@@ -58,15 +58,6 @@ class MatchParam():
   def __str__(self):
     return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
 
-# TODO: Eliminate this, I think, in favor of a couple more dictionaries in HP4C
-# dicts will have pc_state (int) as key, and parse_state or list of preceding
-# parse_states as values
-class PC_State():
-  def __init__(self, ID):
-    self.ID = ID
-    self.parse_state = ''
-    self.preceding_parse_states = set()
-
 class HP4C:
   def __init__(self, h, args):
     self.pc_bits_extracted = {}
@@ -76,6 +67,8 @@ class HP4C:
     self.offset = 0
     self.next_pc_states = {}
     self.ps_to_pc = {}
+    self.pc_to_ps = {}
+    self.pc_to_preceding_pcs = {}
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
@@ -97,6 +90,16 @@ class HP4C:
                                        ["[program ID]", "[VPORT_0]"]))
 
   def process_parse_state(self, parse_state, pc_state):
+    # track pc - ps membership
+    if self.ps_to_pc.has_key(parse_state) is False:
+      self.ps_to_pc[parse_state] = set()
+    if pc_state == 0:
+      self.ps_to_pc[parse_state].add(1)
+      self.pc_to_ps[1] = parse_state
+    else:
+      self.ps_to_pc[parse_state].add(pc_state)
+      self.pc_to_ps[pc_state] = parse_state
+
     numbits = self.offset
     for call in parse_state.call_sequence:
       if call[0].value != 'extract':
@@ -266,10 +269,10 @@ class HP4C:
             pc_state += 1
             next_states_pcs[next_state] = pc_state
 
-            #TODO: rethink this - I don't think we'll use PC_State class after all
-            if self.ps_to_pc.has_key(parse_state) is False:
-              self.ps_to_pc[parse_state] = set()
-            self.ps_to_pc[parse_state].add(PC_State(pc_state))
+            #TODO: track preceding pc_states
+            if self.pc_to_preceding_pcs.has_key(curr_pc_state) is False:
+              self.pc_to_preceding_pcs[curr_pc_state] = []
+            self.pc_to_preceding_pcs[pc_state] = self.pc_to_preceding_pcs[curr_pc_state] + [curr_pc_state]
 
             self.next_pc_states[curr_pc_state].append(pc_state)
             # TODO: verify this line is correct; does it account for 'current'?
@@ -370,8 +373,7 @@ class HP4C:
       bound += 10
 
   # TODO: write this method.
-  def tset_pipeline_entries(self):
-    
+  def gen_tset_pipeline_entries(self):
     pass
 
   def write_output(self):
@@ -388,8 +390,8 @@ def main():
   hp4c.gen_tset_inspect_entries()
   hp4c.gen_tset_pr_entries()
   hp4c.gen_tset_pipeline_entries()
-  hp4c.write_output()
-  #code.interact(local=locals())
+  #hp4c.write_output()
+  code.interact(local=locals())
 
 if __name__ == '__main__':
   main()
