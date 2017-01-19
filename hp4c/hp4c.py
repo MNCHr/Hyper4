@@ -69,6 +69,7 @@ class HP4C:
     self.ps_to_pc = {}
     self.pc_to_ps = {}
     self.pc_to_preceding_pcs = {}
+    self.vbits = {}
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
@@ -237,7 +238,12 @@ class HP4C:
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
     self.process_parse_state(parse_state, pc_state)
-  
+
+    curr_pc_state = pc_state
+    if curr_pc_state == 0:
+      curr_pc_state += 1
+      self.pc_to_preceding_pcs[curr_pc_state] = []
+
     # traverse parse tree
     next_states = []
     next_states_pcs = {}
@@ -248,9 +254,6 @@ class HP4C:
       else:
         return
     elif parse_state.return_statement[RETURN_TYPE] == 'select':
-      curr_pc_state = pc_state
-      if curr_pc_state == 0:
-        curr_pc_state += 1
       self.next_pc_states[curr_pc_state] = []
       # return_statement[CASE_ENTRIES]: list of tuples (see case_entry below)
       for case_entry in parse_state.return_statement[CASE_ENTRIES]:
@@ -370,20 +373,6 @@ class HP4C:
                                        []))
       bound += 10
 
-  def fill_valid_bits(self, pc_state):
-    '''
-    for call in parse_state.call_sequence:
-      if call[0].value != 'extract':
-        print("ERROR: unsupported call %s" % call[0].value)
-        exit()
-      # update field_offsets, numbits
-      for field in call[1].fields:
-        self.field_offsets[call[1].name + '.' + field.name] = self.offset
-        self.offset += field.width # advance current offset
-        numbits += field.width
-    '''
-    return 0
-
   def gen_tset_pipeline_entries(self):
     # USEFUL DATA STRUCTURES:
     # self.ps_to_pc = {p4_parse_state : pc_state}
@@ -407,17 +396,17 @@ class HP4C:
     for ingress_ps in self.h.p4_ingress_ptr[first_table]:
       for pc_state in self.ps_to_pc[ingress_ps]:
         pc_headers[pc_state] = []
-
+        #code.interact(local=locals())
         for prec_pc in self.pc_to_preceding_pcs[pc_state]:
           ps = self.pc_to_ps[prec_pc]
           for call in ps.call_sequence:
             if call[0].value != 'extract':
-              print("ERROR (fill_valid_bits): unsupported call %s" % call[0].value)
+              print("ERROR (gen_tset_pipeline_entries): unsupported call %s" % call[0].value)
               exit()
             pc_headers[pc_state].append(call[1])
         for call in ingress_ps.call_sequence:
           if call[0].value != 'extract':
-            print("ERROR (fill_valid_bits): unsupported call %s" % call[0].value)
+            print("ERROR (gen_tset_pipeline_entries): unsupported call %s" % call[0].value)
             exit()
           pc_headers[pc_state].append(call[1])
 
@@ -434,14 +423,14 @@ class HP4C:
 
     # extracted.validbits is 80b wide
     # vbits: {(level (int), header name (str)): number (binary)}
-    vbits = {}
+    #vbits = {}
     lshift = 80
     for j in range(longest):
       numbits = len(headerset[j])
       lshift = lshift - numbits
       i = 1
       for header in headerset[j]:
-        vbits[(j, header)] = i << lshift
+        self.vbits[(j, header)] = i << lshift
         i = i << 1
 
     field_match = first_table.match_fields[0]
@@ -456,7 +445,7 @@ class HP4C:
       for pc_state in self.ps_to_pc[ps]:
         val = 0
         for i in range(len(pc_headers[pc_state])):
-          val = val | vbits[(i, pc_headers[pc_state][i])]
+          val = val | self.vbits[(i, pc_headers[pc_state][i])]
         valstr = '0x' + '%x' % val
 
         self.commands.append(HP4_Command("table_add",
@@ -479,8 +468,8 @@ def main():
   hp4c.gen_tset_inspect_entries()
   hp4c.gen_tset_pr_entries()
   hp4c.gen_tset_pipeline_entries()
-  #hp4c.write_output()
-  code.interact(local=locals())
+  hp4c.write_output()
+  #code.interact(local=locals())
 
 if __name__ == '__main__':
   main()

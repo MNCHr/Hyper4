@@ -48,7 +48,7 @@ action set_nhop(nhop_ipv4, port) {
 
 table ipv4_lpm {
     reads {
-        ipv4.dstAddr : lpm;
+        ipv4.dstAddr : exact;
     }
     actions {
         set_nhop;

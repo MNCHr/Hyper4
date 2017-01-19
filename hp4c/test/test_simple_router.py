@@ -9,6 +9,7 @@ class TestSimpleRouter:
   hp4compiler.gen_tset_control_entries()
   hp4compiler.gen_tset_inspect_entries()
   hp4compiler.gen_tset_pr_entries()
+  hp4compiler.gen_tset_pipeline_entries()
   expected = []
   fin = open('test/expected_outputs/simple_router.hp4t', 'r')
   for line in fin:

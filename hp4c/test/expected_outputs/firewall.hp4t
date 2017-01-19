@@ -13,3 +13,7 @@ table_set_default tset_pr_20_29 a_pr_import_20_29
 table_set_default tset_pr_30_39 a_pr_import_30_39
 table_set_default tset_pr_40_49 a_pr_import_40_49
 table_set_default tset_pr_50_59 a_pr_import_50_59
+table_add tset_pipeline a_set_pipeline [program ID] 4 => [EXTRACTED_EXACT] 0xe0000000000000000000
+table_add tset_pipeline a_set_pipeline [program ID] 1 => [EXTRACTED_EXACT] 0x80000000000000000000
+table_add tset_pipeline a_set_pipeline [program ID] 3 => [EXTRACTED_EXACT] 0xd0000000000000000000
+table_add tset_pipeline a_set_pipeline [program ID] 2 => [EXTRACTED_EXACT] 0xc0000000000000000000
