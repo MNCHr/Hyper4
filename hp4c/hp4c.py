@@ -269,7 +269,7 @@ class HP4C:
             pc_state += 1
             next_states_pcs[next_state] = pc_state
 
-            #TODO: track preceding pc_states
+            # track preceding pc_states
             if self.pc_to_preceding_pcs.has_key(curr_pc_state) is False:
               self.pc_to_preceding_pcs[curr_pc_state] = []
             self.pc_to_preceding_pcs[pc_state] = self.pc_to_preceding_pcs[curr_pc_state] + [curr_pc_state]
@@ -325,8 +325,6 @@ class HP4C:
         self.pc_bits_extracted[1] = self.pc_bits_extracted[0]
         self.pc_bits_extracted[0] = self.args.seb * 8
         self.pc_action[1] = self.pc_action[0]
-        # TODO: eliminate this line?  Don't think it does anything useful
-        #self.pc_action[0] = "[EXTRACT_MORE]"
 
       else:
         self.commands.append(HP4_Command("table_add",
@@ -372,9 +370,67 @@ class HP4C:
                                        []))
       bound += 10
 
-  # TODO: write this method.
+  def fill_valid_bits(self, pc_state):
+    
+          
+      '''
+for call in parse_state.call_sequence:
+      if call[0].value != 'extract':
+        print("ERROR: unsupported call %s" % call[0].value)
+        exit()
+      # update field_offsets, numbits
+      for field in call[1].fields:
+        self.field_offsets[call[1].name + '.' + field.name] = self.offset
+        self.offset += field.width # advance current offset
+        numbits += field.width
+      '''
+    return 0
+
   def gen_tset_pipeline_entries(self):
-    pass
+    # USEFUL DATA STRUCTURES:
+    # self.ps_to_pc = {p4_parse_state : pc_state}
+    # self.pc_to_ps = {pc_state : p4_parse_state}
+    # self.pc_to_preceding_pcs = {pc_state : [pc_state, ..., pc_state]}
+    # self.h.p4_ingress_ptr = {p4_table: set([p4_parse_state, ..., p4_parse_state])}
+    # self.h.p4_ingress_ptr.keys()[0].match_fields: (p4_field, MATCH_TYPE, None)
+    #    MATCH_TYPE: P4_MATCH_EXACT | ? (no doubt P4_MATCH_VALID, others)
+    #    third is probably mask
+    if len(self.h.p4_ingress_ptr.keys()) > 1:
+      print("Not yet supported: multiple entry points into ingress pipeline")
+      exit()
+    first_table = self.h.p4_ingress_ptr.keys()[0]
+    if len(first_table.match_fields) > 1:
+      print("Not yet supported: multiple field matches (table: %s)" % first_table.name)
+      exit()
+
+    # TODO: This is a complete mess at the moment because I have to abort to
+    # catch a bus, but trying to create all the valid values for extracted.validbits
+    pc_headers = {}
+    for ps in self.h.p4_ingress_ptr[first_table]:
+      pc_headers[] = []
+      for prec_pc in self.pc_to_preceding_pcs[pc_state]:
+        ps = self.pc_to_ps[prec_pc]
+        for call in ps.call_sequence:
+          if call[0].value != 'extract':
+            print("ERROR (fill_valid_bits): unsupported call %s" % call[0].value)
+            exit()
+          headers.append(call[1])
+
+    field_match = first_table.match_fields[0]
+    match_type = field_match[1]
+    if match_type.value != 'P4_MATCH_EXACT':
+      print("Not yet supported: match type %s" % match_type.value)
+      exit()
+    else:
+      aparam_table_ID = '[EXTRACTED_EXACT]'
+    for ps in self.h.p4_ingress_ptr[first_table]:
+      mparam = self.ps_to_pc[ps]
+      val = fill_valid_bits(mparam)
+      self.commands.append(HP4_Command("table_add",
+                                       "tset_pipeline",
+                                       "a_set_pipeline",
+                                       ['[program ID]', str(mparam)],
+                                       [aparam_table_ID, val]))
 
   def write_output(self):
     out = open(self.args.output, 'w')
