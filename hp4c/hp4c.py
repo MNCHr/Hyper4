@@ -371,10 +371,8 @@ class HP4C:
       bound += 10
 
   def fill_valid_bits(self, pc_state):
-    
-          
-      '''
-for call in parse_state.call_sequence:
+    '''
+    for call in parse_state.call_sequence:
       if call[0].value != 'extract':
         print("ERROR: unsupported call %s" % call[0].value)
         exit()
@@ -383,7 +381,7 @@ for call in parse_state.call_sequence:
         self.field_offsets[call[1].name + '.' + field.name] = self.offset
         self.offset += field.width # advance current offset
         numbits += field.width
-      '''
+    '''
     return 0
 
   def gen_tset_pipeline_entries(self):
@@ -403,18 +401,48 @@ for call in parse_state.call_sequence:
       print("Not yet supported: multiple field matches (table: %s)" % first_table.name)
       exit()
 
-    # TODO: This is a complete mess at the moment because I have to abort to
-    # catch a bus, but trying to create all the valid values for extracted.validbits
+    # create all the valid values for extracted.validbits
     pc_headers = {}
-    for ps in self.h.p4_ingress_ptr[first_table]:
-      pc_headers[] = []
-      for prec_pc in self.pc_to_preceding_pcs[pc_state]:
-        ps = self.pc_to_ps[prec_pc]
-        for call in ps.call_sequence:
+    longest = 0
+    for ingress_ps in self.h.p4_ingress_ptr[first_table]:
+      for pc_state in self.ps_to_pc[ingress_ps]:
+        pc_headers[pc_state] = []
+
+        for prec_pc in self.pc_to_preceding_pcs[pc_state]:
+          ps = self.pc_to_ps[prec_pc]
+          for call in ps.call_sequence:
+            if call[0].value != 'extract':
+              print("ERROR (fill_valid_bits): unsupported call %s" % call[0].value)
+              exit()
+            pc_headers[pc_state].append(call[1])
+        for call in ingress_ps.call_sequence:
           if call[0].value != 'extract':
             print("ERROR (fill_valid_bits): unsupported call %s" % call[0].value)
             exit()
-          headers.append(call[1])
+          pc_headers[pc_state].append(call[1])
+
+        if len(pc_headers[pc_state]) > longest:
+          longest = len(pc_headers[pc_state])
+
+    headerset = []
+    for j in range(longest):
+      headerset.append(set())
+      
+      for pc_state in pc_headers.keys():
+        if len(pc_headers[pc_state]) > j:
+          headerset[j].add(pc_headers[pc_state][j])
+
+    # extracted.validbits is 80b wide
+    # vbits: {(level (int), header name (str)): number (binary)}
+    vbits = {}
+    lshift = 80
+    for j in range(longest):
+      numbits = len(headerset[j])
+      lshift = lshift - numbits
+      i = 1
+      for header in headerset[j]:
+        vbits[(j, header)] = i << lshift
+        i = i << 1
 
     field_match = first_table.match_fields[0]
     match_type = field_match[1]
@@ -423,14 +451,19 @@ for call in parse_state.call_sequence:
       exit()
     else:
       aparam_table_ID = '[EXTRACTED_EXACT]'
+
     for ps in self.h.p4_ingress_ptr[first_table]:
-      mparam = self.ps_to_pc[ps]
-      val = fill_valid_bits(mparam)
-      self.commands.append(HP4_Command("table_add",
-                                       "tset_pipeline",
-                                       "a_set_pipeline",
-                                       ['[program ID]', str(mparam)],
-                                       [aparam_table_ID, val]))
+      for pc_state in self.ps_to_pc[ps]:
+        val = 0
+        for i in range(len(pc_headers[pc_state])):
+          val = val | vbits[(i, pc_headers[pc_state][i])]
+        valstr = '0x' + '%x' % val
+
+        self.commands.append(HP4_Command("table_add",
+                                         "tset_pipeline",
+                                         "a_set_pipeline",
+                                         ['[program ID]', str(pc_state)],
+                                         [aparam_table_ID, valstr]))
 
   def write_output(self):
     out = open(self.args.output, 'w')
