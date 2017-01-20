@@ -155,3 +155,10 @@ OK maybe not a class but rather a couple of dictionaries.
 And in HP4C we could have a dictionary ps_to_pc where parse_state is the key and a list of pc_states is the value.
 
 With the current and preceding parse_states we could accomplish task #2.
+
+OBJECTIVE 4: generate a stage mapping for each table in the ingress pipeline
+
+Need to navigate the nodes of the ingress pipeline and figure out the mapping
+of each table application to a unique stage.  Specifically, we need to populate the table_to_stage dictionary (table is the key, stage is the value).
+
+Start with h.p4_ingress_ptr.keys()[0], the first table in the ingress pipeline.  Do a depth-first search from there, using the current table's next_ dictionary to navigate the branches according to the action invoked in the current table.  That is, for the next_ dictionary, we have a key for every possible action, and the value is the next table to be invoked.

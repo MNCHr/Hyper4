@@ -61,10 +61,12 @@ class MatchParam():
 class HP4C:
   def __init__(self, h, args):
     self.pc_bits_extracted = {}
+    # TODO: put this to use:
     self.pc_bits_extracted_curr = {}
     self.pc_action = {}
     self.field_offsets = {}
     self.offset = 0
+    # TODO: put this to use or eliminate:
     self.next_pc_states = {}
     self.ps_to_pc = {}
     self.pc_to_ps = {}
@@ -73,6 +75,7 @@ class HP4C:
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
+    self.table_to_stage = {}
     self.commands = []
     self.h = h
     self.h.build()
@@ -234,7 +237,10 @@ class HP4C:
       ret.append(str(mparam))
     return ret
 
-  
+  def walk_ingress_pipeline(self, curr_table):
+    # traverse the pipeline
+    # TODO: implement this depth-first traversal
+
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
     self.process_parse_state(parse_state, pc_state)
@@ -454,6 +460,9 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
+  def gen_stage_mappings(self):
+    self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
+
   def write_output(self):
     out = open(self.args.output, 'w')
     for command in self.commands:
@@ -468,6 +477,7 @@ def main():
   hp4c.gen_tset_inspect_entries()
   hp4c.gen_tset_pr_entries()
   hp4c.gen_tset_pipeline_entries()
+  hp4c.gen_stage_mappings()
   hp4c.write_output()
   #code.interact(local=locals())
 
