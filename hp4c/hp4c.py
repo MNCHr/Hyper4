@@ -60,6 +60,7 @@ class MatchParam():
 
 class HP4C:
   def __init__(self, h, args):
+    self.headers_hp4_type = {}
     self.pc_bits_extracted = {}
     # TODO: put this to use:
     self.pc_bits_extracted_curr = {}
@@ -85,6 +86,17 @@ class HP4C:
         print('  ' + node)
       exit()
     self.args = args
+
+  def collect_headers(self):
+    for header_key in self.h.p4_header_instances.keys():
+      header = self.h.p4_header_instances[header_key]
+      if header.name == 'standard_metadata':
+        self.headers_hp4_type[header_key] = 'standard_metadata'
+        continue
+      if header.metadata == True:
+        self.headers_hp4_type[header_key] = 'metadata'
+      else:
+        self.headers_hp4_type[header_key] = 'extracted'
 
   def gen_tset_context_entry(self):
     self.commands.append(HP4_Command("table_add",
@@ -240,6 +252,7 @@ class HP4C:
   def walk_ingress_pipeline(self, curr_table):
     # traverse the pipeline
     # TODO: implement this depth-first traversal
+    pass
 
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -402,7 +415,6 @@ class HP4C:
     for ingress_ps in self.h.p4_ingress_ptr[first_table]:
       for pc_state in self.ps_to_pc[ingress_ps]:
         pc_headers[pc_state] = []
-        #code.interact(local=locals())
         for prec_pc in self.pc_to_preceding_pcs[pc_state]:
           ps = self.pc_to_ps[prec_pc]
           for call in ps.call_sequence:
@@ -429,7 +441,6 @@ class HP4C:
 
     # extracted.validbits is 80b wide
     # vbits: {(level (int), header name (str)): number (binary)}
-    #vbits = {}
     lshift = 80
     for j in range(longest):
       numbits = len(headerset[j])
@@ -439,12 +450,21 @@ class HP4C:
         self.vbits[(j, header)] = i << lshift
         i = i << 1
 
+    # handle table_ID
+    if len(first_table.match_fields) > 1:
+      print("Not yet supported: multiple match fields (%s)" % first_table.name)
+      exit()
     field_match = first_table.match_fields[0]
+    field = field_match[0]
     match_type = field_match[1]
     if match_type.value != 'P4_MATCH_EXACT':
       print("Not yet supported: match type %s" % match_type.value)
       exit()
-    else:
+    if self.headers_hp4_type[field.instance.name] == 'standard_metadata':
+      aparam_table_ID = '[STDMETA_EXACT]'
+    elif self.headers_hp4_type[field.instance.name] == 'metadata':
+      aparam_table_ID = '[METADATA_EXACT]'
+    elif self.headers_hp4_type[field.instance.name] == 'extracted':
       aparam_table_ID = '[EXTRACTED_EXACT]'
 
     for ps in self.h.p4_ingress_ptr[first_table]:
@@ -463,6 +483,15 @@ class HP4C:
   def gen_stage_mappings(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
 
+  def build(self):
+    self.collect_headers()
+    self.gen_tset_context_entry()
+    self.gen_tset_control_entries()
+    self.gen_tset_inspect_entries()
+    self.gen_tset_pr_entries()
+    self.gen_tset_pipeline_entries()
+    self.gen_stage_mappings()
+
   def write_output(self):
     out = open(self.args.output, 'w')
     for command in self.commands:
@@ -472,12 +501,7 @@ class HP4C:
 def main():
   args = parse_args(sys.argv[1:])
   hp4c = HP4C(HLIR(args.input), args)
-  hp4c.gen_tset_context_entry()
-  hp4c.gen_tset_control_entries()
-  hp4c.gen_tset_inspect_entries()
-  hp4c.gen_tset_pr_entries()
-  hp4c.gen_tset_pipeline_entries()
-  hp4c.gen_stage_mappings()
+  hp4c.build()
   hp4c.write_output()
   #code.interact(local=locals())
 

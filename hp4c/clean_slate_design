@@ -162,3 +162,6 @@ Need to navigate the nodes of the ingress pipeline and figure out the mapping
 of each table application to a unique stage.  Specifically, we need to populate the table_to_stage dictionary (table is the key, stage is the value).
 
 Start with h.p4_ingress_ptr.keys()[0], the first table in the ingress pipeline.  Do a depth-first search from there, using the current table's next_ dictionary to navigate the branches according to the action invoked in the current table.  That is, for the next_ dictionary, we have a key for every possible action, and the value is the next table to be invoked.
+
+Requirements:
+- 

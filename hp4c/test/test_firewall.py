@@ -6,11 +6,7 @@ class TestFirewall:
   function = 'firewall'
   args = hp4c.parse_args(['-o', function+'.hp4t', 'test/'+function+'.p4'])
   hp4compiler = hp4c.HP4C(HLIR('test/'+function+'.p4'), args)
-  hp4compiler.gen_tset_context_entry()
-  hp4compiler.gen_tset_control_entries()
-  hp4compiler.gen_tset_inspect_entries()
-  hp4compiler.gen_tset_pr_entries()
-  hp4compiler.gen_tset_pipeline_entries()
+  hp4compiler.build()
   expected = []
   fin = open('test/expected_outputs/'+function+'.hp4t', 'r')
   for line in fin:
@@ -29,13 +25,13 @@ class TestFirewall:
     # hack to handle non-deterministic order of state handling though still correct:
     if test_input == 15 or test_input == 17:
       if self.testflags[test_input] == False:
-        if hp4compiler.commands[15].action_params == '0xe0000000000000000000':
-          if hp4compiler.commands[17].action_params == '0xd0000000000000000000':
+        if self.hp4compiler.commands[15].action_params == '0xe0000000000000000000':
+          if self.hp4compiler.commands[17].action_params == '0xd0000000000000000000':
             assert True
           else:
             assert False
-        elif hp4compiler.commands[15].action_params == '0xd0000000000000000000':
-          if hp4compiler.commands[17].action_params == '0xe0000000000000000000':
+        elif self.hp4compiler.commands[15].action_params == '0xd0000000000000000000':
+          if self.hp4compiler.commands[17].action_params == '0xe0000000000000000000':
             assert True
           else:
             assert False

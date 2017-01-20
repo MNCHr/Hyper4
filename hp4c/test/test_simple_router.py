@@ -5,11 +5,7 @@ import pytest
 class TestSimpleRouter:
   args = hp4c.parse_args(['-o', 'simple_router.hp4t', 'test/simple_router/simple_router.p4'])
   hp4compiler = hp4c.HP4C(HLIR('test/simple_router/simple_router.p4'), args)
-  hp4compiler.gen_tset_context_entry()
-  hp4compiler.gen_tset_control_entries()
-  hp4compiler.gen_tset_inspect_entries()
-  hp4compiler.gen_tset_pr_entries()
-  hp4compiler.gen_tset_pipeline_entries()
+  hp4compiler.build()
   expected = []
   fin = open('test/expected_outputs/simple_router.hp4t', 'r')
   for line in fin:
