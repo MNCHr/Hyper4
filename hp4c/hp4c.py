@@ -58,9 +58,32 @@ class MatchParam():
   def __str__(self):
     return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
 
+class Table_Rep():
+  def __init__(self, stage, match_type, source_type):
+    self.stage = stage
+    self.match_type = match_type
+    self.source_type = source_type
+    self.name = 't' + str(self.stage) + '_'
+    if source_type == 'standard_metadata':
+      self.name += 'stdmeta_'
+    elif source_type == 'metadata':
+      self.name += 'metadata_'
+    elif source_type == 'extracted':
+      self.name += 'extracted_'
+    if match_type == 'P4_MATCH_EXACT':
+      self.name += 'exact'
+    elif match_type == 'P4_MATCH_VALID':
+      self.name += 'valid'
+    elif match_type == 'P4_MATCH_TERNARY':
+      self.name += 'ternary'
+  def __str__(self):
+    return self.name
+
 class HP4C:
   def __init__(self, h, args):
     self.headers_hp4_type = {}
+    self.action_ID = {}
+    self.actionID = 1
     self.pc_bits_extracted = {}
     # TODO: put this to use:
     self.pc_bits_extracted_curr = {}
@@ -76,7 +99,8 @@ class HP4C:
     self.tics_match_offsets = {}
     self.tics_table_names = {}
     self.tics_list = []
-    self.table_to_stage = {}
+    self.stage = 1
+    self.table_to_trep = {}
     self.commands = []
     self.h = h
     self.h.build()
@@ -97,6 +121,12 @@ class HP4C:
         self.headers_hp4_type[header_key] = 'metadata'
       else:
         self.headers_hp4_type[header_key] = 'extracted'
+
+  def collect_actions(self):
+    for action in self.h.p4_actions.values():
+      if action.lineno > 0:
+        self.action_ID[action] = self.actionID
+        self.actionID += 1
 
   def gen_tset_context_entry(self):
     self.commands.append(HP4_Command("table_add",
@@ -250,9 +280,24 @@ class HP4C:
     return ret
 
   def walk_ingress_pipeline(self, curr_table):
-    # traverse the pipeline
-    # TODO: implement this depth-first traversal
-    pass
+    # headers_hp4_type[<str>]: 'standard_metadata' | 'metadata' | 'extracted'
+    match_type = curr_table.match_fields[0][1].value
+    source_type = ''
+    if (curr_table.match_fields[0][1].value == 'P4_MATCH_EXACT' or
+       curr_table.match_fields[0][1].value == 'P4_MATCH_TERNARY'):
+      source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
+    elif curr_table.match_fields[0][1].value == 'P4_MATCH_VALID':
+      source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
+    self.table_to_trep[curr_table] = Table_Rep(self.stage,
+                                               match_type,
+                                               source_type)
+    
+    for action in curr_table.next_:
+      if curr_table.next_[action] == None:
+        continue
+      else:
+        self.stage += 1
+        self.walk_ingress_pipeline(curr_table.next_[action])
 
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -485,6 +530,8 @@ class HP4C:
 
   def build(self):
     self.collect_headers()
+    self.collect_actions()
+    code.interact(local=locals())
     self.gen_tset_context_entry()
     self.gen_tset_control_entries()
     self.gen_tset_inspect_entries()
