@@ -139,7 +139,7 @@ action _drop() {
 
 table tcp_src_block {
   reads {
-    tcp.src_port : ternary;
+    tcp.src_port : exact;
   }
   actions {
     _drop;
@@ -149,7 +149,7 @@ table tcp_src_block {
 
 table tcp_dst_block {
   reads {
-    tcp.dst_port : ternary;
+    tcp.dst_port : exact;
   }
   actions {
     _drop;
@@ -159,7 +159,7 @@ table tcp_dst_block {
 
 table udp_src_block {
   reads {
-    udp.src_port : ternary;
+    udp.src_port : exact;
   }
   actions {
     _drop;
@@ -169,7 +169,7 @@ table udp_src_block {
 
 table udp_dst_block {
   reads {
-    udp.dst_port : ternary;
+    udp.dst_port : exact;
   }
   actions {
     _drop;

@@ -14,6 +14,34 @@ CRITERIA = 1
 NEXT_PARSE_STATE = 1
 CASE_ENTRIES = 2
 
+primitive_ID = {'modify_field': '[MODIFY_FIELD]',
+                'add_header': '[ADD_HEADER]',
+                'copy_header': '[COPY_HEADER]',
+                'remove_header': '[REMOVE_HEADER]',
+                'modify_field_with_hash_based_offset': '[MODIFY_FIELD_WITH_HBO]',
+                'truncate': '[TRUNCATE]',
+                'drop': '[DROP]',
+                'no_op': '[NO_OP]',
+                'push': '[PUSH]',
+                'pop': '[POP]',
+                'count': '[COUNT]',
+                'execute_meter': '[METER]',
+                'generate_digest': '[GENERATE_DIGEST]',
+                'recirculate': '[RECIRCULATE]',
+                'resubmit': '[RESUBMIT]',
+                'clone_ingress_pkt_to_egress': '[CLONE_INGRESS_EGRESS]',
+                'clone_egress_pkt_to_egress': '[CLONE_EGRESS_EGRESS]',
+                'multicast': '[MULTICAST]',
+                'math_on_field': '[MATH_ON_FIELD]'}
+
+stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
+              'packet_length': '[STDMETA_PACKET_LENGTH]',
+              'egress_spec': '[STDMETA_EGRESS_SPEC]',
+              'egress_port': '[STDMETA_EGRESS_PORT]',
+              'egress_instance': '[STDMETA_EGRESS_INSTANCE]',
+              'instance_type': '[STDMETA_INSTANCE_TYPE]',
+              'clone_spec': '[STDMETA_CLONE_SPEC]'}
+
 def parse_args(args):
   parser = argparse.ArgumentParser(description='HP4 Compiler')
   parser.add_argument('input', help='path for input .p4',
@@ -76,6 +104,27 @@ class Table_Rep():
       self.name += 'valid'
     elif match_type == 'P4_MATCH_TERNARY':
       self.name += 'ternary'
+  def table_type(self):
+    if self.source_type == 'standard_metadata':
+      if self.match_type == 'P4_MATCH_EXACT':
+        return '[STDMETA_EXACT]'
+      else:
+        print("Not supported: standard_metadata with %s match type" % self.match_type)
+        exit()
+    elif self.source_type == 'metadata':
+      if self.match_type == 'P4_MATCH_EXACT':
+        return '[METADATA_EXACT]'
+      else:
+        print("Not supported: metadata with %s match type" % self.match_type)
+        exit()
+    elif self.source_type == 'extracted':
+      if self.match_type == 'P4_MATCH_EXACT':
+        return '[EXTRACTED_EXACT]'
+      elif self.match_type == 'P4_MATCH_VALID':
+        return '[EXTRACTED_VALID]'
+      else:
+        print("Not supported: extracted with %s match type" % self.match_type)
+        exit()
   def __str__(self):
     return self.name
 
@@ -525,19 +574,81 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
-  def gen_stage_mappings(self):
+  def gen_tX_templates(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
+
+    for table in self.table_to_trep:
+      tname = str(self.table_to_trep[table])
+      aname = 'init_program_state'
+      if self.table_to_trep[table].source_type == 'standard_metadata':
+        aname = 'set_meta_stdmeta'
+      match_params = ['[program ID]']
+      if len(table.match_fields) > 1:
+        print("Not yet supported: more than 1 match field (table: %s)" % table.name)
+        exit()
+      if table.match_fields[0][1].value == 'P4_MATCH_VALID':
+        # TODO: handle match_params using extracted.validbits / self.vbits
+        match_params.append('1&&&[mask]')
+        
+      elif table.match_fields[0][1].value == 'P4_MATCH_EXACT':
+        field = table.match_fields[0][0]
+        if field.instance.name == 'standard_metadata':
+          aparams = [stdmeta_ID[field.name]]
+        else:
+          mp = '[val]&&&0x'
+          offset = self.field_offsets[str(field)]
+          for i in range(offset / 8):
+            mp += '00'
+          bits_left = field.width
+          while bits_left > 0:
+            byte = 0
+            bit = 0b10000000 >> (offset % 8)
+            if bits_left >= 8 - (offset % 8):
+              for i in range(8 - (offset % 8)):
+                byte = byte | bit
+                bit = bit >> 1
+                bits_left = bits_left - (8 - (offset % 8))
+            else:
+              for i in range(bits_left):
+                byte = byte | bit
+                bit = bit >> 1
+                bits_left = 0
+            mp += hex(byte)[2:]
+          match_params.append(mp)
+      # need a distinct template entry for every possible action
+      for action in table.next_.keys():
+        if aname == 'init_program_state':
+          # action_ID
+          aparams = [str(self.action_ID[action])]
+          # match_ID
+          aparams.append('[match ID]')
+          # next_table
+          if table.next_[action] == None:
+            aparams.append('[DONE]')
+          else:
+            aparams.append(self.table_to_trep[table.next_[action]].table_type())
+          # primitive
+          if len(action.call_sequence) == 0:
+            aparams.append(primitive_ID['no_op'])
+          else:
+            aparams.append(primitive_ID[action.call_sequence[0][0].name])
+        self.commands.append(HP4_Command("table_add",
+                                          tname,
+                                          aname,
+                                          match_params,
+                                          aparams))
+      
+    code.interact(local=locals())
 
   def build(self):
     self.collect_headers()
     self.collect_actions()
-    code.interact(local=locals())
     self.gen_tset_context_entry()
     self.gen_tset_control_entries()
     self.gen_tset_inspect_entries()
     self.gen_tset_pr_entries()
     self.gen_tset_pipeline_entries()
-    self.gen_stage_mappings()
+    self.gen_tX_templates()
 
   def write_output(self):
     out = open(self.args.output, 'w')

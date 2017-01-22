@@ -166,7 +166,10 @@ Requirements:
   - template for value string representing 100B: '[val]'
   - mask string representing field location within extracted.data (100B)
 - action_params:
-  - action_ID: 
+  - action_ID: retrieve from action_ID[action]
+  - match_ID: unique # for every entry
+  - next_table: nt = curr_table.next_[action], then table_to_trep[nt].stage
+  - primitive: primitive_ID[action.call_sequence[0][0].name]
 
 action init_program_state(action_ID, match_ID, next_table, primitive, primitive_subtype) {
   modify_field(meta_primitive_state.action_ID, action_ID);
@@ -193,3 +196,16 @@ Need to navigate the nodes of the ingress pipeline and figure out the mapping
 of each table application to a unique stage.  Specifically, we need to populate the table_to_trep dictionary (table is the key, Table_Rep is the value).
 
 Start with h.p4_ingress_ptr.keys()[0], the first table in the ingress pipeline.  Do a depth-first search from there, using the current table's next_ dictionary to navigate the branches according to the action invoked in the current table.  That is, for the next_ dictionary, we have a key for every possible action, and the value is the next table to be invoked.
+
+The mask string:  Need '0x' and 200 characters following, two for every byte.  First we get the offset via field_offsets[str(field)].  Divide offset by 8 to get the number of leading '00s' and append these to the string mp we are building.
+
+Now if offset % 8 == 0 and field.width % 8 == 0, the task is simple: for field.width / 8, append '00'.  Otherwise we need to do a bit more work.
+
+Algorithm:
+  We start with bits_left = field.width bits to represent.  Then loop until bits_left == 0:
+
+  Set curr_byte to 0 and set bit to 0b10000000.
+
+  In the current byte, there will be some offset % 8 leading 0 bits.  Shift bit right by this many.  Next step depends on whether bits_left >= 8 - (offset % 8); if so, we then have 8 - (offset % 8) 1 bits (inner loop: curr_byte = curr_byte | bit; bit = bit >> 1) and set bits_left to bits_left - (8 - (offset % 8)).  If not, we have bits_left 1 bits (inner loop as in other case) and we set bits_left to 0.  We can calculate the hex representation of the resulting byte and append it to mp.  If we have bits_left > 0, we can then shift offset:
+  offset = offset + 8 - (offset % 8).
+Otherwise we are done.
