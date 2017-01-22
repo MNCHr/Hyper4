@@ -597,8 +597,10 @@ class HP4C:
         else:
           mp = '[val]&&&0x'
           offset = self.field_offsets[str(field)]
+          bytes_written = 0
           for i in range(offset / 8):
             mp += '00'
+            bytes_written += 1
           bits_left = field.width
           while bits_left > 0:
             byte = 0
@@ -607,13 +609,18 @@ class HP4C:
               for i in range(8 - (offset % 8)):
                 byte = byte | bit
                 bit = bit >> 1
-                bits_left = bits_left - (8 - (offset % 8))
+              bits_left = bits_left - (8 - (offset % 8))
+              offset = offset + 8 - (offset % 8)
             else:
               for i in range(bits_left):
                 byte = byte | bit
                 bit = bit >> 1
-                bits_left = 0
+              bits_left = 0
             mp += hex(byte)[2:]
+            bytes_written += 1
+          while bytes_written < 100:
+            mp += '00'
+            bytes_written += 1
           match_params.append(mp)
       # need a distinct template entry for every possible action
       for action in table.next_.keys():
