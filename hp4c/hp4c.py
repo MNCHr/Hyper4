@@ -586,10 +586,17 @@ class HP4C:
       if len(table.match_fields) > 1:
         print("Not yet supported: more than 1 match field (table: %s)" % table.name)
         exit()
+      match_params_list = []
       if table.match_fields[0][1].value == 'P4_MATCH_VALID':
-        # TODO: handle match_params using extracted.validbits / self.vbits
-        match_params.append('1&&&[mask]')
-        
+        mp = '0x01&&&'
+        # self.vbits[(level, header_instance)]
+        hinst = table.match_fields[0][0]
+        for key in self.vbits.keys():
+          if hinst == key[1]:
+            mp += format(self.vbits[key], '#x')
+            temp_match_params = list(match_params)
+            temp_match_params.append(mp)
+            match_params_list.append(temp_match_params)
       elif table.match_fields[0][1].value == 'P4_MATCH_EXACT':
         field = table.match_fields[0][0]
         if field.instance.name == 'standard_metadata':
@@ -622,28 +629,30 @@ class HP4C:
             mp += '00'
             bytes_written += 1
           match_params.append(mp)
+        match_params_list.append(match_params)
       # need a distinct template entry for every possible action
-      for action in table.next_.keys():
-        if aname == 'init_program_state':
-          # action_ID
-          aparams = [str(self.action_ID[action])]
-          # match_ID
-          aparams.append('[match ID]')
-          # next_table
-          if table.next_[action] == None:
-            aparams.append('[DONE]')
-          else:
-            aparams.append(self.table_to_trep[table.next_[action]].table_type())
-          # primitive
-          if len(action.call_sequence) == 0:
-            aparams.append(primitive_ID['no_op'])
-          else:
-            aparams.append(primitive_ID[action.call_sequence[0][0].name])
-        self.commands.append(HP4_Command("table_add",
-                                          tname,
-                                          aname,
-                                          match_params,
-                                          aparams))
+      for mparams in match_params_list:
+        for action in table.next_.keys():
+          if aname == 'init_program_state':
+            # action_ID
+            aparams = [str(self.action_ID[action])]
+            # match_ID
+            aparams.append('[match ID]')
+            # next_table
+            if table.next_[action] == None:
+              aparams.append('[DONE]')
+            else:
+              aparams.append(self.table_to_trep[table.next_[action]].table_type())
+            # primitive
+            if len(action.call_sequence) == 0:
+              aparams.append(primitive_ID['no_op'])
+            else:
+              aparams.append(primitive_ID[action.call_sequence[0][0].name])
+          self.commands.append(HP4_Command("table_add",
+                                            tname,
+                                            aname,
+                                            mparams,
+                                            aparams))
       
     code.interact(local=locals())
 
