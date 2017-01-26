@@ -58,7 +58,9 @@ run\_demo\_three.sh
 
 ### Utilities
 
-run\_nano.sh: This runs a modified version of Barefoot Networks' nano message
+#### run_nano.sh
+
+This runs a modified version of Barefoot Networks' nano message
 client, which connects to bmv2's nano service and outputs events (packet
 ingress events, table matches, actions, et cetera).  Some of the demos
 employ multiple switches, so by adding the appropriate integer as a command
@@ -75,6 +77,13 @@ Typical usage involves redirecting stdout to a file:
 We then fire a packet in mininet (e.g., h1 ping h2 -c 1 -W 1), return to the
 terminal running nano, and CTRL-C to stop it.  At this point we can open
 the text file for analysis.
+
+#### cleanup.sh
+
+This script kills all running bmv2 processes and cleans up corrupt mininet
+and bmv2 state.  This fixes incorrect behaviors that sometimes occur after
+mininet was not shut down cleanly (the usual but not exclusive cause of
+such behaviors).
 
 ## Background
 

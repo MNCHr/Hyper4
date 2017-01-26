@@ -110,4 +110,3 @@ table_add t_multicast _no_op 3 0 0 0&&&0 => 1
 table_add csum16 _no_op 3 =>
 table_add t_link _no_op 3 1 =>
 table_add t_link _no_op 3 2 =>
-table_add t_link a_physical_egress 3 65 =>

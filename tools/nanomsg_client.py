@@ -411,7 +411,7 @@ def recv_msgs():
         except:
             print "Unknown msg type", msg_type
             continue
-        if p.type_str == "PACKET_IN" or p.type_str == "TABLE_HIT" or p.type_str == "PACKET_OUT": 
+        if p.type_str == "PACKET_IN" or p.type_str == "TABLE_HIT" or p.type_str == "TABLE_MISS" or p.type_str == "PACKET_OUT": 
           p.extract()
           print(p)
 
