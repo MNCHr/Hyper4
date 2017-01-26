@@ -11,7 +11,7 @@ Execution as follows:
 
 1. Invoke the demo:
    ```
-   ./run_demo_one.sh
+   ./run\_demo\_one.sh
    ```
 2. Try h1 ping h2 in the mininet terminal; observe failure.  The switches have
    been loaded with HyPer4 but the tables have not been populated to provide
@@ -19,8 +19,8 @@ Execution as follows:
 3. In a separate terminal (referred to hereafter as "the second terminal"),
    load the switches with configurations for A, B and C:
    ```
-   cd [path to repo]/hp4/targets/demo_one
-   ./load_s1_s2_s3.sh
+   cd [path to repo]/hp4/targets/demo\_one
+   ./load\_s1\_s2\_s3.sh
    ```
 4. Back in the mininet terminal, try pinging between all hosts; observe
    success (though in some cases duplicate packets are sent; this is an
@@ -32,7 +32,7 @@ Execution as follows:
    as ARP proxies (TODO: provide details on how to do this).
 6. Switch phases from A to B.  In the second terminal:
    ```
-   ./swap_to_B_s1_s2_s3.sh
+   ./swap\_to\_B\_s1\_s2\_s3.sh
    ```
 7. Back in the mininet terminal, try pinging between all hosts; observe
    success.
@@ -40,12 +40,12 @@ Execution as follows:
    provide details on how to do this).
 9. Switch phases from B to C.  In the second terminal:
    ```
-   ./swap_to_C_s1_s2_s3.sh
+   ./swap\_to\_C\_s1\_s2\_s3.sh
    ```
 10. Back in the mininet terminal, run the source command with a script that
     reconfigures the hosts with different IP addresses and gateways:
    ```
-   source targets/demo_one/chg_ips
+   source targets/demo\_one/chg\_ips
    ```
 11. Verify, via ifconfig, that hosts h1 and h2 are on a different subnet than
     h3 and h4 and can only communicate through a router.  Try pinging between
@@ -57,6 +57,24 @@ run\_demo\_two.sh
 run\_demo\_three.sh
 
 ### Utilities
+
+run\_nano.sh: This runs a modified version of Barefoot Networks' nano message
+client, which connects to bmv2's nano service and outputs events (packet
+ingress events, table matches, actions, et cetera).  Some of the demos
+employ multiple switches, so by adding the appropriate integer as a command
+line argument, we can specify which switch to connect to:
+```
+./run\_nano.sh [switch ID]
+```
+where switch ID corresponds to the integer to the right of the 's' in the
+name used in mininet (e.g., 1 for s1).
+Typical usage involves redirecting stdout to a file:
+```
+./run\_nano.sh [switch ID] > nano\_out.txt
+```
+We then fire a packet in mininet (e.g., h1 ping h2 -c 1 -W 1), return to the
+terminal running nano, and CTRL-C to stop it.  At this point we can open
+the text file for analysis.
 
 ## Background
 
