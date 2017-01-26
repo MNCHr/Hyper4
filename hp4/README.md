@@ -11,33 +11,61 @@ Execution as follows:
 
 1. Invoke the demo:
    ```
+   cd [path to repo]/hp4
    ./run\_demo\_one.sh
    ```
 2. Try h1 ping h2 in the mininet terminal; observe failure.  The switches have
    been loaded with HyPer4 but the tables have not been populated to provide
    HyPer4 any functionality.
 3. In a separate terminal (referred to hereafter as "the second terminal"),
-   load the switches with configurations for A, B and C:
+   load the switches with configurations for A, B and C.  It is also
+   recommended to disable the sources of non-relevant IPv6 traffic by
+   running the iface\_down script at this time:
    ```
    cd [path to repo]/hp4/targets/demo\_one
+   ./iface\_down.sh
    ./load\_s1\_s2\_s3.sh
    ```
 4. Back in the mininet terminal, try pinging between all hosts; observe
    success (though in some cases duplicate packets are sent; this is an
-   error we will eventually fix.  In any case, the error disappears once
-   we move from phase A to phase B so it is useful for quick evidence
+   error.  It should be fixed, but in any case, the error disappears once
+   we move from phase A to phase B, so it is useful for quick evidence
    that invoking the script to change phases actually changes the
    configuration of the switches.)
 5. Use xterms and wireshark to observe that the outer switches are acting
-   as ARP proxies (TODO: provide details on how to do this).
+   as ARP proxies:
+   ```
+   xterm s2
+   ```
+   The node for which we spawn the xterm is s2 here, but it actually doesn't
+   matter as long as it is s1, s2, or s3.  From the xterm:
+   ```
+   wireshark
+   ```
+   Select interfaces to monitor.  To show that the ARP proxy is working, we
+   might plan to send a ping from h1 to h3 after flushing the arp cache
+   (```h1 ip -s -s neigh flush all```) and see whether the ARP traffic is
+   ever carried on the s2-facing interface in s1, and for good measure
+   whether the ARP traffic ever appears on the s1-facing interface in s2.
+   In this case select s1-eth1, s1-eth3, and s2-eth1 and start sniffing.
+   Then, in the mininet terminal:
+   ```
+   h1 ping h3 -c 1 -W 1
+   ```
+   Observe in wireshark that the ARP traffic initiated by h1 appears on
+   s1-eth1 and is sent back out s1-eth1 and never appears on s1-eth3 or
+   s2-eth1.
 6. Switch phases from A to B.  In the second terminal:
    ```
    ./swap\_to\_B\_s1\_s2\_s3.sh
    ```
 7. Back in the mininet terminal, try pinging between all hosts; observe
    success.
-8. Use xterms and iperf to observe that s2 is acting as a firewall (TODO:
-   provide details on how to do this).
+8. Use xterms and iperf to observe that s2 is acting as a firewall:
+   ```
+   xterm s2
+   ```
+   TODO...
 9. Switch phases from B to C.  In the second terminal:
    ```
    ./swap\_to\_C\_s1\_s2\_s3.sh
@@ -84,6 +112,12 @@ This script kills all running bmv2 processes and cleans up corrupt mininet
 and bmv2 state.  This fixes incorrect behaviors that sometimes occur after
 mininet was not shut down cleanly (the usual but not exclusive cause of
 such behaviors).
+
+#### iface_down.sh
+
+This script "disconnects" interfaces to mute IPv6 traffic, though connectivity
+in mininet remains intact.  This script helps nano- and wireshark-based
+analysis by eliminating traffic that is not relevant to the HyPer4 scenario.
 
 ## Background
 
