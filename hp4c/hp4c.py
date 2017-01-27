@@ -8,6 +8,7 @@ import argparse
 import code
 import sys
 import math
+import json
 
 RETURN_TYPE = 0
 CRITERIA = 1
@@ -77,7 +78,13 @@ class TICS(HP4_Command):
     HP4_Command.__init__(self, '', '', '', [], [])
     self.curr_pc_state = 0
     self.next_pc_state = 0
-    self.next_parse_state = '' 
+    self.next_parse_state = ''
+
+class HP4_Match_Command(HP4_Command):
+  def __init__(self, source_table, source_action, command, table, action, mparams, aparams):
+    HP4_Command.__init__(self, command, table, action, mparams, aparams)
+    self.source_table = source_table
+    self.source_action = source_action
 
 class MatchParam():
   def __init__(self):
@@ -151,6 +158,7 @@ class HP4C:
     self.stage = 1
     self.table_to_trep = {}
     self.commands = []
+    self.command_templates = []
     self.h = h
     self.h.build()
     if len(self.h.p4_ingress_ptr) > 1:
@@ -648,7 +656,10 @@ class HP4C:
               aparams.append(primitive_ID['no_op'])
             else:
               aparams.append(primitive_ID[action.call_sequence[0][0].name])
-          self.commands.append(HP4_Command("table_add",
+
+          self.command_templates.append(HP4_Match_Command(table.name,
+                                            action.name,
+                                            "table_add",
                                             tname,
                                             aname,
                                             mparams,
