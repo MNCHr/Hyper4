@@ -7,6 +7,28 @@
 run\_demo\_one.sh: This demo includes three switches in a line
 s1 <-> s2 <-> s3, and four hosts, with h1 and h2 both connected to s1, and h3
 and h4 both connected to s3.  The demo involves three phases: A, B, and C.
+
+Phase A:
+* s1: arp proxy
+* s2: l2 switch
+* s3: arp proxy
+Phase B:
+* s1: l2 switch
+* s2: firewall
+* s3: l2 switch
+Phase C:
+* s1: l2 switch
+* s2: arp proxy -> firewall -> router
+* s3: l2 switch
+
+Conceptually, when you execute this demo, the switches are first loaded with
+HyPer4.  But each instance of HyPer4 does not perform a function until its
+tables are populated.  You then run a script to populate the tables such
+that each instance virtually contains all of the functions necessary for
+each phase, with the function for Phase A left active.  You run some tests
+to verify expected behavior and switch to the next phase, repeating this
+process until phase C has been evaluated.
+
 Execution as follows:
 
 1. Invoke the demo:
@@ -63,9 +85,36 @@ Execution as follows:
    success.
 8. Use xterms and iperf to observe that s2 is acting as a firewall:
    ```
-   xterm s2
+   xterm h1
+   xterm h3
    ```
-   TODO...
+   In xterm for h3, start a server:
+   ```
+   iperf -s
+   ```
+   The default is a TCP server on port 5001.  The firewall in s2 blocks
+   TCP traffic with a source port of 4000, and UDP traffic with
+   a destination port of 5000.  So TCP traffic sent to h3 from h1 now
+   should work.  In the xterm for h1, give it a try:
+   ```
+   iperf -c 10.0.0.3
+   ```
+   Now stop the server on h3 (CTRL-C) and try the configurations that
+   are blocked.  Both commands shown together (for xterm for h3):
+   ```
+   iperf -s -p 4000
+   iperf -s -p 5000 -u
+   ```
+   The corresponding commands for h1:
+   ```
+   iperf -c 10.0.0.3 -p 4000
+   iperf -c 10.0.0.3 -p 5000 -u
+   ```
+   Of course, you can try any combination of server / client so long
+   as either h1 or h2 plays one of the roles while h3 or h4 plays the
+   other role.  But feel free to try iperf between h1 and h2, and
+   between h3 and h4, to see that traffic is not blocked because the
+   firewall is at s2, not s1 or s3.
 9. Switch phases from B to C.  In the second terminal:
    ```
    ./swap\_to\_C\_s1\_s2\_s3.sh
@@ -77,9 +126,10 @@ Execution as follows:
    ```
 11. Verify, via ifconfig, that hosts h1 and h2 are on a different subnet than
     h3 and h4 and can only communicate through a router.  Try pinging between
-    all hosts (TODO: fix the bug that currently prevents traffic from routing
-    between subnets).  Use xterms and iperf to observe that s2 also employs
-    a firewall function.
+    all hosts.  Use xterms and iperf as in step 8 to observe that s2 also
+    employs a firewall function.  Use xterms and wireshark on interfaces
+    s2-eth1, s2-eth2, and s3-eth1 as in step 5 to see that s2 also employs
+    an ARP proxy function.
 
 run\_demo\_two.sh
 run\_demo\_three.sh
