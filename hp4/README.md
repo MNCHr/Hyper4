@@ -131,9 +131,46 @@ Execution as follows:
     s2-eth1, s2-eth2, and s3-eth1 as in step 5 to see that s2 also employs
     an ARP proxy function.
 
-run\_demo\_two.sh
+run\_demo\_two.sh: This demo includes one switch s1, and four hosts h1, h2,
+h3, and h4 connected to it.  The switch runs HyPer4 and is initially devoid
+of function.  When the load.sh script is run, the switch adopts a simple
+l2 switch behavior for hosts h1 and h2, and a firewall -> router composite
+behavior for hosts h3 and h4.
 
+Execution as follows:
 
+1. Invoke the demo:
+   ```
+   cd [path to repo]/hp4
+   ./run\_demo\_two.sh
+   ```
+2. Try pinging between any two hosts in the mininet terminal; observe failure.
+   The switches have been loaded with HyPer4 but the tables have not been
+   populated to provide HyPer4 any functionality.
+3. In a separate terminal (referred to hereafter as "the second terminal"),
+   load the switch with configurations for the h1, h2 side and for the h3,
+   h4 side.  It is also recommended to disable the sources of non-relevant
+   IPv6 traffic by running the iface\_down script at this time:
+   ```
+   cd [path to repo]/hp4/targets/demo\_two
+   ./iface\_down.sh
+   ./load.sh
+   ```
+4. Back in the mininet terminal, change the network configuration for h3
+   and h4 using a provided script as follows:
+   ```
+   source targets/demo\_two/chg_ips
+   ```
+   Ping between h1 and h2, and between h3 and h4 and observe success. You
+   may also try pinging between h1 or h2 and h3 or h4 to observe failure
+   as there is no bridge between the two sides.  The switch has been sliced
+   according to physical ingress ports.
+5. Use xterm and iperf to verify the firewall functions for traffic passing
+   between h3 and h4.  Follow the pattern shown in step 8 of the instructions
+   for demo one, but use xterms for h3 and h4, and use the correct IP address
+   depending on which host is selected to act as the server:
+   * h3: 10.0.1.3
+   * h4: 10.0.2.4
 
 run\_demo\_three.sh
 
