@@ -209,3 +209,46 @@ Algorithm:
   In the current byte, there will be some offset % 8 leading 0 bits.  Shift bit right by this many.  Next step depends on whether bits_left >= 8 - (offset % 8); if so, we then have 8 - (offset % 8) 1 bits (inner loop: curr_byte = curr_byte | bit; bit = bit >> 1) and set bits_left to bits_left - (8 - (offset % 8)).  If not, we have bits_left 1 bits (inner loop as in other case) and we set bits_left to 0.  We can calculate the hex representation of the resulting byte and append it to mp.  If we have bits_left > 0, we can then shift offset:
   offset = offset + 8 - (offset % 8).
 Otherwise we are done.
+
+OBJECTIVE 5: Handle entry templates for tX tables
+
+The entry templates have to go somewhere.  They are incomplete and it makes no sense to try to load them into HyPer4.  Time to introduce the DPMU.  DPMU can be thought of as a function performed by the controller allowing the user to supply table_add commands formatted for the .source P4 program, which the DPMU then converts into HyPer4 commands by using the template.
+
+To accomplish this, the simple version of the DPMU requires a file that includes the entry templates.  This file must include the association of each entry template with the corresponding table in the source program.  It must also include the association of each action_ID with the corresponding action in the source program.  Let's say the mode of use is to invoke the DPMU with such a file as a command line argument.  At the same time, we have to supply the actual program ID as a command line argument.  We finally need some way of associating each actual entry with a match ID (unique among all entries for the same table).  If DPMU were to continue running as a service in the background, we could use a set of counters, one counter for each table, tracking the number of entries the DPMU has produced for the table, and used as the match ID for the next table entry.  Otherwise, we can have the DPMU connect to the instance of HyPer4 and figure out the next match_ID to use based on how many entries are resident for the particular table.  Or we can have a separate file tracking this kind of state.  A command line flag would indicate that this file should be reset to initial values.
+
+Let's see how each would look.
+
+As a background service:
+> ./dpmu_start template_file1 template_file2 ... template_filen -p [HyPer4 port]
+[separate terminal]
+> ./dpmu [-p [DPMU port]] [-t template file program ID]* [[-c single command] | [-f file with commands]]
+
+As a static utility:
+> ./dpmu -p [HyPer4 port] [-i] [-t template file] [-P program ID]* [[-c single command] | [-f file with commands]]
+
+Static utility looks a little cleaner and is probably simpler to implement, too, but we likely want to get rid of the -i (initialize counters) option and have DPMU talk to HyPer4 to set the counters.  But the problem is we have to supply the template file every time?  How annoying is that?  Resolve this by maintaining a master template file, which is appended everytime dpmu is invoked with the -t option.  Repurpose -i for reinitializing the master template file.
+
+- [ ] Establish template file format
+- [ ] Connect to HyPer4, obtain list of all tX tables, and initialize counters
+- [ ] Read template files and set up {src_table : template} as well as
+      {src_action : action_ID} maps
+- [ ] Accept single command and convert to entry ready for loading by HyPer4
+- [ ] Accept file of multiple commands and convert to entries ready for loading
+      by HyPer4 (through hp4l)
+
+Template File Format:
+
+Use JSON.  Each file has a collection of entry_template object declarations produced
+by p4c-hp4 for a particular program.
+
+entry_template:
+- source program table name
+- HyPer4 table name
+- action (e.g., init_program_state)
+- match field width
+- mask
+- source action name
+- action ID
+- next_table
+- primitive
+- primitive subtype

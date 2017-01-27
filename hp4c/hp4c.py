@@ -654,7 +654,6 @@ class HP4C:
                                             mparams,
                                             aparams))
       
-    code.interact(local=locals())
 
   def build(self):
     self.collect_headers()
