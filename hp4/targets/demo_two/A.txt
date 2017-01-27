@@ -22,3 +22,4 @@ table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 1 => 1
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 2 => 2
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 3 => 3
 table_add t_mod_11 mod_stdmeta_egressspec_const 1 8 4 => 3
+table_add t_set_validbits _no_op 1 0 =>
