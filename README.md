@@ -70,7 +70,7 @@ Execution as follows:
 1. Invoke the demo:
    ```
    cd [path to repo]/hp4
-   ./run\_demo\_one.sh
+   ./run_demo_one.sh
    ```
 2. Try h1 ping h2 in the mininet terminal; observe failure.  The switches have
    been loaded with HyPer4 but the tables have not been populated to provide
@@ -80,9 +80,9 @@ Execution as follows:
    recommended to disable the sources of non-relevant IPv6 traffic by
    running the iface\_down script at this time:
    ```
-   cd [path to repo]/hp4/targets/demo\_one
-   ./iface\_down.sh
-   ./load\_s1\_s2\_s3.sh
+   cd [path to repo]/hp4/targets/demo_one
+   ./iface_down.sh
+   ./load_s1_s2_s3.sh
    ```
 4. Back in the mininet terminal, try pinging between all hosts; observe
    success (though in some cases duplicate packets are sent; this is an
@@ -115,7 +115,7 @@ Execution as follows:
    s2-eth1.
 6. Switch phases from A to B.  In the second terminal:
    ```
-   ./swap\_to\_B\_s1\_s2\_s3.sh
+   ./swap_to_B_s1_s2_s3.sh
    ```
 7. Back in the mininet terminal, try pinging between all hosts; observe
    success.
@@ -153,12 +153,12 @@ Execution as follows:
    firewall is at s2, not s1 or s3.
 9. Switch phases from B to C.  In the second terminal:
    ```
-   ./swap\_to\_C\_s1\_s2\_s3.sh
+   ./swap_to_C_s1_s2_s3.sh
    ```
 10. Back in the mininet terminal, run the source command with a script that
     reconfigures the hosts with different IP addresses and gateways:
    ```
-   source targets/demo\_one/chg\_ips
+   source targets/demo_one/chg_ips
    ```
 11. Verify, via ifconfig, that hosts h1 and h2 are on a different subnet than
     h3 and h4 and can only communicate through a router.  Try pinging between
@@ -178,7 +178,7 @@ Execution as follows:
 1. Invoke the demo:
    ```
    cd [path to repo]/hp4
-   ./run\_demo\_two.sh
+   ./run_demo_two.sh
    ```
 2. Try pinging between any two hosts in the mininet terminal; observe failure.
    The switches have been loaded with HyPer4 but the tables have not been
@@ -188,14 +188,14 @@ Execution as follows:
    h4 side.  It is also recommended to disable the sources of non-relevant
    IPv6 traffic by running the iface\_down script at this time:
    ```
-   cd [path to repo]/hp4/targets/demo\_two
-   ./iface\_down.sh
+   cd [path to repo]/hp4/targets/demo_two
+   ./iface_down.sh
    ./load.sh
    ```
 4. Back in the mininet terminal, change the network configuration for h3
    and h4 using a provided script as follows:
    ```
-   source targets/demo\_two/chg_ips
+   source targets/demo_two/chg_ips
    ```
    Ping between h1 and h2, and between h3 and h4 and observe success. You
    may also try pinging between h1 or h2 and h3 or h4 to observe failure
@@ -218,13 +218,13 @@ ingress events, table matches, actions, et cetera).  Some of the demos
 employ multiple switches, so by adding the appropriate integer as a command
 line argument, we can specify which switch to connect to:
 ```
-./run\_nano.sh [switch ID]
+./run_nano.sh [switch ID]
 ```
 where switch ID corresponds to the integer to the right of the 's' in the
 name used in mininet (e.g., 1 for s1).
 Typical usage involves redirecting stdout to a file:
 ```
-./run\_nano.sh [switch ID] > nano\_out.txt
+./run_nano.sh [switch ID] > nano_out.txt
 ```
 We then fire a packet in mininet (e.g., h1 ping h2 -c 1 -W 1), return to the
 terminal running nano, and CTRL-C to stop it.  At this point we can open
