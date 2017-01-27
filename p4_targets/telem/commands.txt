@@ -1,3 +1,0 @@
-table_add forward set_egr 1 => 2
-table_add forward set_egr 2 => 3
-table_add forward set_egr 3 => 1

@@ -1,8 +1,0 @@
-table_add t_act a_act 0 => 0x41414141414141414141 0xFFFFFFFFFFFFFFFFFFFF
-table_add t_act a_act 1 1 => 0x0B0000000000000000000000 0xFF0000000000000000000000
-table_add t_act a_act 1 2 => 0x160000000000000000000000 0xFF0000000000000000000000
-table_add t_act _no_op 2 1 =>
-table_add t_act _no_op 2 2 =>
-table_add fwd a_fwd 1 => 2
-table_add fwd a_fwd 2 => 1
-table_add csum16 a_ipv4_csum16 1 => 0 16

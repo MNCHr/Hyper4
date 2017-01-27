@@ -1,6 +1,0 @@
-table_add set_header a_set_header 1 => 2
-table_add set_header a_set_header 2 => 1
-table_set_default set_egress a_set_egress
-table_add check_tmeta _no_op 0xEA =>
-table_set_default check_tmeta _drop
-table_set_default set_tmeta a_set_tmeta 14 10

@@ -1,2 +1,0 @@
-table_add send_frame rewrite_mac 1 => 0x00aabb000000
-table_add send_frame rewrite_mac 2 => 0x00aabb000001

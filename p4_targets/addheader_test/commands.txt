@@ -1,6 +1,0 @@
-table_indirect_create_member t_add_header_XY_1 a_add_header_00_1
-table_indirect_create_member t_add_header_XY_1 a_add_header_00_4
-table_indirect_create_member t_add_header_XY_1 a_add_header_00_20
-table_indirect_add t_add_header_XY_1 0 0 0 => 0
-table_indirect_add t_add_header_XY_1 0 1 0 => 1
-table_indirect_add t_add_header_XY_1 0 2 0 => 2

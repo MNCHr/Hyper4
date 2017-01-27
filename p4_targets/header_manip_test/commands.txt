@@ -1,8 +1,0 @@
-table_set_default step0 a_step0_12
-table_set_default step1 a_step1
-table_set_default step2 a_pop_ext_08
-table_set_default step3 a_step3_4 0x81 0x00 0xAA 0xBB
-table_set_default step4 a_push_ext_12
-table_set_default step5 a_step5_12
-table_add fwd a_fwd 1 => 2
-table_add fwd a_fwd 2 => 1

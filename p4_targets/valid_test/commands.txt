@@ -1,2 +1,0 @@
-table_add test _no_op 0 =>
-table_add test _no_op 1 =>

@@ -1,7 +1,0 @@
-/build
-/.*_ts
-/dependmodules.x
-/hobfs.mk
-/*.pcap
-/hobfs
-/tests/pd_thrift

@@ -1,6 +1,0 @@
-table_set_default t_cpy a_cpy
-table_set_default t_erase_extracted a_erase_extracted
-table_add t_fwd a_fwd 1 => 2
-table_add t_fwd a_fwd 2 => 1
-table_add t_inspect_extracted _no_op 0 =>
-table_set_default t_prep_deparse a_prep_deparse

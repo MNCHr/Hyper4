@@ -1,4 +1,0 @@
-table_add forward set_egress 1 => 2
-table_add forward set_egress 2 => 1
-table_set_default set_tmeta a_set_tmeta 42
-table_set_default check_tmeta _drop
