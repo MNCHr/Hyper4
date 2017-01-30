@@ -35,6 +35,21 @@ primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'multicast': '[MULTICAST]',
                 'math_on_field': '[MATH_ON_FIELD]'}
 
+prim_subtype_ID = {('meta', 'ingress_port'): '1',
+                   ('meta', 'packet_length'): '2',
+                   ('meta', 'egress_spec'): '3',
+                   ('meta', 'egress_port'): '4',
+                   ('meta', 'egress_instance'): '5',
+                   ('meta', 'instance_type'): '6',
+                   ('egress_spec', 'meta'): '7',
+                   ('meta', 'const'): '8',
+                   ('egress_spec', 'const'): '9',
+                   ('ext', 'const'): '10',
+                   ('egress_spec', 'ingress_port'): '11',
+                   ('ext', 'ext'): '12',
+                   ('meta', 'ext'): '13',
+                   ('ext', 'meta'): '14'}
+
 stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
               'packet_length': '[STDMETA_PACKET_LENGTH]',
               'egress_spec': '[STDMETA_EGRESS_SPEC]',
@@ -664,7 +679,10 @@ class HP4C:
             else:
               aparams.append(primitive_ID[action.call_sequence[0][0].name])
             # primitive_subtype
-              # TODO:
+            if len(action.call_sequence) > 0:
+              aparams.append(get_prim_subtype(action.call_sequence[0]))
+            else:
+              aparams.append('0')
 
           self.command_templates.append(HP4_Match_Command(table.name,
                                             action.name,
@@ -697,7 +715,10 @@ class HP4C:
             else:
               stdm_aparams.append(primitive_ID[action.call_sequence[0][0].name])
             #   primitive_subtype
-              # TODO:
+            if len(action.call_sequence) > 0:
+              stdm_aparams.append(get_prim_subtype(action.call_sequence[0]))
+            else:
+              stdm_aparams.append('0')
 
             self.command_templates.append(HP4_Match_Command(table.name,
                                               action.name,
@@ -706,6 +727,42 @@ class HP4C:
                                               stdm_aname,
                                               stdm_mparams,
                                               stdm_aparams))
+  # primitive_call: (p4_action, [list of parameters])
+  def get_prim_subtype(self, call):
+    if call[0].name == 'drop':
+      return '0'
+    elif call[0].name == 'add_to_field':
+      # TODO:
+      print("Not yet supported: add_to_field")
+      exit()
+    elif call[0].name == 'modify_field':
+      first = 0
+      second = 0
+      if call[1][0].instance.metadata == True:
+        if call[1][0].instance.name == 'standard_metadata':
+          if prim[1][0].name == 'egress_spec':
+            first = prim[1][0].name
+          else:
+            print("ERROR: Unexpected stdmeta field %s as dst in modify_field primitive" % prim[1][0].name)
+            exit()
+        else: # user-defined metadata
+          first = 'meta'
+      else: # parsed representation
+        first = 'ext'
+      if type(prim[1][1]) is int:
+        second = 'const'
+      elif type(prim[1][1]) is p4_hlir.hlir.p4_headers.p4_field:
+        if prim[1][1].instance.metadata == True:
+          if prim[1][1].instance.name == 'standard_metadata':
+            second = prim[1][1].name
+          else:
+            second = 'meta'
+        else:
+          second = 'ext'
+      else:
+        print("ERROR: Unexpected type %s as src in modify_field call" % type(prim[1][1]))
+        exit()
+      return prim_subtype_ID[first, second]
 
   def build(self):
     self.collect_headers()
