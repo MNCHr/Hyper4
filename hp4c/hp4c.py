@@ -33,7 +33,7 @@ primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'clone_ingress_pkt_to_egress': '[CLONE_INGRESS_EGRESS]',
                 'clone_egress_pkt_to_egress': '[CLONE_EGRESS_EGRESS]',
                 'multicast': '[MULTICAST]',
-                'math_on_field': '[MATH_ON_FIELD]'}
+                'add_to_field': '[MATH_ON_FIELD]'}
 
 prim_subtype_ID = {('meta', 'ingress_port'): '1',
                    ('meta', 'packet_length'): '2',
@@ -732,9 +732,21 @@ class HP4C:
     if call[0].name == 'drop':
       return '0'
     elif call[0].name == 'add_to_field':
-      # TODO:
-      print("Not yet supported: add_to_field")
-      exit()
+      if type(call[1][0]) is p4_hlir.hlir.p4_headers.p4_field:
+        if call[1][0].instance.metadata == True:
+          print("Not supported: metadata (%s) as dst field in add_to_field" %  call[1][0].instance.name)
+          exit()
+        else:
+          if type(call[1][1]) is int:
+            if call[1][1] < 0:
+              # TODO: primitive subtype should indicate subtraction
+            else:
+              # TODO: primitive subtype should indicate addition
+          else:
+            # TODO: error, unsupported
+      else:
+        print("ERROR: dst field type %s in add_to_field" % type(call[1][0]))
+        exit()
     elif call[0].name == 'modify_field':
       first = 0
       second = 0
