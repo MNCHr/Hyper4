@@ -671,7 +671,37 @@ class HP4C:
                                             aname,
                                             mparams,
                                             aparams))
-      
+          if aname == 'set_meta_stdmeta':
+            # Need an entirely new command template since stdmeta matching is
+            #  handled in two steps, vs other types of matching in one step.
+            stdm_tname = ('t' + str(self.table_to_trep[table].stage) +
+                         '_stdmeta_' + table.match_fields[0][0].name)
+            stdm_aname = 'init_program_state'
+            # MATCH PARAMS:
+            stdm_mparams = ['[program ID]', '[val]']
+            # ACTION PARAMS:
+            #   action_ID
+            stdm_aparams = [str(self.action_ID[action])]
+            #   match_ID
+            stdm_aparams.append('[match ID]')
+            #   next_table
+            if table.next_[action] == None:
+              stdm_aparams.append('[DONE]')
+            else:
+              stdm_aparams.append(self.table_to_trep[table.next_[action]].table_type())
+            #   primitive
+            if len(action.call_sequence) == 0:
+              stdm_aparams.append(primitive_ID['no_op'])
+            else:
+              stdm_aparams.append(primitive_ID[action.call_sequence[0][0].name])
+
+            self.command_templates.append(HP4_Match_Command(table.name,
+                                              action.name,
+                                              "table_add",
+                                              stdm_tname,
+                                              stdm_aname,
+                                              stdm_mparams,
+                                              stdm_aparams))
 
   def build(self):
     self.collect_headers()
