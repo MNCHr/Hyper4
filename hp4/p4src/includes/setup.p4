@@ -14,7 +14,7 @@ setup.p4:
 - Set program and first table
 */
 
-action a_norm_SEB() {
+action a_pr_import_SEB() {
   modify_field(extracted.data, extracted.data + (ext[0].data << 792));
   modify_field(extracted.data, extracted.data + (ext[1].data << 784));
   modify_field(extracted.data, extracted.data + (ext[2].data << 776));
@@ -37,13 +37,13 @@ action a_norm_SEB() {
   modify_field(extracted.data, extracted.data + (ext[19].data << 640));
 }
 
-table t_norm_SEB {
+table tset_pr_SEB {
   actions {
-    a_norm_SEB;
+    a_pr_import_SEB;
   }
 }
 
-action a_norm_20_39() {
+action a_pr_import_20_39() {
   modify_field(extracted.data, extracted.data + (ext[20].data << 632));
   modify_field(extracted.data, extracted.data + (ext[21].data << 624));
   modify_field(extracted.data, extracted.data + (ext[22].data << 616));
@@ -66,13 +66,13 @@ action a_norm_20_39() {
   modify_field(extracted.data, extracted.data + (ext[39].data << 480));
 }
 
-table t_norm_20_39 {
+table tset_pr_20_39 {
   actions {
-    a_norm_20_39;
+    a_pr_import_20_39;
   }
 }
 
-action a_norm_40_59() {
+action a_pr_import_40_59() {
   modify_field(extracted.data, extracted.data + (ext[40].data << 472));
   modify_field(extracted.data, extracted.data + (ext[41].data << 464));
   modify_field(extracted.data, extracted.data + (ext[42].data << 456));
@@ -95,13 +95,13 @@ action a_norm_40_59() {
   modify_field(extracted.data, extracted.data + (ext[59].data << 320));
 }
 
-table t_norm_40_59 {
+table tset_pr_40_59 {
   actions {
-    a_norm_40_59;
+    a_pr_import_40_59;
   }
 }
 
-action a_norm_60_79() {
+action a_pr_import_60_79() {
   modify_field(extracted.data, extracted.data + (ext[60].data << 312));
   modify_field(extracted.data, extracted.data + (ext[61].data << 304));
   modify_field(extracted.data, extracted.data + (ext[62].data << 296));
@@ -124,13 +124,13 @@ action a_norm_60_79() {
   modify_field(extracted.data, extracted.data + (ext[79].data << 160));
 }
 
-table t_norm_60_79 {
+table tset_pr_60_79 {
   actions {
-    a_norm_60_79;
+    a_pr_import_60_79;
   }
 }
 
-action a_norm_80_99() {
+action a_pr_import_80_99() {
   modify_field(extracted.data, extracted.data + (ext[80].data << 152));
   modify_field(extracted.data, extracted.data + (ext[81].data << 144));
   modify_field(extracted.data, extracted.data + (ext[82].data << 136));
@@ -153,9 +153,9 @@ action a_norm_80_99() {
   modify_field(extracted.data, extracted.data + (ext[99].data << 0));
 }
 
-table t_norm_80_99 {
+table tset_pr_80_99 {
   actions {
-    a_norm_80_99;
+    a_pr_import_80_99;
   }
 }
 
@@ -164,7 +164,7 @@ action set_program(program, virt_ingress_port) {
   modify_field(meta_ctrl.virt_ingress_port, virt_ingress_port);
 }
 
-table t_prog_select {
+table tset_context {
   reads {
     standard_metadata.ingress_port : exact; // range not yet supported by bmv2
     //standard_metadata.packet_length : exact; // range not yet supported by bmv2
@@ -176,13 +176,15 @@ table t_prog_select {
   }
 }
 
-action set_next_action(next_action) {
+action set_next_action(next_action, state) {
   modify_field(parse_ctrl.next_action, next_action);
+  modify_field(parse_ctrl.state, state);
 }
 
-action set_next_action_chg_program(next_action, programID) {
+action set_next_action_chg_program(next_action, state, programID) {
   modify_field(parse_ctrl.next_action, next_action);
   modify_field(meta_ctrl.program, programID);
+  modify_field(parse_ctrl.state, state);
 }
 
 field_list fl_extract_more {
@@ -193,23 +195,21 @@ field_list fl_extract_more {
 
 action extract_more(numbytes, state) {
   modify_field(parse_ctrl.numbytes, numbytes);
-  modify_field(parse_ctrl.state, state);
   modify_field(parse_ctrl.next_action, EXTRACT_MORE);
+  modify_field(parse_ctrl.state, state);
   resubmit(fl_extract_more);
 }
 
-action extract_more_chg_program(numbytes, state, programID) {
+action extract_more_chg_program(numbytes, programID) {
   modify_field(parse_ctrl.numbytes, numbytes);
-  modify_field(parse_ctrl.state, state);
   modify_field(parse_ctrl.next_action, EXTRACT_MORE);
   modify_field(meta_ctrl.program, programID);
   resubmit(fl_extract_more);
 }
 
-table parse_control {
+table tset_control {
   reads {
     meta_ctrl.program : exact;
-    parse_ctrl.numbytes : exact;
     parse_ctrl.state : exact;
   }
   actions {
@@ -220,9 +220,10 @@ table parse_control {
   }
 }
 
-table t_inspect_SEB {
+table tset_inspect_SEB {
   reads {
     meta_ctrl.program : exact;
+    parse_ctrl.state: exact;
     ext[0].data : ternary;
     ext[1].data : ternary;
     ext[2].data : ternary;
@@ -252,7 +253,7 @@ table t_inspect_SEB {
   }
 }
 
-table t_inspect_20_29 {
+table tset_inspect_20_29 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -275,7 +276,7 @@ table t_inspect_20_29 {
   }
 }
 
-table t_inspect_30_39 {
+table tset_inspect_30_39 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -298,7 +299,7 @@ table t_inspect_30_39 {
   }
 }
 
-table t_inspect_40_49 {
+table tset_inspect_40_49 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -321,7 +322,7 @@ table t_inspect_40_49 {
   }
 }
 
-table t_inspect_50_59 {
+table tset_inspect_50_59 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -344,7 +345,7 @@ table t_inspect_50_59 {
   }
 }
 
-table t_inspect_60_69 {
+table tset_inspect_60_69 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -367,7 +368,7 @@ table t_inspect_60_69 {
   }
 }
 
-table t_inspect_70_79 {
+table tset_inspect_70_79 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -390,7 +391,7 @@ table t_inspect_70_79 {
   }
 }
 
-table t_inspect_80_89 {
+table tset_inspect_80_89 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -413,7 +414,7 @@ table t_inspect_80_89 {
   }
 }
 
-table t_inspect_90_99 {
+table tset_inspect_90_99 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -436,34 +437,20 @@ table t_inspect_90_99 {
   }
 }
 
-action a_set_first_table(tableID) {
+action a_set_pipeline(tableID, val) {
   modify_field(meta_ctrl.next_table, tableID);
   modify_field(meta_ctrl.stage, NORM);
   modify_field(meta_ctrl.next_stage, 1);
-}
-
-table t_set_first_table {
-  reads {
-    meta_ctrl.program : exact;
-    parse_ctrl.state : exact;
-  }
-  actions {
-    a_set_first_table;
-  }
-}
-
-action a_set_validbits(val) {
   modify_field(extracted.validbits, val);
 }
 
-table t_set_validbits {
+table tset_pipeline {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
   }
   actions {
-    a_set_validbits;
-    _no_op;
+    a_set_pipeline;
   }
 }
 
@@ -472,7 +459,7 @@ action a_virt_ports_cleanup() {
   modify_field(meta_ctrl.virt_egress_port, 0);
 }
 
-table t_virt_filter {
+table tset_virtnet {
   reads {
     meta_ctrl.program : exact;
     meta_ctrl.virt_egress_port : exact;
@@ -488,7 +475,7 @@ action a_recirc_cleanup() {
   modify_field(meta_ctrl.clone_program, 0); // necessary b/c used at egress
 }
 
-table t_recirc_cleanup {
+table tset_recirc {
   actions {
     a_recirc_cleanup;
   }
@@ -498,58 +485,57 @@ table t_recirc_cleanup {
 control setup {
   if (meta_ctrl.stage == INIT) { //_condition_0
     if (meta_ctrl.program == 0) {
-      apply(t_prog_select);
+      apply(tset_context);
     }
     if (meta_ctrl.virt_egress_port > 0) {
-      apply(t_virt_filter);
+      apply(tset_virtnet);
       if (meta_ctrl.clone_program > 0) {
-        apply(t_recirc_cleanup);
+        apply(tset_recirc);
       }
     }
   }
-  apply(parse_control);
-  if(parse_ctrl.next_action == INSPECT_SEB) { //_condition_1
-    apply(t_inspect_SEB);
+  apply(tset_control);
+  if(parse_ctrl.next_action == INSPECT_SEB) {
+    apply(tset_inspect_SEB);
   }
-  if(parse_ctrl.next_action == INSPECT_20_29) { //_condition_2
-    apply(t_inspect_20_29);
+  if(parse_ctrl.next_action == INSPECT_20_29) {
+    apply(tset_inspect_20_29);
   }
-  if(parse_ctrl.next_action == INSPECT_30_39) { //_condition_3
-    apply(t_inspect_30_39);
+  if(parse_ctrl.next_action == INSPECT_30_39) {
+    apply(tset_inspect_30_39);
   }
-  if(parse_ctrl.next_action == INSPECT_40_49) { //_condition_4
-    apply(t_inspect_40_49);
+  if(parse_ctrl.next_action == INSPECT_40_49) {
+    apply(tset_inspect_40_49);
   }
-  if(parse_ctrl.next_action == INSPECT_50_59) { //_condition_5
-    apply(t_inspect_50_59);
+  if(parse_ctrl.next_action == INSPECT_50_59) {
+    apply(tset_inspect_50_59);
   }
-  if(parse_ctrl.next_action == INSPECT_60_69) { //_condition_6
-    apply(t_inspect_60_69);
+  if(parse_ctrl.next_action == INSPECT_60_69) {
+    apply(tset_inspect_60_69);
   }
-  if(parse_ctrl.next_action == INSPECT_70_79) { //_condition_7
-    apply(t_inspect_70_79);
+  if(parse_ctrl.next_action == INSPECT_70_79) {
+    apply(tset_inspect_70_79);
   }
-  if(parse_ctrl.next_action == INSPECT_80_89) { //_condition_8
-    apply(t_inspect_80_89);
+  if(parse_ctrl.next_action == INSPECT_80_89) {
+    apply(tset_inspect_80_89);
   }
-  if(parse_ctrl.next_action == INSPECT_90_99) { //_condition_9
-    apply(t_inspect_90_99);
+  if(parse_ctrl.next_action == INSPECT_90_99) {
+    apply(tset_inspect_90_99);
   }
-  if(parse_ctrl.next_action == PROCEED) { //_condition_10
-    apply(t_norm_SEB);
-    if(parse_ctrl.numbytes > 20) { //_condition_11
-      apply(t_norm_20_39);
-      if(parse_ctrl.numbytes > 40) { //_condition_12
-        apply(t_norm_40_59);
-        if(parse_ctrl.numbytes > 60) { //_condition_13
-          apply(t_norm_60_79);
-          if(parse_ctrl.numbytes > 80) { //_condition_14
-            apply(t_norm_80_99);
+  if(parse_ctrl.next_action == PROCEED) {
+    apply(tset_pr_SEB);
+    if(parse_ctrl.numbytes > 20) {
+      apply(tset_pr_20_39);
+      if(parse_ctrl.numbytes > 40) {
+        apply(tset_pr_40_59);
+        if(parse_ctrl.numbytes > 60) {
+          apply(tset_pr_60_79);
+          if(parse_ctrl.numbytes > 80) {
+            apply(tset_pr_80_99);
           }
         }
       }
     }
-    apply(t_set_first_table);
-    apply(t_set_validbits);
+    apply(tset_pipeline);
   }
 }

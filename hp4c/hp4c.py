@@ -663,6 +663,8 @@ class HP4C:
               aparams.append(primitive_ID['no_op'])
             else:
               aparams.append(primitive_ID[action.call_sequence[0][0].name])
+            # primitive_subtype
+              # TODO:
 
           self.command_templates.append(HP4_Match_Command(table.name,
                                             action.name,
@@ -694,6 +696,8 @@ class HP4C:
               stdm_aparams.append(primitive_ID['no_op'])
             else:
               stdm_aparams.append(primitive_ID[action.call_sequence[0][0].name])
+            #   primitive_subtype
+              # TODO:
 
             self.command_templates.append(HP4_Match_Command(table.name,
                                               action.name,

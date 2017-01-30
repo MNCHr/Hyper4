@@ -9,7 +9,6 @@ HyPer4: A P4 Program to Run Other P4 Programs
 switch_stdmeta.p4: Handles table matching: exact, using standard metadata
 */
 
-
 table t1_stdmeta_ingress_port {
   reads {
     meta_ctrl.program : exact;
@@ -170,9 +169,8 @@ table t4_stdmeta_egress_spec {
   }
 }
 
-
 control switch_stdmeta_1 {
-  if(meta_ctrl.stdmeta_ID == STDMETA_INGRESS_PORT) {  //_condition_20
+  if(meta_ctrl.stdmeta_ID == STDMETA_INGRESS_PORT) {
     apply(t1_stdmeta_ingress_port);
   }
   else if(meta_ctrl.stdmeta_ID == STDMETA_PACKET_LENGTH) {

@@ -95,7 +95,7 @@ action a_ipv4_csum16(rshift_base) {
   modify_field(extracted.data, (extracted.data & ~csum.csmask) | ((csum.final << (rshift_base + 64)) & csum.csmask));
 }
 
-table csum16 {
+table tegr_csum16 {
   reads {
     meta_ctrl.program : exact;
     // TODO: extracted.validbits : ternary

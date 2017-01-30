@@ -277,6 +277,8 @@ Two challenges:
 
 OBJECTIVE 7: generate entries for set_primitive_metadata_XY
 
+TODO: Revise.  This objective and design sketch was written for a now-superseded verion of HyPer4.  No longer do we have set_primitive_metadata_XY tables.  It is possible the thoughts below will help accommodate the new design but I haven't looked at the new design in detail.
+
 Every action is a collection of primitives, and we string the execution of them together with the use of the set_primitive_metadata_XY tables.  We need to generate the entries for these tables.
 
 For each action, we need to identify the possible stages in which it could be invoked.  Then, for every stage, we generate entries for tables set_primitive_metadata_X1 - set_primitive_metadata_Xn where n is the number of primitives and X is the stage.

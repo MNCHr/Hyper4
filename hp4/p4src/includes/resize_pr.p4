@@ -10,15 +10,15 @@ resize_pr.p4: Resize parsed representation prior to copying extracted.data to
               ext and deparsing
 */
 
-action a_resize_pr_01() { pop(ext, 100); push(ext, 1); }
-action a_resize_pr_02() { pop(ext, 100); push(ext, 2); }
-action a_resize_pr_03() { pop(ext, 100); push(ext, 3); }
-action a_resize_pr_04() { pop(ext, 100); push(ext, 4); }
-action a_resize_pr_05() { pop(ext, 100); push(ext, 5); }
-action a_resize_pr_06() { pop(ext, 100); push(ext, 6); }
-action a_resize_pr_07() { pop(ext, 100); push(ext, 7); }
-action a_resize_pr_08() { pop(ext, 100); push(ext, 8); }
-action a_resize_pr_09() { pop(ext, 100); push(ext, 9); }
+action a_resize_pr_1() { pop(ext, 100); push(ext, 1); }
+action a_resize_pr_2() { pop(ext, 100); push(ext, 2); }
+action a_resize_pr_3() { pop(ext, 100); push(ext, 3); }
+action a_resize_pr_4() { pop(ext, 100); push(ext, 4); }
+action a_resize_pr_5() { pop(ext, 100); push(ext, 5); }
+action a_resize_pr_6() { pop(ext, 100); push(ext, 6); }
+action a_resize_pr_7() { pop(ext, 100); push(ext, 7); }
+action a_resize_pr_8() { pop(ext, 100); push(ext, 8); }
+action a_resize_pr_9() { pop(ext, 100); push(ext, 9); }
 action a_resize_pr_10() { pop(ext, 100); push(ext, 10); }
 action a_resize_pr_11() { pop(ext, 100); push(ext, 11); }
 action a_resize_pr_12() { pop(ext, 100); push(ext, 12); }
@@ -111,20 +111,20 @@ action a_resize_pr_98() { pop(ext, 100); push(ext, 98); }
 action a_resize_pr_99() { pop(ext, 100); push(ext, 99); }
 action a_resize_pr_100() { pop(ext, 100); push(ext, 100); }
 
-table t_resize_pr {
+table tegr_resize_pr {
   reads {
     parse_ctrl.numbytes : exact;
   }
   actions {
-    a_resize_pr_01;
-    a_resize_pr_02;
-    a_resize_pr_03;
-    a_resize_pr_04;
-    a_resize_pr_05;
-    a_resize_pr_06;
-    a_resize_pr_07;
-    a_resize_pr_08;
-    a_resize_pr_09;
+    a_resize_pr_1;
+    a_resize_pr_2;
+    a_resize_pr_3;
+    a_resize_pr_4;
+    a_resize_pr_5;
+    a_resize_pr_6;
+    a_resize_pr_7;
+    a_resize_pr_8;
+    a_resize_pr_9;
     a_resize_pr_10;
     a_resize_pr_11;
     a_resize_pr_12;

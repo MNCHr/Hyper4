@@ -149,7 +149,9 @@ table t_math_on_field_19 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -161,7 +163,9 @@ table t_math_on_field_21 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -173,7 +177,9 @@ table t_math_on_field_22 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -185,7 +191,9 @@ table t_math_on_field_23 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -197,7 +205,9 @@ table t_math_on_field_24 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -209,7 +219,9 @@ table t_math_on_field_25 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -221,7 +233,9 @@ table t_math_on_field_26 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -233,7 +247,9 @@ table t_math_on_field_27 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -245,7 +261,9 @@ table t_math_on_field_28 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -257,7 +275,9 @@ table t_math_on_field_29 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -269,7 +289,9 @@ table t_math_on_field_31 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -281,7 +303,9 @@ table t_math_on_field_32 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -293,7 +317,9 @@ table t_math_on_field_33 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -305,7 +331,9 @@ table t_math_on_field_34 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -317,7 +345,9 @@ table t_math_on_field_35 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -329,7 +359,9 @@ table t_math_on_field_36 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -341,7 +373,9 @@ table t_math_on_field_37 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -353,7 +387,9 @@ table t_math_on_field_38 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -365,7 +401,9 @@ table t_math_on_field_39 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -377,7 +415,9 @@ table t_math_on_field_41 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -389,7 +429,9 @@ table t_math_on_field_42 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -401,7 +443,9 @@ table t_math_on_field_43 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -413,7 +457,9 @@ table t_math_on_field_44 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -425,7 +471,9 @@ table t_math_on_field_45 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -437,7 +485,9 @@ table t_math_on_field_46 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -449,7 +499,9 @@ table t_math_on_field_47 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -461,7 +513,9 @@ table t_math_on_field_48 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 
@@ -473,7 +527,9 @@ table t_math_on_field_49 {
   }
   actions {
     a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
     a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
   }
 }
 

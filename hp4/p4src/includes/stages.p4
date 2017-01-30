@@ -14,17 +14,22 @@ stages.p4: Each control function executes a single match-action stage of a
 */
 
 #include "match.p4"
-#include "action.p4"
 #include "switch_primitivetype.p4"
 
-action set_program_state(action_ID, primitive_index, stage_state, next_stage) {
+action update_state(action_ID, primitive, primitive_subtype) {
   modify_field(meta_primitive_state.action_ID, action_ID);
-  modify_field(meta_primitive_state.primitive_index, primitive_index);
-  modify_field(meta_ctrl.stage_state, stage_state);
+  modify_field(meta_primitive_state.primitive_index, 
+               meta_primitive_state.primitive_index + 1);
+  modify_field(meta_primitive_state.primitive, primitive);
+  modify_field(meta_primitive_state.subtype, primitive_subtype);
+}
+
+action finish_action(next_stage) {
   modify_field(meta_ctrl.next_stage, next_stage);
+  modify_field(meta_ctrl.stage_state, COMPLETE);
 }
 
-table set_program_state_11 {
+table tstg11_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -32,10 +37,11 @@ table set_program_state_11 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_12 {
+table tstg12_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -43,10 +49,11 @@ table set_program_state_12 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_13 {
+table tstg13_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -54,10 +61,11 @@ table set_program_state_13 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_14 {
+table tstg14_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -65,10 +73,11 @@ table set_program_state_14 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_15 {
+table tstg15_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -76,10 +85,11 @@ table set_program_state_15 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_16 {
+table tstg16_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -87,10 +97,11 @@ table set_program_state_16 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_17 {
+table tstg17_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -98,10 +109,11 @@ table set_program_state_17 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_18 {
+table tstg18_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -109,10 +121,11 @@ table set_program_state_18 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_19 {
+table tstg19_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -120,10 +133,11 @@ table set_program_state_19 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_21 {
+table tstg21_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -131,10 +145,11 @@ table set_program_state_21 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_22 {
+table tstg22_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -142,10 +157,11 @@ table set_program_state_22 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_23 {
+table tstg23_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -153,10 +169,11 @@ table set_program_state_23 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_24 {
+table tstg24_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -164,10 +181,11 @@ table set_program_state_24 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_25 {
+table tstg25_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -175,10 +193,11 @@ table set_program_state_25 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_26 {
+table tstg26_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -186,10 +205,11 @@ table set_program_state_26 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_27 {
+table tstg27_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -197,10 +217,11 @@ table set_program_state_27 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_28 {
+table tstg28_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -208,10 +229,11 @@ table set_program_state_28 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_29 {
+table tstg29_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -219,10 +241,11 @@ table set_program_state_29 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_31 {
+table tstg31_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -230,10 +253,11 @@ table set_program_state_31 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_32 {
+table tstg32_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -241,10 +265,11 @@ table set_program_state_32 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_33 {
+table tstg33_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -252,10 +277,11 @@ table set_program_state_33 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_34 {
+table tstg34_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -263,10 +289,11 @@ table set_program_state_34 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_35 {
+table tstg35_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -274,10 +301,11 @@ table set_program_state_35 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_36 {
+table tstg36_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -285,10 +313,11 @@ table set_program_state_36 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_37 {
+table tstg37_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -296,10 +325,11 @@ table set_program_state_37 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_38 {
+table tstg38_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -307,10 +337,11 @@ table set_program_state_38 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_39 {
+table tstg39_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -318,10 +349,11 @@ table set_program_state_39 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_41 {
+table tstg41_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -329,10 +361,11 @@ table set_program_state_41 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_42 {
+table tstg42_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -340,10 +373,11 @@ table set_program_state_42 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_43 {
+table tstg43_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -351,10 +385,11 @@ table set_program_state_43 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_44 {
+table tstg44_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -362,10 +397,11 @@ table set_program_state_44 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_45 {
+table tstg45_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -373,10 +409,11 @@ table set_program_state_45 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_46 {
+table tstg46_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -384,10 +421,11 @@ table set_program_state_46 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_47 {
+table tstg47_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -395,10 +433,11 @@ table set_program_state_47 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_48 {
+table tstg48_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -406,10 +445,11 @@ table set_program_state_48 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
-table set_program_state_49 {
+table tstg49_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
@@ -417,46 +457,40 @@ table set_program_state_49 {
   }
   actions {
     set_program_state;
+    finish_action;
   }
 }
 
 control stage1 {
   match_1();
-  apply(set_primitive_metadata_11);
-  switch_primitivetype_11();
-  apply(set_program_state_11);
   if(meta_ctrl.stage_state != COMPLETE) {
-    apply(set_primitive_metadata_12);
-    switch_primitivetype_12();
-    apply(set_program_state_12);
+    switch_primitivetype_11();
+    apply(tstg11_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      apply(set_primitive_metadata_13);
-      switch_primitivetype_13();
-      apply(set_program_state_13);
+      switch_primitivetype_12();
+      apply(tstg12_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        apply(set_primitive_metadata_14);
-        switch_primitivetype_14();
-        apply(set_program_state_14);
+        switch_primitivetype_13();
+        apply(tstg13_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          apply(set_primitive_metadata_15);
-          switch_primitivetype_15();
-          apply(set_program_state_15);
+          switch_primitivetype_14();
+          apply(tstg14_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            apply(set_primitive_metadata_16);
-            switch_primitivetype_16();
-            apply(set_program_state_16);
+            switch_primitivetype_15();
+            apply(tstg15_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              apply(set_primitive_metadata_17);
-              switch_primitivetype_17();
-              apply(set_program_state_17);
+              switch_primitivetype_16();
+              apply(tstg16_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                apply(set_primitive_metadata_18);
-                switch_primitivetype_18();
-                apply(set_program_state_18);
+                switch_primitivetype_17();
+                apply(tstg17_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  apply(set_primitive_metadata_19);
-                  switch_primitivetype_19();
-                  apply(set_program_state_19);
+                  switch_primitivetype_18();
+                  apply(tstg18_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_19();
+                    apply(tstg19_update_state);
+                  }
                 }
               }
             }
@@ -469,41 +503,34 @@ control stage1 {
 
 control stage2 {
   match_2();
-  apply(set_primitive_metadata_21);
-  switch_primitivetype_21();
-  apply(set_program_state_21);
   if(meta_ctrl.stage_state != COMPLETE) {
-    apply(set_primitive_metadata_22);
-    switch_primitivetype_22();
-    apply(set_program_state_22);
+    switch_primitivetype_21();
+    apply(tstg21_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      apply(set_primitive_metadata_23);
-      switch_primitivetype_23();
-      apply(set_program_state_23);
+      switch_primitivetype_22();
+      apply(tstg22_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        apply(set_primitive_metadata_24);
-        switch_primitivetype_24();
-        apply(set_program_state_24);
+        switch_primitivetype_23();
+        apply(tstg23_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          apply(set_primitive_metadata_25);
-          switch_primitivetype_25();
-          apply(set_program_state_25);
+          switch_primitivetype_24();
+          apply(tstg24_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            apply(set_primitive_metadata_26);
-            switch_primitivetype_26();
-            apply(set_program_state_26);
+            switch_primitivetype_25();
+            apply(tstg25_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              apply(set_primitive_metadata_27);
-              switch_primitivetype_27();
-              apply(set_program_state_27);
+              switch_primitivetype_26();
+              apply(tstg26_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                apply(set_primitive_metadata_28);
-                switch_primitivetype_28();
-                apply(set_program_state_28);
+                switch_primitivetype_27();
+                apply(tstg27_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  apply(set_primitive_metadata_29);
-                  switch_primitivetype_29();
-                  apply(set_program_state_29);
+                  switch_primitivetype_28();
+                  apply(tstg28_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_29();
+                    apply(tstg29_update_state);
+                  }
                 }
               }
             }
@@ -516,41 +543,34 @@ control stage2 {
 
 control stage3 {
   match_3();
-  apply(set_primitive_metadata_31);
-  switch_primitivetype_31();
-  apply(set_program_state_31);
   if(meta_ctrl.stage_state != COMPLETE) {
-    apply(set_primitive_metadata_32);
-    switch_primitivetype_32();
-    apply(set_program_state_32);
+    switch_primitivetype_31();
+    apply(tstg31_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      apply(set_primitive_metadata_33);
-      switch_primitivetype_33();
-      apply(set_program_state_33);
+      switch_primitivetype_32();
+      apply(tstg32_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        apply(set_primitive_metadata_34);
-        switch_primitivetype_34();
-        apply(set_program_state_34);
+        switch_primitivetype_33();
+        apply(tstg33_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          apply(set_primitive_metadata_35);
-          switch_primitivetype_35();
-          apply(set_program_state_35);
+          switch_primitivetype_34();
+          apply(tstg34_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            apply(set_primitive_metadata_36);
-            switch_primitivetype_36();
-            apply(set_program_state_36);
+            switch_primitivetype_35();
+            apply(tstg35_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              apply(set_primitive_metadata_37);
-              switch_primitivetype_37();
-              apply(set_program_state_37);
+              switch_primitivetype_36();
+              apply(tstg36_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                apply(set_primitive_metadata_38);
-                switch_primitivetype_38();
-                apply(set_program_state_38);
+                switch_primitivetype_37();
+                apply(tstg37_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  apply(set_primitive_metadata_39);
-                  switch_primitivetype_39();
-                  apply(set_program_state_39);
+                  switch_primitivetype_38();
+                  apply(tstg38_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_39();
+                    apply(tstg39_update_state);
+                  }
                 }
               }
             }
@@ -563,41 +583,34 @@ control stage3 {
 
 control stage4 {
   match_4();
-  apply(set_primitive_metadata_41);
-  switch_primitivetype_41();
-  apply(set_program_state_41);
   if(meta_ctrl.stage_state != COMPLETE) {
-    apply(set_primitive_metadata_42);
-    switch_primitivetype_42();
-    apply(set_program_state_42);
+    switch_primitivetype_41();
+    apply(tstg41_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      apply(set_primitive_metadata_43);
-      switch_primitivetype_43();
-      apply(set_program_state_43);
+      switch_primitivetype_42();
+      apply(tstg42_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        apply(set_primitive_metadata_44);
-        switch_primitivetype_44();
-        apply(set_program_state_44);
+        switch_primitivetype_43();
+        apply(tstg43_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          apply(set_primitive_metadata_45);
-          switch_primitivetype_45();
-          apply(set_program_state_45);
+          switch_primitivetype_44();
+          apply(tstg44_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            apply(set_primitive_metadata_46);
-            switch_primitivetype_46();
-            apply(set_program_state_46);
+            switch_primitivetype_45();
+            apply(tstg45_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              apply(set_primitive_metadata_47);
-              switch_primitivetype_47();
-              apply(set_program_state_47);
+              switch_primitivetype_46();
+              apply(tstg46_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                apply(set_primitive_metadata_48);
-                switch_primitivetype_48();
-                apply(set_program_state_48);
+                switch_primitivetype_47();
+                apply(tstg47_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  apply(set_primitive_metadata_49);
-                  switch_primitivetype_49();
-                  apply(set_program_state_49);
+                  switch_primitivetype_48();
+                  apply(tstg48_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_49();
+                    apply(tstg49_update_state);
+                  }
                 }
               }
             }

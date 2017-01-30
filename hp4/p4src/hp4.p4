@@ -67,18 +67,21 @@ table t_link {
 control ingress {
   setup();
 
-  if (meta_ctrl.stage == NORM) { //_condition_15
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { //_condition_16
-      stage1();
+  if (meta_ctrl.stage == NORM) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) {
+      stage1(); // stages.p4
     }
+
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) {
-      stage2();
+      stage2(); // stages.p4
     }
+
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) {
-      stage3();
+      stage3(); // stages.p4
     }
+
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) {
-      stage4();
+      stage4(); // stages.p4
     }
   }
   if (meta_ctrl.mc_flag == 1) {
@@ -101,7 +104,7 @@ action mod_and_clone(port) {
   clone_egress_pkt_to_egress(port, clone_fl);
 }
 
-table t_multicast {
+table tegr_multicast {
   reads {
     meta_ctrl.program : exact;
     meta_ctrl.multicast_seq_id : exact;
@@ -125,7 +128,7 @@ action a_virt_net(next_prog) {
   recirculate(fl_virt_net);
 }
 
-table t_virt_net {
+table tegr_virtnet {
   reads {
     meta_ctrl.program : exact;
     meta_ctrl.virt_egress_port : exact;
@@ -138,24 +141,24 @@ table t_virt_net {
 
 control egress {
   if(meta_ctrl.mc_flag == 1) {
-    apply(t_multicast);
+    apply(tegr_multicast);
   }
-  apply(csum16);
-  apply(t_resize_pr);
-  apply(t_prep_deparse_SEB);
-  if(parse_ctrl.numbytes > 20) { // 341
-    apply(t_prep_deparse_20_39);
-    if(parse_ctrl.numbytes > 40) { // 342
-      apply(t_prep_deparse_40_59);
-      if(parse_ctrl.numbytes > 60) { // 343
-        apply(t_prep_deparse_60_79);
-        if(parse_ctrl.numbytes > 80) { // 344
-          apply(t_prep_deparse_80_99);
+  apply(tegr_csum16); // checksums.p4
+  apply(tegr_resize_pr); // resize_pr.p4
+  apply(tegr_pr_SEB); // deparse_prep.p4 but names are different!
+  if(parse_ctrl.numbytes > 20) {
+    apply(tegr_pr_20_39);
+    if(parse_ctrl.numbytes > 40) {
+      apply(tegr_pr_40_59);
+      if(parse_ctrl.numbytes > 60) {
+        apply(tegr_pr_60_79);
+        if(parse_ctrl.numbytes > 80) {
+          apply(tegr_pr_80_99);
         }
       }
     }
   }
   if(meta_ctrl.virt_egress_port > 0) {
-    apply(t_virt_net);
+    apply(tegr_virtnet);
   }
 }
