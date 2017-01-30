@@ -260,3 +260,38 @@ hp4c.py support:
                              action, mparams, aparams
 - HP4C attribute: command_templates []
 
+OBJECTIVE 6: generate entry templates for tX_stdmeta_* tables
+
+We recognize the need for an entry in the gen_tX_templates method when we examine the source type and see that it is standard_metadata, generating an action of "set_meta_stdmeta".
+
+Each table follows the same pattern:
+- match parameter 1: [program ID]
+- match parameter 2: a distinct field in standard_metadata
+- action: init_program_state
+
+Two challenges:
+- identify the table
+  Farther down in the gen_tX_templates method, we look at the field being matched on in order to produce the correct action parameter for the set_meta_stdmeta action.  We can similarly make use of the matched field earlier in the method where we set aname = 'set_meta_stdmeta'.  Or later when we test whether aname == 'init_program_state' - add another test for aname == 'set_meta_stdmeta'.
+- collect the action parameters for init_program_state
+  - actually this is pretty simple; just follow the pattern already established for other match types.
+
+OBJECTIVE 7: generate entries for set_primitive_metadata_XY
+
+Every action is a collection of primitives, and we string the execution of them together with the use of the set_primitive_metadata_XY tables.  We need to generate the entries for these tables.
+
+For each action, we need to identify the possible stages in which it could be invoked.  Then, for every stage, we generate entries for tables set_primitive_metadata_X1 - set_primitive_metadata_Xn where n is the number of primitives and X is the stage.
+
+We see an opportunity to clean up HP4 design because currently, each such table includes the meta_primitive_state.primitive_index field as a match field, but this is redundant, because each specific table is dedicated to a specific rank within the arbitrary set of primitives for any arbitrary action.
+
+[ ] Eliminate meta_primitive_state.primitive_index from the set of match fields for all set_primitives_metadata_XY tables, in the HP4 template.
+[ ] Regenerate HP4 and do some basic sanity checks.
+[ ] Populate a data structure: {action_ID:[stage a, stage b, ...]} where the value is a list of stages from which the action could be invoked.
+[ ] For each action:
+      for each stage in the value list:
+        generate one entry per primitive in the action:
+          the table name is set_primitive_metadata_[stage][primitive rank]
+          the action is a_set_primitive_metadata
+          first match param: [program ID]
+          second match param: action ID
+
+
