@@ -49,6 +49,8 @@ def parse_args(args):
                     type=str)
   parser.add_argument('-o', '--output', help='path for output .hp4t file',
                     type=str, action="store", required=True)
+  parser.add_argument('-m', '--mt_output', help='path for match template output',
+                    type=str, action="store", default='output.hp4mt')
   parser.add_argument('-s', '--seb', help='set standard extracted bytes',
                     type=int, action="store", default=20)
   return parser.parse_args(args)
@@ -85,6 +87,11 @@ class HP4_Match_Command(HP4_Command):
     HP4_Command.__init__(self, command, table, action, mparams, aparams)
     self.source_table = source_table
     self.source_action = source_action
+
+def convert_to_builtin_type(obj):
+  d = { '__class__':obj.__class__.__name__, '__module__':obj.__module__, }
+  d.update(obj.__dict__)
+  return d
 
 class MatchParam():
   def __init__(self):
@@ -680,6 +687,9 @@ class HP4C:
     out = open(self.args.output, 'w')
     for command in self.commands:
       out.write(str(command) + '\n')
+    out.close()
+    out = open(self.args.mt_output, 'w')
+    json.dump(self.command_templates, out, default=convert_to_builtin_type, indent=2)
     out.close()
 
 def main():

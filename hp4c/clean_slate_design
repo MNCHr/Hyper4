@@ -252,3 +252,11 @@ entry_template:
 - next_table
 - primitive
 - primitive subtype
+
+hp4c.py support:
+- HP4_Match_Command
+  Subclass of HP4_Command.
+  __init__ parameters order: source_table, source_action, command, table,
+                             action, mparams, aparams
+- HP4C attribute: command_templates []
+
