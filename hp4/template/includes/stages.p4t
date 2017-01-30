@@ -25,7 +25,7 @@ table tstg[+X+][+Y+]_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }

@@ -35,20 +35,22 @@ primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'multicast': '[MULTICAST]',
                 'add_to_field': '[MATH_ON_FIELD]'}
 
-prim_subtype_ID = {('meta', 'ingress_port'): '1',
-                   ('meta', 'packet_length'): '2',
-                   ('meta', 'egress_spec'): '3',
-                   ('meta', 'egress_port'): '4',
-                   ('meta', 'egress_instance'): '5',
-                   ('meta', 'instance_type'): '6',
-                   ('egress_spec', 'meta'): '7',
-                   ('meta', 'const'): '8',
-                   ('egress_spec', 'const'): '9',
-                   ('ext', 'const'): '10',
-                   ('egress_spec', 'ingress_port'): '11',
-                   ('ext', 'ext'): '12',
-                   ('meta', 'ext'): '13',
-                   ('ext', 'meta'): '14'}
+mf_prim_subtype_ID = {('meta', 'ingress_port'): '1',
+                      ('meta', 'packet_length'): '2',
+                      ('meta', 'egress_spec'): '3',
+                      ('meta', 'egress_port'): '4',
+                      ('meta', 'egress_instance'): '5',
+                      ('meta', 'instance_type'): '6',
+                      ('egress_spec', 'meta'): '7',
+                      ('meta', 'const'): '8',
+                      ('egress_spec', 'const'): '9',
+                      ('ext', 'const'): '10',
+                      ('egress_spec', 'ingress_port'): '11',
+                      ('ext', 'ext'): '12',
+                      ('meta', 'ext'): '13',
+                      ('ext', 'meta'): '14'}
+
+a2f_prim_subtype_ID = {'add': '1', 'sub': '2'}
 
 stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
               'packet_length': '[STDMETA_PACKET_LENGTH]',
@@ -739,11 +741,12 @@ class HP4C:
         else:
           if type(call[1][1]) is int:
             if call[1][1] < 0:
-              # TODO: primitive subtype should indicate subtraction
+              return(a2f_prim_subtype_ID['sub'])
             else:
-              # TODO: primitive subtype should indicate addition
+              return(a2f_prim_subtype_ID['add'])
           else:
-            # TODO: error, unsupported
+            print("ERROR: Not supported: %s type for src field in add_to_field" % type(call[1][1]))
+            exit()
       else:
         print("ERROR: dst field type %s in add_to_field" % type(call[1][0]))
         exit()
@@ -774,7 +777,7 @@ class HP4C:
       else:
         print("ERROR: Unexpected type %s as src in modify_field call" % type(prim[1][1]))
         exit()
-      return prim_subtype_ID[first, second]
+      return mf_prim_subtype_ID[first, second]
 
   def build(self):
     self.collect_headers()

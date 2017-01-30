@@ -36,7 +36,7 @@ table tstg11_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -48,7 +48,7 @@ table tstg12_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -60,7 +60,7 @@ table tstg13_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -72,7 +72,7 @@ table tstg14_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -84,7 +84,7 @@ table tstg15_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -96,7 +96,7 @@ table tstg16_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -108,7 +108,7 @@ table tstg17_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -120,7 +120,7 @@ table tstg18_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -132,7 +132,7 @@ table tstg19_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -144,7 +144,7 @@ table tstg21_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -156,7 +156,7 @@ table tstg22_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -168,7 +168,7 @@ table tstg23_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -180,7 +180,7 @@ table tstg24_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -192,7 +192,7 @@ table tstg25_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -204,7 +204,7 @@ table tstg26_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -216,7 +216,7 @@ table tstg27_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -228,7 +228,7 @@ table tstg28_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -240,7 +240,7 @@ table tstg29_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -252,7 +252,7 @@ table tstg31_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -264,7 +264,7 @@ table tstg32_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -276,7 +276,7 @@ table tstg33_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -288,7 +288,7 @@ table tstg34_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -300,7 +300,7 @@ table tstg35_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -312,7 +312,7 @@ table tstg36_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -324,7 +324,7 @@ table tstg37_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -336,7 +336,7 @@ table tstg38_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -348,7 +348,7 @@ table tstg39_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -360,7 +360,7 @@ table tstg41_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -372,7 +372,7 @@ table tstg42_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -384,7 +384,7 @@ table tstg43_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -396,7 +396,7 @@ table tstg44_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -408,7 +408,7 @@ table tstg45_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -420,7 +420,7 @@ table tstg46_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -432,7 +432,7 @@ table tstg47_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -444,7 +444,7 @@ table tstg48_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
@@ -456,7 +456,7 @@ table tstg49_update_state {
     meta_primitive_state.primitive_index : exact;
   }
   actions {
-    set_program_state;
+    update_state;
     finish_action;
   }
 }
