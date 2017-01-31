@@ -275,24 +275,23 @@ Two challenges:
 - collect the action parameters for init_program_state
   - actually this is pretty simple; just follow the pattern already established for other match types.
 
-OBJECTIVE 7: generate entries for set_primitive_metadata_XY
+OBJECTIVE 7: generate entries for t_mod_XY
 
-TODO: Revise.  This objective and design sketch was written for a now-superseded verion of HyPer4.  No longer do we have set_primitive_metadata_XY tables.  It is possible the thoughts below will help accommodate the new design but I haven't looked at the new design in detail.
+You know what would be great?  This would also support Objective 8: a data structure with {action_ID: ([stage a, stage b, ...], [(primitive type, primitive subtype), ...])}.  Not all primitives have meaningful subtypes but that's ok.  The point is the second member of the value tuple is the sequence of primitives for the action.  And with this data structure we can methodically go through every action_ID, every invokable stage, and every call in the call sequence, generating one table entry for that combination.  We know the table name from the stage, the primitive type, and the order of the call in the call list.
 
-Every action is a collection of primitives, and we string the execution of them together with the use of the set_primitive_metadata_XY tables.  We need to generate the entries for these tables.
+OBJECTIVE 8: generate entries for tstgXY_update_state
 
-For each action, we need to identify the possible stages in which it could be invoked.  Then, for every stage, we generate entries for tables set_primitive_metadata_X1 - set_primitive_metadata_Xn where n is the number of primitives and X is the stage.
+Every action is a collection of primitives, and we string the execution of them together with the use of the tstgXY_update_state tables.  We need to generate the entries for these tables.
 
-We see an opportunity to clean up HP4 design because currently, each such table includes the meta_primitive_state.primitive_index field as a match field, but this is redundant, because each specific table is dedicated to a specific rank within the arbitrary set of primitives for any arbitrary action.
+For each action, we need to identify the possible stages in which it could be invoked.  Then, for every stage, we generate entries for tables tstgX1_update_state - tstgXn_update_state where n is the number of primitives and X is the stage.
 
-[ ] Eliminate meta_primitive_state.primitive_index from the set of match fields for all set_primitives_metadata_XY tables, in the HP4 template.
-[ ] Regenerate HP4 and do some basic sanity checks.
 [ ] Populate a data structure: {action_ID:[stage a, stage b, ...]} where the value is a list of stages from which the action could be invoked.
 [ ] For each action:
       for each stage in the value list:
         generate one entry per primitive in the action:
-          the table name is set_primitive_metadata_[stage][primitive rank]
-          the action is a_set_primitive_metadata
+          the table name is tstg[stage][primitive rank]_update_state
+          the action is update_state (unless there are no more primitives following,
+           in which case the action is finish_action)
           first match param: [program ID]
           second match param: action ID
 

@@ -22,7 +22,6 @@ table tstg[+X+][+Y+]_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;

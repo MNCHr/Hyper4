@@ -33,7 +33,6 @@ table tstg11_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -45,7 +44,6 @@ table tstg12_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -57,7 +55,6 @@ table tstg13_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -69,7 +66,6 @@ table tstg14_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -81,7 +77,6 @@ table tstg15_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -93,7 +88,6 @@ table tstg16_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -105,7 +99,6 @@ table tstg17_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -117,7 +110,6 @@ table tstg18_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -129,7 +121,6 @@ table tstg19_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -141,7 +132,6 @@ table tstg21_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -153,7 +143,6 @@ table tstg22_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -165,7 +154,6 @@ table tstg23_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -177,7 +165,6 @@ table tstg24_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -189,7 +176,6 @@ table tstg25_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -201,7 +187,6 @@ table tstg26_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -213,7 +198,6 @@ table tstg27_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -225,7 +209,6 @@ table tstg28_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -237,7 +220,6 @@ table tstg29_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -249,7 +231,6 @@ table tstg31_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -261,7 +242,6 @@ table tstg32_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -273,7 +253,6 @@ table tstg33_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -285,7 +264,6 @@ table tstg34_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -297,7 +275,6 @@ table tstg35_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -309,7 +286,6 @@ table tstg36_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -321,7 +297,6 @@ table tstg37_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -333,7 +308,6 @@ table tstg38_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -345,7 +319,6 @@ table tstg39_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -357,7 +330,6 @@ table tstg41_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -369,7 +341,6 @@ table tstg42_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -381,7 +352,6 @@ table tstg43_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -393,7 +363,6 @@ table tstg44_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -405,7 +374,6 @@ table tstg45_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -417,7 +385,6 @@ table tstg46_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -429,7 +396,6 @@ table tstg47_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -441,7 +407,6 @@ table tstg48_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
@@ -453,7 +418,6 @@ table tstg49_update_state {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
   }
   actions {
     update_state;
