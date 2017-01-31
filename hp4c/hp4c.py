@@ -682,7 +682,7 @@ class HP4C:
               aparams.append(primitive_ID[action.call_sequence[0][0].name])
             # primitive_subtype
             if len(action.call_sequence) > 0:
-              aparams.append(get_prim_subtype(action.call_sequence[0]))
+              aparams.append(self.get_prim_subtype(action.call_sequence[0]))
             else:
               aparams.append('0')
 
@@ -718,7 +718,7 @@ class HP4C:
               stdm_aparams.append(primitive_ID[action.call_sequence[0][0].name])
             #   primitive_subtype
             if len(action.call_sequence) > 0:
-              stdm_aparams.append(get_prim_subtype(action.call_sequence[0]))
+              stdm_aparams.append(self.get_prim_subtype(action.call_sequence[0]))
             else:
               stdm_aparams.append('0')
 
@@ -755,27 +755,30 @@ class HP4C:
       second = 0
       if call[1][0].instance.metadata == True:
         if call[1][0].instance.name == 'standard_metadata':
-          if prim[1][0].name == 'egress_spec':
-            first = prim[1][0].name
+          if call[1][0].name == 'egress_spec':
+            first = call[1][0].name
           else:
-            print("ERROR: Unexpected stdmeta field %s as dst in modify_field primitive" % prim[1][0].name)
+            print("ERROR: Unexpected stdmeta field %s as dst in modify_field primitive" % call[1][0].name)
             exit()
         else: # user-defined metadata
           first = 'meta'
       else: # parsed representation
         first = 'ext'
-      if type(prim[1][1]) is int:
+      code.interact(local=locals())
+      if type(call[1][1]) is int:
         second = 'const'
-      elif type(prim[1][1]) is p4_hlir.hlir.p4_headers.p4_field:
-        if prim[1][1].instance.metadata == True:
-          if prim[1][1].instance.name == 'standard_metadata':
-            second = prim[1][1].name
+      elif type(call[1][1]) is p4_hlir.hlir.p4_headers.p4_field:
+        if call[1][1].instance.metadata == True:
+          if call[1][1].instance.name == 'standard_metadata':
+            second = call[1][1].name
           else:
             second = 'meta'
         else:
           second = 'ext'
+      elif type(call[1][1]) is p4_hlir.hlir.p4_imperatives.p4_signature_ref):
+        second = 'const'
       else:
-        print("ERROR: Unexpected type %s as src in modify_field call" % type(prim[1][1]))
+        print("ERROR: Unexpected type %s as src in modify_field call" % type(call[1][1]))
         exit()
       return mf_prim_subtype_ID[first, second]
 

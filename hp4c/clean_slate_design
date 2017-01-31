@@ -295,4 +295,31 @@ For each action, we need to identify the possible stages in which it could be in
           first match param: [program ID]
           second match param: action ID
 
+OBJECTIVE 9: Handling modify_field([field], CONST) vs. modify_field([field], sig(x))
 
+In get_prim_subtype we have decided to handle both of these as though the second parameter is a constant.  What are the implications?
+
+The primitive subtype is set to 8, 9, or 10, depending on the type of the first parameter.
+
+When we carry out the primitive, we apply t_mod_XY:
+
+table t_mod_XY {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.match_ID : exact;
+  }
+  actions {
+    // ...
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    // ...
+  }
+}
+
+The subtype and match_ID trigger the action that does the modify_field primitive.
+
+The difference, really, is in the entry template that should be generated.  For a primitive in the source that uses a constant as the second parameter, the constant should be in the entry template, while when a signature_ref (action parameter reference) is used as the second parameter, we should have a fill-in-the-blank marker (e.g., [val]).
+
+We need to tackle this when we get to the point of generating the t_mod_XY entry templates.  We do not have to worry about it for the HP4_Match_Command templates, though if we need to populate some data structure to support differentiation between actual constant and [val], get_prim_subtype might be the place to do it.

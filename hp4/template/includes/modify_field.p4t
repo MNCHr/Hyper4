@@ -81,7 +81,7 @@ table t_mod_[+X+][+Y+] {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     mod_meta_stdmeta_ingressport;

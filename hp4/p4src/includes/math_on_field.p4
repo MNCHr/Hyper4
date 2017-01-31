@@ -33,7 +33,7 @@ table t_math_on_field_11 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -47,7 +47,7 @@ table t_math_on_field_12 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -61,7 +61,7 @@ table t_math_on_field_13 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -75,7 +75,7 @@ table t_math_on_field_14 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -89,7 +89,7 @@ table t_math_on_field_15 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -103,7 +103,7 @@ table t_math_on_field_16 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -117,7 +117,7 @@ table t_math_on_field_17 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -131,7 +131,7 @@ table t_math_on_field_18 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -145,7 +145,7 @@ table t_math_on_field_19 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -159,7 +159,7 @@ table t_math_on_field_21 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -173,7 +173,7 @@ table t_math_on_field_22 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -187,7 +187,7 @@ table t_math_on_field_23 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -201,7 +201,7 @@ table t_math_on_field_24 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -215,7 +215,7 @@ table t_math_on_field_25 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -229,7 +229,7 @@ table t_math_on_field_26 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -243,7 +243,7 @@ table t_math_on_field_27 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -257,7 +257,7 @@ table t_math_on_field_28 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -271,7 +271,7 @@ table t_math_on_field_29 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -285,7 +285,7 @@ table t_math_on_field_31 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -299,7 +299,7 @@ table t_math_on_field_32 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -313,7 +313,7 @@ table t_math_on_field_33 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -327,7 +327,7 @@ table t_math_on_field_34 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -341,7 +341,7 @@ table t_math_on_field_35 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -355,7 +355,7 @@ table t_math_on_field_36 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -369,7 +369,7 @@ table t_math_on_field_37 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -383,7 +383,7 @@ table t_math_on_field_38 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -397,7 +397,7 @@ table t_math_on_field_39 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -411,7 +411,7 @@ table t_math_on_field_41 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -425,7 +425,7 @@ table t_math_on_field_42 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -439,7 +439,7 @@ table t_math_on_field_43 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -453,7 +453,7 @@ table t_math_on_field_44 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -467,7 +467,7 @@ table t_math_on_field_45 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -481,7 +481,7 @@ table t_math_on_field_46 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -495,7 +495,7 @@ table t_math_on_field_47 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -509,7 +509,7 @@ table t_math_on_field_48 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
@@ -523,7 +523,7 @@ table t_math_on_field_49 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
-    meta_primitive_state.match_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_add2f_extracted_const_s;
