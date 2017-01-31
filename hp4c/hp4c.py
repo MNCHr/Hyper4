@@ -795,6 +795,12 @@ class HP4C:
         exit()
       return mf_prim_subtype_ID[first, second]
 
+  def gen_action_entries(self):
+    for action in self.action_to_arep:
+      for stage in self.action_to_arep[action].stages:
+        for call in self.action_to_arep[action].call_sequence:
+          # TODO: calculate tname, et cetera
+
   def build(self):
     self.collect_headers()
     self.collect_actions()
@@ -804,6 +810,7 @@ class HP4C:
     self.gen_tset_pr_entries()
     self.gen_tset_pipeline_entries()
     self.gen_tX_templates()
+    self.gen_action_entries()
 
   def write_output(self):
     out = open(self.args.output, 'w')
