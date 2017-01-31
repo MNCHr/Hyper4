@@ -159,6 +159,11 @@ class Table_Rep():
   def __str__(self):
     return self.name
 
+class Action_Rep():
+  def __init__(self):
+    self.stages = set()
+    self.call_sequence = []
+
 class HP4C:
   def __init__(self, h, args):
     self.headers_hp4_type = {}
@@ -181,6 +186,7 @@ class HP4C:
     self.tics_list = []
     self.stage = 1
     self.table_to_trep = {}
+    self.action_to_arep = {}
     self.commands = []
     self.command_templates = []
     self.h = h
@@ -205,7 +211,7 @@ class HP4C:
 
   def collect_actions(self):
     for action in self.h.p4_actions.values():
-      if action.lineno > 0:
+      if action.lineno > 0: # is action from source (else built-in)?
         self.action_ID[action] = self.actionID
         self.actionID += 1
 
@@ -372,7 +378,15 @@ class HP4C:
     self.table_to_trep[curr_table] = Table_Rep(self.stage,
                                                match_type,
                                                source_type)
-    
+    for action in curr_table.actions:
+      if self.action_to_arep.has_key(action) is False:
+        self.action_to_arep[action] = Action_Rep()
+        for call in action.call_sequence:
+          prim_type = primitive_ID[call[0].name]
+          prim_subtype = self.get_prim_subtype(call)
+          self.action_to_arep[action].call_sequence.append((prim_type, prim_subtype))
+      self.action_to_arep[action].stages.add(self.table_to_trep[curr_table].stage)
+
     for action in curr_table.next_:
       if curr_table.next_[action] == None:
         continue
@@ -608,7 +622,7 @@ class HP4C:
 
   def gen_tX_templates(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
-
+    code.interact(local=locals())
     for table in self.table_to_trep:
       tname = str(self.table_to_trep[table])
       aname = 'init_program_state'
@@ -764,7 +778,6 @@ class HP4C:
           first = 'meta'
       else: # parsed representation
         first = 'ext'
-      code.interact(local=locals())
       if type(call[1][1]) is int:
         second = 'const'
       elif type(call[1][1]) is p4_hlir.hlir.p4_headers.p4_field:
@@ -775,7 +788,7 @@ class HP4C:
             second = 'meta'
         else:
           second = 'ext'
-      elif type(call[1][1]) is p4_hlir.hlir.p4_imperatives.p4_signature_ref):
+      elif type(call[1][1]) is p4_hlir.hlir.p4_imperatives.p4_signature_ref:
         second = 'const'
       else:
         print("ERROR: Unexpected type %s as src in modify_field call" % type(call[1][1]))
