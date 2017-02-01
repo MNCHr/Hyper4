@@ -18,6 +18,15 @@ action set_meta_stdmeta(stdmeta_ID) {
 }
 
 [+ sloop +]
+table t[+X+]_matchless {
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t[+X+]_extracted_exact {
   reads {
     meta_ctrl.program : exact;

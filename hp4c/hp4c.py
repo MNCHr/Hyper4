@@ -190,6 +190,8 @@ class Table_Rep():
       self.name += 'valid'
     elif match_type == 'P4_MATCH_TERNARY':
       self.name += 'ternary'
+    elif match_type == 'MATCHLESS':
+      self.name += 'matchless'
   def table_type(self):
     if self.source_type == 'standard_metadata':
       if self.match_type == 'P4_MATCH_EXACT':
@@ -211,6 +213,15 @@ class Table_Rep():
       else:
         print("Not supported: extracted with %s match type" % self.match_type)
         exit()
+    elif self.source_type == '':
+      if self.match_type == 'MATCHLESS':
+        return '[MATCHLESS]'
+      else:
+        print("Not supported: [no source] with %s match type" % self.match_type)
+        exit()
+    else:
+      print("Not supported: source type %s, match type %s" % (self.source_type, self.match_type))
+      exit()
   def __str__(self):
     return self.name
 
@@ -690,49 +701,51 @@ class HP4C:
         print("Not yet supported: more than 1 match field (table: %s)" % table.name)
         exit()
       match_params_list = []
-      if table.match_fields[0][1].value == 'P4_MATCH_VALID':
-        mp = '0x01&&&'
-        # self.vbits[(level, header_instance)]
-        hinst = table.match_fields[0][0]
-        for key in self.vbits.keys():
-          if hinst == key[1]:
-            mp += format(self.vbits[key], '#x')
-            temp_match_params = list(match_params)
-            temp_match_params.append(mp)
-            match_params_list.append(temp_match_params)
-      elif table.match_fields[0][1].value == 'P4_MATCH_EXACT':
-        field = table.match_fields[0][0]
-        if field.instance.name == 'standard_metadata':
-          aparams = [stdmeta_ID[field.name]]
-        else:
-          mp = '[val]&&&0x'
-          offset = self.field_offsets[str(field)]
-          bytes_written = 0
-          for i in range(offset / 8):
-            mp += '00'
-            bytes_written += 1
-          bits_left = field.width
-          while bits_left > 0:
-            byte = 0
-            bit = 0b10000000 >> (offset % 8)
-            if bits_left >= 8 - (offset % 8):
-              for i in range(8 - (offset % 8)):
-                byte = byte | bit
-                bit = bit >> 1
-              bits_left = bits_left - (8 - (offset % 8))
-              offset = offset + 8 - (offset % 8)
-            else:
-              for i in range(bits_left):
-                byte = byte | bit
-                bit = bit >> 1
-              bits_left = 0
-            mp += hex(byte)[2:]
-            bytes_written += 1
-          while bytes_written < 100:
-            mp += '00'
-            bytes_written += 1
-          match_params.append(mp)
+      if len(table.match_fields) == 1:      
+        if table.match_fields[0][1].value == 'P4_MATCH_VALID':
+          mp = '0x01&&&'
+          # self.vbits[(level, header_instance)]
+          hinst = table.match_fields[0][0]
+          for key in self.vbits.keys():
+            if hinst == key[1]:
+              mp += format(self.vbits[key], '#x')
+              temp_match_params = list(match_params)
+              temp_match_params.append(mp)
+              match_params_list.append(temp_match_params)
+        elif table.match_fields[0][1].value == 'P4_MATCH_EXACT':
+          field = table.match_fields[0][0]
+          if field.instance.name == 'standard_metadata':
+            aparams = [stdmeta_ID[field.name]]
+          else:
+            mp = '[val]&&&0x'
+            offset = self.field_offsets[str(field)]
+            bytes_written = 0
+            for i in range(offset / 8):
+              mp += '00'
+              bytes_written += 1
+            bits_left = field.width
+            while bits_left > 0:
+              byte = 0
+              bit = 0b10000000 >> (offset % 8)
+              if bits_left >= 8 - (offset % 8):
+                for i in range(8 - (offset % 8)):
+                  byte = byte | bit
+                  bit = bit >> 1
+                bits_left = bits_left - (8 - (offset % 8))
+                offset = offset + 8 - (offset % 8)
+              else:
+                for i in range(bits_left):
+                  byte = byte | bit
+                  bit = bit >> 1
+                bits_left = 0
+              mp += hex(byte)[2:]
+              bytes_written += 1
+            while bytes_written < 100:
+              mp += '00'
+              bytes_written += 1
+            match_params.append(mp)
         match_params_list.append(match_params)
+
       # need a distinct template entry for every possible action
       for mparams in match_params_list:
         for action in table.next_.keys():
@@ -891,7 +904,7 @@ class HP4C:
                 match_ID_param = '[val]&&&0x7FFFFF'
                 break
             mparams.append(match_ID_param)
-          aparams = gen_action_aparams(p4_call, call)
+          aparams = self.gen_action_aparams(p4_call, call)
                    
           code.interact(local=locals())
 

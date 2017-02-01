@@ -25,6 +25,15 @@ action set_meta_stdmeta(stdmeta_ID) {
   modify_field(meta_ctrl.stdmeta_ID, stdmeta_ID);
 }
 
+table t1_matchless {
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t1_extracted_exact {
   reads {
     meta_ctrl.program : exact;
@@ -58,6 +67,15 @@ table t1_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_matchless {
+  reads {
+    meta_ctrl.program : exact;
   }
   actions {
     init_program_state;
@@ -103,6 +121,15 @@ table t2_extracted_valid {
   }
 }
 
+table t3_matchless {
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t3_extracted_exact {
   reads {
     meta_ctrl.program : exact;
@@ -136,6 +163,15 @@ table t3_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_matchless {
+  reads {
+    meta_ctrl.program : exact;
   }
   actions {
     init_program_state;
