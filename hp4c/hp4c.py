@@ -35,6 +35,26 @@ primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'multicast': '[MULTICAST]',
                 'add_to_field': '[MATH_ON_FIELD]'}
 
+primitive_tnames = {'modify_field': 'mod',
+                    'add_header': 'addh',
+                    'copy_header': '',
+                    'remove_header': '',
+                    'modify_field_with_hash_based_offset': '',
+                    'truncate' : 'truncate',
+                    'drop' : 'drop',
+                    'no_op' : '',
+                    'push' : '',
+                    'pop' : '',
+                    'count' : '',
+                    'execute_meter': '',
+                    'generate_digest': '',
+                    'recirculate': '',
+                    'resubmit': '',
+                    'clone_ingress_pkt_to_egress': '',
+                    'clone_egress_pkt_to_egress': '',
+                    'multicast': 'multicast',
+                    'add_to_field': 'math_on_field'}
+
 mf_prim_subtype_ID = {('meta', 'ingress_port'): '1',
                       ('meta', 'packet_length'): '2',
                       ('meta', 'egress_spec'): '3',
@@ -50,7 +70,42 @@ mf_prim_subtype_ID = {('meta', 'ingress_port'): '1',
                       ('meta', 'ext'): '13',
                       ('ext', 'meta'): '14'}
 
+mf_prim_subtype_action = {'1': 'mod_meta_stdmeta_ingressport',
+                          '2': 'mod_meta_stdmeta_packetlength',
+                          '3': 'mod_meta_stdmeta_egressspec',
+                          '4': 'mod_meta_stdmeta_egressport',
+                          '5': 'mod_meta_stdmeta_egressinst',
+                          '6': 'mod_meta_stdmeta_insttype',
+                          '7': 'mod_stdmeta_egressspec_meta',
+                          '8': 'mod_meta_const',
+                          '9': 'mod_stdmeta_egressspec_const',
+                          '10': 'mod_extracted_const',
+                          '11': 'mod_stdmeta_egressspec_stdmeta_ingressport',
+                          '12': 'mod_extracted_extracted',
+                          '13': 'mod_meta_extracted',
+                          '14': 'mod_extracted_meta'}
+
 a2f_prim_subtype_ID = {'add': '1', 'sub': '2'}
+
+a2f_prim_subtype_action = {'1': 'a_add2f_extracted_const_u',
+                           '2': 'a_subff_extracted_const_u'}
+
+gen_prim_subtype_action = {'add_header': 'a_addh',
+                           'copy_header': '',
+                           'remove_header': '',
+                           'modify_field_with_hash_based_offset': '',
+                           'truncate': 'a_truncate',
+                           'drop': 'a_drop',
+                           'no_op': '',
+                           'push': '',
+                           'pop': '',
+                           'count': '',
+                           'execute_meter': '',
+                           'recirculate': '',
+                           'resubmit': '',
+                           'clone_ingress_pkt_to_egress': '',
+                           'clone_egress_pkt_to_egress': '',
+                           'multicast': 'a_multicast'}
 
 stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
               'packet_length': '[STDMETA_PACKET_LENGTH]',
@@ -382,7 +437,7 @@ class HP4C:
       if self.action_to_arep.has_key(action) is False:
         self.action_to_arep[action] = Action_Rep()
         for call in action.call_sequence:
-          prim_type = primitive_ID[call[0].name]
+          prim_type = call[0].name
           prim_subtype = self.get_prim_subtype(call)
           self.action_to_arep[action].call_sequence.append((prim_type, prim_subtype))
       self.action_to_arep[action].stages.add(self.table_to_trep[curr_table].stage)
@@ -622,7 +677,6 @@ class HP4C:
 
   def gen_tX_templates(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
-    code.interact(local=locals())
     for table in self.table_to_trep:
       tname = str(self.table_to_trep[table])
       aname = 'init_program_state'
@@ -743,6 +797,7 @@ class HP4C:
                                               stdm_aname,
                                               stdm_mparams,
                                               stdm_aparams))
+
   # primitive_call: (p4_action, [list of parameters])
   def get_prim_subtype(self, call):
     if call[0].name == 'drop':
@@ -795,11 +850,26 @@ class HP4C:
         exit()
       return mf_prim_subtype_ID[first, second]
 
+  def print_action_to_arep(self):
+    for action in self.action_to_arep:
+      print("Action: " + str(action))
+      print("  stages: " + str(self.action_to_arep[action].stages))
+      print("  call_sequence: " + str(self.action_to_arep[action].call_sequence))
+
   def gen_action_entries(self):
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
         for call in self.action_to_arep[action].call_sequence:
-          # TODO: calculate tname, et cetera
+          rank = self.action_to_arep[action].call_sequence.index(call) + 1
+          tname = 't_' + primitive_tnames[call[0]] + '_' + str(stage) + str(rank)
+          if call[0] == 'modify_field':
+            aname = mf_prim_subtype_action[call[1]]
+          elif call[0] == 'add_to_field':
+            aname = a2f_prim_subtype_action[call[1]]
+          else:
+            aname = gen_prim_subtype_action[call[0]]
+          #TODO: mparams, aparams
+          code.interact(local=locals())
 
   def build(self):
     self.collect_headers()

@@ -323,3 +323,8 @@ The subtype and match_ID trigger the action that does the modify_field primitive
 The difference, really, is in the entry template that should be generated.  For a primitive in the source that uses a constant as the second parameter, the constant should be in the entry template, while when a signature_ref (action parameter reference) is used as the second parameter, we should have a fill-in-the-blank marker (e.g., [val]).
 
 We need to tackle this when we get to the point of generating the t_mod_XY entry templates.  We do not have to worry about it for the HP4_Match_Command templates, though if we need to populate some data structure to support differentiation between actual constant and [val], get_prim_subtype might be the place to do it.
+
+The JSON entry for the DPMU probably needs to include a flag for such entry templates.
+
+Problem: have to generate a separate entry for every match_ID even though every other parameter is the same, when the src field of the modify_field call is a constant (when the src field of the call is an action parameter, we SHOULD have a separate entry for every match_ID)
+Solution: use ternary matching on the match_ID instead.  That way, we can do 0&&&0 to render the match_ID irrelevant; else [val]&&&0b11111111111111111111111 or [val]&&&0x7FFFFF when it should be relevant.
