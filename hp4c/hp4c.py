@@ -689,7 +689,7 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
-  def gen_bitmask(field):
+  def gen_bitmask(self, field):
     mask = '0x'
     offset = self.field_offsets[str(field)]
     bytes_written = offset / 8
@@ -710,9 +710,10 @@ class HP4C:
         bits_left = 0
       mask += hex(byte)[2:]
       bytes_written += 1
-    while bytes_written < 100:
-      mask += '00'
-      bytes_written += 1
+    mask += '[' + str(100 - bytes_written) + 'x00s]'
+    #while bytes_written < 100:
+    #  mask += '00'
+    #  bytes_written += 1
     return mask
 
   def gen_tX_templates(self):
@@ -935,8 +936,10 @@ class HP4C:
         exit()
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_meta':
         # TODO
+        pass
       elif mf_prim_subtype_action[call[1]] == 'mod_meta_const':
         # TODO
+        pass
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const':
         if type(p4_call[1][1]) == int:
           aparams.append(str(p4_call[1][1]))
@@ -957,17 +960,26 @@ class HP4C:
         return aparams
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_extracted':
         # aparams:
-        # - leftshift (# bits in front of source field)
-        # - rightshift (# bits in front of dest field)
+        # - leftshift (how far should src field be shifted to align w/ dst)
+        # - rightshift (how far should src field be shifted to align w/ dst)
         # - msk (bitmask for dest field)
-        fo = self.field_offsets[str(p4_call[1][0])]
-        fw = p4_call[1][0].width
-        aparams.append(str(800 - (fo + fw)))
-        # TODO
+        dst_offset = self.field_offsets[str(p4_call[1][0])]
+        src_offset = self.field_offsets[str(p4_call[1][1])]
+        lshift = 0
+        rshift = 0
+        if dst_offset > src_offset:
+          rshift = dst_offset - src_offset
+        else:
+          lshift = src_offset - dst_offset
+        aparams.append(lshift)
+        aparams.append(rshift)
+        aparams.append(self.gen_bitmask(p4_call[1][0]))
       elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
         # TODO
+        pass
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
         # TODO
+        pass
     return aparams
 
   def build(self):
