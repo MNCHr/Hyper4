@@ -859,8 +859,11 @@ class HP4C:
   def gen_action_entries(self):
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
-        for call in self.action_to_arep[action].call_sequence:
-          rank = self.action_to_arep[action].call_sequence.index(call) + 1
+        # Need to fix this next line
+        for p4_call in action.call_sequence:
+          idx = action.call_sequence.index(p4_call)
+          call = self.action_to_arep[action].call_sequence[idx]
+          rank = idx + 1
           tname = 't_' + primitive_tnames[call[0]] + '_' + str(stage) + str(rank)
           if call[0] == 'modify_field':
             aname = mf_prim_subtype_action[call[1]]
@@ -868,8 +871,26 @@ class HP4C:
             aname = a2f_prim_subtype_action[call[1]]
           else:
             aname = gen_prim_subtype_action[call[0]]
-          #TODO: mparams, aparams
-          mparams = ['[program ID]']
+          mparams = []
+          if call[0] != 'drop':
+            mparams.append('[program ID]')
+            if call[0] == 'modify_field' or call[0] == 'add_to_field':
+              mparams.append( call[1] )
+            mparams.append(str(self.action_ID[action]))
+            # If the parameter passed to the primitive in the source code is an
+            # action parameter reference, the match_ID parameter should be
+            # [val]&&&0x7FFFFF because each distinct match could have a different
+            # value for the action parameter.  Otherwise, we don't care what the
+            # match_ID is so use 0&&&0.
+            match_ID_param = '0&&&0'
+            for param in p4_call[1]:
+              if type(param) == p4_hlir.hlir.p4_imperatives.p4_signature_ref:
+                match_ID_param = '[val]&&&0x7FFFFF'
+                break
+            mparams.append(match_ID_param)
+          aparams = []
+          #TODO: aparams
+          
           
           code.interact(local=locals())
 
