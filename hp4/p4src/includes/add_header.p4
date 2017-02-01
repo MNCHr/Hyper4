@@ -19,7 +19,7 @@ table t_addh_11 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -30,7 +30,7 @@ table t_addh_12 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -41,7 +41,7 @@ table t_addh_13 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -52,7 +52,7 @@ table t_addh_14 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -63,7 +63,7 @@ table t_addh_15 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -74,7 +74,7 @@ table t_addh_16 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -85,7 +85,7 @@ table t_addh_17 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -96,7 +96,7 @@ table t_addh_18 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -107,7 +107,7 @@ table t_addh_19 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -118,7 +118,7 @@ table t_addh_21 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -129,7 +129,7 @@ table t_addh_22 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -140,7 +140,7 @@ table t_addh_23 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -151,7 +151,7 @@ table t_addh_24 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -162,7 +162,7 @@ table t_addh_25 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -173,7 +173,7 @@ table t_addh_26 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -184,7 +184,7 @@ table t_addh_27 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -195,7 +195,7 @@ table t_addh_28 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -206,7 +206,7 @@ table t_addh_29 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -217,7 +217,7 @@ table t_addh_31 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -228,7 +228,7 @@ table t_addh_32 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -239,7 +239,7 @@ table t_addh_33 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -250,7 +250,7 @@ table t_addh_34 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -261,7 +261,7 @@ table t_addh_35 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -272,7 +272,7 @@ table t_addh_36 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -283,7 +283,7 @@ table t_addh_37 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -294,7 +294,7 @@ table t_addh_38 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -305,7 +305,7 @@ table t_addh_39 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -316,7 +316,7 @@ table t_addh_41 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -327,7 +327,7 @@ table t_addh_42 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -338,7 +338,7 @@ table t_addh_43 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -349,7 +349,7 @@ table t_addh_44 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -360,7 +360,7 @@ table t_addh_45 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -371,7 +371,7 @@ table t_addh_46 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -382,7 +382,7 @@ table t_addh_47 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -393,7 +393,7 @@ table t_addh_48 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;
@@ -404,7 +404,7 @@ table t_addh_49 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;

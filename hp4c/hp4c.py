@@ -869,6 +869,8 @@ class HP4C:
           else:
             aname = gen_prim_subtype_action[call[0]]
           #TODO: mparams, aparams
+          mparams = ['[program ID]']
+          
           code.interact(local=locals())
 
   def build(self):

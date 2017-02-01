@@ -7,6 +7,11 @@ action a_truncate(val) {
 
 [+ dloop +]
 table t_truncate_[+X+][+Y+] {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }

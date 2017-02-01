@@ -22,6 +22,8 @@ action a_multicast(seq_id, highport) {
 table t_multicast_11 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -31,6 +33,8 @@ table t_multicast_11 {
 table t_multicast_12 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -40,6 +44,8 @@ table t_multicast_12 {
 table t_multicast_13 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -49,6 +55,8 @@ table t_multicast_13 {
 table t_multicast_14 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -58,6 +66,8 @@ table t_multicast_14 {
 table t_multicast_15 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -67,6 +77,8 @@ table t_multicast_15 {
 table t_multicast_16 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -76,6 +88,8 @@ table t_multicast_16 {
 table t_multicast_17 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -85,6 +99,8 @@ table t_multicast_17 {
 table t_multicast_18 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -94,6 +110,8 @@ table t_multicast_18 {
 table t_multicast_19 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -103,6 +121,8 @@ table t_multicast_19 {
 table t_multicast_21 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -112,6 +132,8 @@ table t_multicast_21 {
 table t_multicast_22 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -121,6 +143,8 @@ table t_multicast_22 {
 table t_multicast_23 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -130,6 +154,8 @@ table t_multicast_23 {
 table t_multicast_24 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -139,6 +165,8 @@ table t_multicast_24 {
 table t_multicast_25 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -148,6 +176,8 @@ table t_multicast_25 {
 table t_multicast_26 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -157,6 +187,8 @@ table t_multicast_26 {
 table t_multicast_27 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -166,6 +198,8 @@ table t_multicast_27 {
 table t_multicast_28 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -175,6 +209,8 @@ table t_multicast_28 {
 table t_multicast_29 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -184,6 +220,8 @@ table t_multicast_29 {
 table t_multicast_31 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -193,6 +231,8 @@ table t_multicast_31 {
 table t_multicast_32 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -202,6 +242,8 @@ table t_multicast_32 {
 table t_multicast_33 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -211,6 +253,8 @@ table t_multicast_33 {
 table t_multicast_34 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -220,6 +264,8 @@ table t_multicast_34 {
 table t_multicast_35 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -229,6 +275,8 @@ table t_multicast_35 {
 table t_multicast_36 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -238,6 +286,8 @@ table t_multicast_36 {
 table t_multicast_37 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -247,6 +297,8 @@ table t_multicast_37 {
 table t_multicast_38 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -256,6 +308,8 @@ table t_multicast_38 {
 table t_multicast_39 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -265,6 +319,8 @@ table t_multicast_39 {
 table t_multicast_41 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -274,6 +330,8 @@ table t_multicast_41 {
 table t_multicast_42 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -283,6 +341,8 @@ table t_multicast_42 {
 table t_multicast_43 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -292,6 +352,8 @@ table t_multicast_43 {
 table t_multicast_44 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -301,6 +363,8 @@ table t_multicast_44 {
 table t_multicast_45 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -310,6 +374,8 @@ table t_multicast_45 {
 table t_multicast_46 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -319,6 +385,8 @@ table t_multicast_46 {
 table t_multicast_47 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -328,6 +396,8 @@ table t_multicast_47 {
 table t_multicast_48 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;
@@ -337,6 +407,8 @@ table t_multicast_48 {
 table t_multicast_49 {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;

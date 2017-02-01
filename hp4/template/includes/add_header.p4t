@@ -12,7 +12,7 @@ table t_addh_[+X+][+Y+] {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.action_ID : exact;
-    meta_primitive_state.primitive_index : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_addh;

@@ -12,6 +12,8 @@ action a_multicast(seq_id, highport) {
 table t_multicast_[+X+][+Y+] {
   reads {
     meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
   }
   actions {
     a_multicast;

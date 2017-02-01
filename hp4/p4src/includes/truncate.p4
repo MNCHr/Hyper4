@@ -14,216 +14,396 @@ action a_truncate(val) {
 }
 
 table t_truncate_11 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_12 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_13 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_14 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_15 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_16 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_17 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_18 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_19 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_21 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_22 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_23 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_24 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_25 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_26 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_27 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_28 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_29 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_31 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_32 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_33 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_34 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_35 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_36 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_37 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_38 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_39 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_41 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_42 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_43 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_44 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_45 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_46 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_47 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_48 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }
 }
 
 table t_truncate_49 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
   actions {
     a_truncate;
   }

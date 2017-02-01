@@ -90,6 +90,7 @@ table t_mod_11 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -114,6 +115,7 @@ table t_mod_12 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -138,6 +140,7 @@ table t_mod_13 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -162,6 +165,7 @@ table t_mod_14 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -186,6 +190,7 @@ table t_mod_15 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -210,6 +215,7 @@ table t_mod_16 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -234,6 +240,7 @@ table t_mod_17 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -258,6 +265,7 @@ table t_mod_18 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -282,6 +290,7 @@ table t_mod_19 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -306,6 +315,7 @@ table t_mod_21 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -330,6 +340,7 @@ table t_mod_22 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -354,6 +365,7 @@ table t_mod_23 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -378,6 +390,7 @@ table t_mod_24 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -402,6 +415,7 @@ table t_mod_25 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -426,6 +440,7 @@ table t_mod_26 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -450,6 +465,7 @@ table t_mod_27 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -474,6 +490,7 @@ table t_mod_28 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -498,6 +515,7 @@ table t_mod_29 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -522,6 +540,7 @@ table t_mod_31 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -546,6 +565,7 @@ table t_mod_32 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -570,6 +590,7 @@ table t_mod_33 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -594,6 +615,7 @@ table t_mod_34 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -618,6 +640,7 @@ table t_mod_35 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -642,6 +665,7 @@ table t_mod_36 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -666,6 +690,7 @@ table t_mod_37 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -690,6 +715,7 @@ table t_mod_38 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -714,6 +740,7 @@ table t_mod_39 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -738,6 +765,7 @@ table t_mod_41 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -762,6 +790,7 @@ table t_mod_42 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -786,6 +815,7 @@ table t_mod_43 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -810,6 +840,7 @@ table t_mod_44 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -834,6 +865,7 @@ table t_mod_45 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -858,6 +890,7 @@ table t_mod_46 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -882,6 +915,7 @@ table t_mod_47 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -906,6 +940,7 @@ table t_mod_48 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
@@ -930,6 +965,7 @@ table t_mod_49 {
   reads {
     meta_ctrl.program : exact;
     meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
   actions {
