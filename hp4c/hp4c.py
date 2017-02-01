@@ -423,13 +423,16 @@ class HP4C:
 
   def walk_ingress_pipeline(self, curr_table):
     # headers_hp4_type[<str>]: 'standard_metadata' | 'metadata' | 'extracted'
-    match_type = curr_table.match_fields[0][1].value
+    #code.interact(local=locals())
     source_type = ''
-    if (curr_table.match_fields[0][1].value == 'P4_MATCH_EXACT' or
-       curr_table.match_fields[0][1].value == 'P4_MATCH_TERNARY'):
-      source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
-    elif curr_table.match_fields[0][1].value == 'P4_MATCH_VALID':
-      source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
+    match_type = 'MATCHLESS'
+    if len(curr_table.match_fields) > 0:
+      match_type = curr_table.match_fields[0][1].value
+      if (match_type == 'P4_MATCH_EXACT' or
+          match_type == 'P4_MATCH_TERNARY'):
+        source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
+      elif match_type == 'P4_MATCH_VALID':
+        source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
     self.table_to_trep[curr_table] = Table_Rep(self.stage,
                                                match_type,
                                                source_type)
@@ -888,11 +891,19 @@ class HP4C:
                 match_ID_param = '[val]&&&0x7FFFFF'
                 break
             mparams.append(match_ID_param)
-          aparams = []
-          #TODO: aparams
-          
-          
+          aparams = gen_action_aparams(p4_call, call)
+                   
           code.interact(local=locals())
+
+  # focus: mod, drop, math
+  def gen_action_aparams(self, p4_call, call):
+    aparams = []
+    if call[0] == 'drop':
+      return aparams
+    if call[0] == 'modify_field':
+      pass
+      #  if call[1] 
+    return aparams
 
   def build(self):
     self.collect_headers()
