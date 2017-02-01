@@ -689,6 +689,32 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
+  def gen_bitmask(field):
+    mask = '0x'
+    offset = self.field_offsets[str(field)]
+    bytes_written = offset / 8
+    bits_left = field.width
+    while bits_left > 0:
+      byte = 0
+      bit = 0b10000000 >> (offset % 8)
+      if bits_left >= 8 - (offset % 8):
+        for i in range(8 - (offset % 8)):
+          byte = byte | bit
+          bit = bit >> 1
+        bits_left = bits_left - (8 - (offset % 8))
+        offset = offset + 8 - (offset % 8)
+      else:
+        for i in range(bits_left):
+          byte = byte | bit
+          bit = bit >> 1
+        bits_left = 0
+      mask += hex(byte)[2:]
+      bytes_written += 1
+    while bytes_written < 100:
+      mask += '00'
+      bytes_written += 1
+    return mask
+
   def gen_tX_templates(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
     for table in self.table_to_trep:
@@ -717,32 +743,7 @@ class HP4C:
           if field.instance.name == 'standard_metadata':
             aparams = [stdmeta_ID[field.name]]
           else:
-            mp = '[val]&&&0x'
-            offset = self.field_offsets[str(field)]
-            bytes_written = 0
-            for i in range(offset / 8):
-              mp += '00'
-              bytes_written += 1
-            bits_left = field.width
-            while bits_left > 0:
-              byte = 0
-              bit = 0b10000000 >> (offset % 8)
-              if bits_left >= 8 - (offset % 8):
-                for i in range(8 - (offset % 8)):
-                  byte = byte | bit
-                  bit = bit >> 1
-                bits_left = bits_left - (8 - (offset % 8))
-                offset = offset + 8 - (offset % 8)
-              else:
-                for i in range(bits_left):
-                  byte = byte | bit
-                  bit = bit >> 1
-                bits_left = 0
-              mp += hex(byte)[2:]
-              bytes_written += 1
-            while bytes_written < 100:
-              mp += '00'
-              bytes_written += 1
+            mp = '[val]&&&' + self.gen_bitmask(field)
             match_params.append(mp)
         match_params_list.append(match_params)
 
@@ -914,8 +915,59 @@ class HP4C:
     if call[0] == 'drop':
       return aparams
     if call[0] == 'modify_field':
-      pass
-      #  if call[1] 
+      if mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_ingressport':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_packetlength':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_egressspec':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_egressport':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_egressinst':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_insttype':
+        print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
+        exit()
+      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_meta':
+        # TODO
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_const':
+        # TODO
+      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const':
+        if type(p4_call[1][1]) == int:
+          aparams.append(str(p4_call[1][1]))
+        else:
+          aparams.append('[val]')
+      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_const':
+        # aparams: val, leftshift, emask
+        if type(p4_call[1][1]) == int:
+          aparams.append(str(p4_call[1][1]))
+        else:
+          aparams.append('[val]')
+        fo = self.field_offsets[str(p4_call[1][0])]
+        fw = p4_call[1][0].width
+        aparams.append(str(800 - (fo + fw)))
+        aparams.append(self.gen_bitmask(p4_call[1][0]))
+
+      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_stdmeta_ingressport':
+        return aparams
+      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_extracted':
+        # aparams:
+        # - leftshift (# bits in front of source field)
+        # - rightshift (# bits in front of dest field)
+        # - msk (bitmask for dest field)
+        fo = self.field_offsets[str(p4_call[1][0])]
+        fw = p4_call[1][0].width
+        aparams.append(str(800 - (fo + fw)))
+        # TODO
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
+        # TODO
+      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
+        # TODO
     return aparams
 
   def build(self):
