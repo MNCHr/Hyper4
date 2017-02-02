@@ -331,3 +331,42 @@ The JSON entry for the DPMU probably needs to include a flag for such entry temp
 
 Problem: have to generate a separate entry for every match_ID even though every other parameter is the same, when the src field of the modify_field call is a constant (when the src field of the call is an action parameter, we SHOULD have a separate entry for every match_ID)
 Solution: use ternary matching on the match_ID instead.  That way, we can do 0&&&0 to render the match_ID irrelevant; else [val]&&&0b11111111111111111111111 or [val]&&&0x7FFFFF when it should be relevant.
+
+OBJECTIVE 10: Multicasting
+
+The multicasting support in HP4 needs a rigorous examination and redesign.  First, we examine how multicasting is supposed to work in P4.
+
+According to the language specification, multicasting should work through the egress_spec.  Unfortunately bmv2 does not appear to adhere to the spec in this case.  Rather, we must set an intrinsic metadata field to a multicast group ID, which multicast groups are created in the CLI separately, and to which we associate 'nodes', or individual or sets of ports.
+
+This is unfortunate because per the spec, it would appear that, to multicast, you just set the egress_spec to a multicast group.  If that were the case it would mean that HP4 has been going about this in a way more complicated fashion than necessary.  All we would really need to do, is generate an entry for the table responsible for indicating multicasting in the action sets the egress_spec, and the value it sets it to (the action parameter) is some marker we can replace at load time, like [MULTICAST].
+
+In the hp4t_l2_switch project, we find these commands in the commands file:
+  mc_mgrp_create 1
+  mc_node_create 1 1 2 3
+  mc_node_associate 1 0
+  table_add dmac broadcast FF:FF:FF:FF:FF:FF => 1
+Where broadcast is:
+action broadcast(mcast) {
+  modify_field(intrinsic_metadata.mcast_grp, mcast);
+}
+
+What we appear to have done is associate 'node' 0 with multicast group 1 (after creating the multicast group).  We asked the question whether 'node' 0 corresponds to egress_spec 0 -- it doesn't.
+
+If bmv2 adhered to the spec, intrinsic_metadata.mcast_grp would be unnecessary.
+
+So we should check the latest version of bmv2 before we go further.  In case things break, the git commit we have been using for bmv2 is:
+  f53451a280b7bb27b5f2b8410ab086122ee77526 Tue Oct 18 18:16:10 2016 -0700
+
+Recommendation (NOW OBSOLETE AND MUST BE RETHOUGHT): rip out the unnecessary elements of HP4 that were implementing the cloning-based approach for multicasting.  This includes:
+- table mc_skip
+- action a_mc_skip
+- table tegr_multicast
+- action mod_and_clone
+- field_list clone_fl
+
+Change:
+- multicast.p4::a_multicast
+  - take a single parameter, used to set the egress_spec
+
+Add:
+- egress filtering mechanism that takes the place of mc_skip (pending validation of this requirement)
