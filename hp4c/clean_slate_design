@@ -277,7 +277,11 @@ Two challenges:
 
 OBJECTIVE 7: generate entries for t_mod_XY
 
-You know what would be great?  This would also support Objective 8: a data structure with {action_ID: ([stage a, stage b, ...], [(primitive type, primitive subtype), ...])}.  Not all primitives have meaningful subtypes but that's ok.  The point is the second member of the value tuple is the sequence of primitives for the action.  And with this data structure we can methodically go through every action_ID, every invokable stage, and every call in the call sequence, generating one table entry for that combination.  We know the table name from the stage, the primitive type, and the order of the call in the call list.
+Populate a data structure with {action_ID: ([stage a, stage b, ...], [(primitive type, primitive subtype), ...])}.  Not all primitives have meaningful subtypes but that's ok.  The point is the second member of the value tuple is the sequence of primitives for the action.  Use this data structure to go through every action_ID, every invokable stage, and every call in the call sequence, generating one table entry for that combination.  We know the table name from the stage, the primitive type, and the order of the call in the call list.
+
+We have taken care of the table name, the action name, and the match parameters.  What remains: the action parameters.  This is a challenge because every (primitive type, primitive subtype) can potentially require unique handling, incurring a certain volume of work.  But also, some of the parameters require complex calculations, incurring a certain depth of work.
+
+The current effort is with mod_meta_extracted.  Before we can proceed further, we need to handle metadata fields.
 
 OBJECTIVE 8: generate entries for tstgXY_update_state
 
