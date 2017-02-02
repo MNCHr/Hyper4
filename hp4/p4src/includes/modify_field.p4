@@ -73,7 +73,7 @@ action mod_extracted_extracted(leftshift, rightshift, msk) {
 
 // 13
 action mod_meta_extracted(leftshift, tmeta_mask, rightshift, emask) {
-  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ( ((extracted.data >> rightshift) & emask) << leftshift ));
+  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (( (extracted.data & emask) << leftshift) >> rightshift))
 }
 
 // 14

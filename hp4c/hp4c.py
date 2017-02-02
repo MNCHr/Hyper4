@@ -265,6 +265,7 @@ class HP4C:
     self.args = args
 
   def collect_headers(self):
+    self.offset = 0
     for header_key in self.h.p4_header_instances.keys():
       header = self.h.p4_header_instances[header_key]
       if header.name == 'standard_metadata':
@@ -272,8 +273,16 @@ class HP4C:
         continue
       if header.metadata == True:
         self.headers_hp4_type[header_key] = 'metadata'
+        for field in header.fields:
+          fullname = header.name + '.' + field.name
+          self.field_offsets[fullname] = self.offset
+          self.offset += field.width
+          if self.offset > 256:
+            print("Error: out of metadata memory with %s" % fullname)
+            exit()
       else:
         self.headers_hp4_type[header_key] = 'extracted'
+    self.offset = 0
 
   def collect_actions(self):
     for action in self.h.p4_actions.values():
@@ -710,7 +719,10 @@ class HP4C:
         bits_left = 0
       mask += hex(byte)[2:]
       bytes_written += 1
-    mask += '[' + str(100 - bytes_written) + 'x00s]'
+    maskwidth = 100
+    if field.instance.metadata:
+      maskwidth = 32
+    mask += '[' + str(maskwidth - bytes_written) + 'x00s]'
     #while bytes_written < 100:
     #  mask += '00'
     #  bytes_written += 1
@@ -975,8 +987,19 @@ class HP4C:
         aparams.append(rshift)
         aparams.append(self.gen_bitmask(p4_call[1][0]))
       elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
-        # TODO
-        pass
+        dst_offset = self.field_offsets[str(p4_call[1][0])]
+        src_offset = self.field_offsets[str(p4_call[1][1])]
+        lshift = 0
+        rshift = 0
+        if dst_offset > src_offset:
+          rshift = dst_offset - src_offset
+          lshift = src_offset - dst_offset
+        tmask = self.gen_bitmask(p4_call[1][0])
+        emask = self.gen_bitmask(p4_call[1][1])
+        aparams.append(lshift)
+        aparams.append(tmask)
+        aparams.append(rshift)
+        aparams.append(emask)
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
         # TODO
         pass
