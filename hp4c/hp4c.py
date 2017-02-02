@@ -960,14 +960,16 @@ class HP4C:
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_const':
         # aparams: val, leftshift, emask
         if type(p4_call[1][1]) == int:
-          aparams.append(str(p4_call[1][1]))
+          val = str(p4_call[1][1])
         else:
-          aparams.append('[val]')
+          val = '[val]'
         fo = self.field_offsets[str(p4_call[1][0])]
         fw = p4_call[1][0].width
-        aparams.append(str(800 - (fo + fw)))
-        aparams.append(self.gen_bitmask(p4_call[1][0]))
-
+        leftshift = str(800 - (fo + fw))
+        emask = self.gen_bitmask(p4_call[1][0])
+        aparams.append(val)
+        aparams.append(leftshift)
+        aparams.append(emask)
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_stdmeta_ingressport':
         return aparams
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_extracted':
@@ -1001,8 +1003,8 @@ class HP4C:
         tmask = self.gen_bitmask(p4_call[1][0])
         emask = self.gen_bitmask(p4_call[1][1])
         aparams.append(lshift)
-        aparams.append(tmask)
         aparams.append(rshift)
+        aparams.append(tmask)
         aparams.append(emask)
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
         # TODO

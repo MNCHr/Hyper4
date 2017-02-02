@@ -11,6 +11,9 @@ modify_field.p4: Carry out the various subtypes of the modify_field primitive,
                  types.
 */
 
+// standard parameter order:
+// [leftshift] [rightshift] [dest mask] [src mask | src val]
+
 // 1
 action mod_meta_stdmeta_ingressport(leftshift, tmeta_mask) { 
   modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((standard_metadata.ingress_port << leftshift) & tmeta_mask)); // last "& mask" probably unnecessary
@@ -47,7 +50,7 @@ action mod_stdmeta_egressspec_meta(rightshift, tmask) {
 }
 
 // 8
-action mod_meta_const(val, leftshift, tmeta_mask) {
+action mod_meta_const(leftshift, tmeta_mask, val) {
   modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((val << leftshift) & tmeta_mask));
 }
 
@@ -57,7 +60,7 @@ action mod_stdmeta_egressspec_const(val) {
 }
 
 // 10
-action mod_extracted_const(val, leftshift, emask) {
+action mod_extracted_const(leftshift, emask, val) {
     modify_field(extracted.data, (extracted.data & ~emask) | ((val << leftshift) & emask));
 }
 
@@ -72,12 +75,12 @@ action mod_extracted_extracted(leftshift, rightshift, msk) {
 }
 
 // 13
-action mod_meta_extracted(leftshift, tmeta_mask, rightshift, emask) {
+action mod_meta_extracted(leftshift, rightshift, tmeta_mask, emask) {
   modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (( (extracted.data & emask) << leftshift) >> rightshift))
 }
 
 // 14
-action mod_extracted_meta(emask, rightshift, tmask, leftshift) {
+action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
   modify_field(extracted.data, (extracted.data & ~emask) | ( ((tmeta.data >> rightshift) & tmask) << leftshift));
 }
 // TODO: add rest of the modify_field actions
