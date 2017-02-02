@@ -899,6 +899,24 @@ class HP4C:
           call = self.action_to_arep[action].call_sequence[idx]
           rank = idx + 1
           tname = 't_' + primitive_tnames[call[0]] + '_' + str(stage) + str(rank)
+          us_tname = 'tstg' + str(stage) + str(rank) + '_update_state'
+          us_aname = 'update_state'
+          us_aparams = []
+          if rank == len(action.call_sequence):
+            us_aname = 'finish_action'
+            # aparams for finish_action: next_stage
+            next_table = self.h.p4_tables[table_name].next_[action]
+            us_aparams.append(str(self.table_to_trep[next_table].stage))
+          else:
+            # aparams for update_state: primitive_type, primitive_subtype
+            next_call = action.call_sequence[idx + 1]
+            next_prim_type = primitive_ID[next_call[0].name]
+            next_prim_subtype = self.get_prim_subtype(next_call)
+            us_aparams.append(next_prim_type)
+            us_aparams.append(next_prim_subtype)
+
+          us_mparams = ['[program ID]']
+          us_mparams.append(str(self.action_ID[action]))
           if call[0] == 'modify_field':
             aname = mf_prim_subtype_action[call[1]]
           elif call[0] == 'add_to_field':
@@ -938,6 +956,11 @@ class HP4C:
                                          aname,
                                          mparams,
                                          aparams))
+          self.commands.append(HP4_Command("table_add",
+                                us_tname,
+                                us_aname,
+                                us_mparams,
+                                us_aparams))
 
   # focus: mod, drop, math
   def gen_action_aparams(self, p4_call, call):
@@ -1070,8 +1093,8 @@ def main():
   args = parse_args(sys.argv[1:])
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.build()
-  hp4c.write_output()
-  #code.interact(local=locals())
+  #hp4c.write_output()
+  code.interact(local=locals())
 
 if __name__ == '__main__':
   main()

@@ -16,8 +16,7 @@ stages.p4: Each control function executes a single match-action stage of a
 #include "match.p4"
 #include "switch_primitivetype.p4"
 
-action update_state(action_ID, primitive, primitive_subtype) {
-  modify_field(meta_primitive_state.action_ID, action_ID);
+action update_state(primitive, primitive_subtype) {
   modify_field(meta_primitive_state.primitive_index, 
                meta_primitive_state.primitive_index + 1);
   modify_field(meta_primitive_state.primitive, primitive);

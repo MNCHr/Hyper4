@@ -297,7 +297,6 @@ For each action, we need to identify the possible stages in which it could be in
           the action is update_state (unless there are no more primitives following,
            in which case the action is finish_action)
           first match param: [program ID]
-          second match param: action ID
 
 OBJECTIVE 9: Handling modify_field([field], CONST) vs. modify_field([field], sig(x))
 
