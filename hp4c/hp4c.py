@@ -991,9 +991,13 @@ class HP4C:
         src_offset = self.field_offsets[str(p4_call[1][1])]
         lshift = 0
         rshift = 0
-        if dst_offset > src_offset:
-          rshift = dst_offset - src_offset
-          lshift = src_offset - dst_offset
+        dst_revo = 256 - (dst_offset + p4_call[1][0].width)
+        src_revo = 800 - (src_offset + p4_call[1][1].width)
+
+        if src_revo > dst_revo:
+          rshift = src_revo - dst_revo
+        else:
+          lshift = dst_revo - src_revo
         tmask = self.gen_bitmask(p4_call[1][0])
         emask = self.gen_bitmask(p4_call[1][1])
         aparams.append(lshift)
