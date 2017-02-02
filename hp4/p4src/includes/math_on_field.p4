@@ -10,22 +10,22 @@ math_on_field.p4: Implements HP4 support for doing math to a field.
 */
 
 // emask ensures change is isolated to the desired field
-action a_add2f_extracted_const_s(val, leftshift, emask) {
+action a_add2f_extracted_const_s(leftshift, emask, val) {
   modify_field(extracted.data, (extracted.data & ~emask) | ( extracted.data + (val << leftshift) ));
 }
 
 // faster and easier, but no protection
-action a_add2f_extracted_const_u(val, leftshift) {
+action a_add2f_extracted_const_u(leftshift, val) {
   modify_field(extracted.data, extracted.data + (val << leftshift) );
 }
 
 // emask ensures change is isolated to the desired field
-action a_subff_extracted_const_s(val, leftshift, emask) {
+action a_subff_extracted_const_s(leftshift, emask, val) {
   modify_field(extracted.data, (extracted.data & ~emask) | ( extracted.data + (val << leftshift) ));
 }
 
 // faster and easier, but no protection
-action a_subff_extracted_const_u(val, leftshift) {
+action a_subff_extracted_const_u(leftshift, val) {
   modify_field(extracted.data, extracted.data - (val << leftshift) );
 }
 

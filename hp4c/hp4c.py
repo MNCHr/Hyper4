@@ -228,6 +228,7 @@ class Table_Rep():
 class Action_Rep():
   def __init__(self):
     self.stages = set()
+    self.tables = {}
     self.call_sequence = []
 
 class HP4C:
@@ -463,7 +464,9 @@ class HP4C:
           prim_type = call[0].name
           prim_subtype = self.get_prim_subtype(call)
           self.action_to_arep[action].call_sequence.append((prim_type, prim_subtype))
-      self.action_to_arep[action].stages.add(self.table_to_trep[curr_table].stage)
+      stage = self.table_to_trep[curr_table].stage
+      self.action_to_arep[action].stages.add(stage)
+      self.action_to_arep[action].tables[stage] = curr_table.name
 
     for action in curr_table.next_:
       if curr_table.next_[action] == None:
@@ -889,8 +892,9 @@ class HP4C:
   def gen_action_entries(self):
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
-        # Need to fix this next line
+        table_name = self.action_to_arep[action].tables[stage]
         for p4_call in action.call_sequence:
+          istemplate = False
           idx = action.call_sequence.index(p4_call)
           call = self.action_to_arep[action].call_sequence[idx]
           rank = idx + 1
@@ -916,17 +920,42 @@ class HP4C:
             for param in p4_call[1]:
               if type(param) == p4_hlir.hlir.p4_imperatives.p4_signature_ref:
                 match_ID_param = '[val]&&&0x7FFFFF'
+                istemplate = True
                 break
             mparams.append(match_ID_param)
           aparams = self.gen_action_aparams(p4_call, call)
-                   
-          code.interact(local=locals())
+          if istemplate == True:
+            self.command_templates.append(HP4_Match_Command(table_name,
+                                            action.name,
+                                            "table_add",
+                                            tname,
+                                            aname,
+                                            mparams,
+                                            aparams))
+          else:
+            self.commands.append(HP4_Command("table_add",
+                                         tname,
+                                         aname,
+                                         mparams,
+                                         aparams))
 
   # focus: mod, drop, math
   def gen_action_aparams(self, p4_call, call):
     aparams = []
     if call[0] == 'drop':
       return aparams
+    if call[0] == 'math_on_field':
+      if (a2f_prim_subtype_action[call[1]] == 'a_add2f_extracted_const_u' or
+          a2f_prim_subtype_action[call[1]] == 'a_subff_extracted_const_u'):
+        # aparams: leftshift, val
+        dst_offset = self.field_offsets[str(p4_call[1][0])]
+        leftshift = 800 - (dst_offset + p4_call[1][0].width)
+        if type(p4_call[1][1]) == int:
+          val = str(p4_call[1][1])
+        else:
+          val = '[val]'
+        aparams.append(str(leftshift))
+        aparams.append(val)
     if call[0] == 'modify_field':
       if mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_ingressport':
         print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
@@ -947,29 +976,33 @@ class HP4C:
         print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
         exit()
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_meta':
-        # TODO
-        pass
-      elif mf_prim_subtype_action[call[1]] == 'mod_meta_const':
-        # TODO
-        pass
-      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const':
-        if type(p4_call[1][1]) == int:
-          aparams.append(str(p4_call[1][1]))
-        else:
-          aparams.append('[val]')
-      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_const':
-        # aparams: val, leftshift, emask
+        # aparams: rightshift, tmask
+        rshift = 256 - (self.field_offsets[str(p4_call[1][1])] + p4_call[1][1].width)
+        mask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
+        aparams.append(str(rshift))
+        aparams.append(mask)
+      elif (mf_prim_subtype_action[call[1]] == 'mod_meta_const' or
+            mf_prim_subtype_action[call[1]] == 'mod_extracted_const'):
+        # aparams: val, leftshift, mask
         if type(p4_call[1][1]) == int:
           val = str(p4_call[1][1])
         else:
           val = '[val]'
         fo = self.field_offsets[str(p4_call[1][0])]
         fw = p4_call[1][0].width
-        leftshift = str(800 - (fo + fw))
-        emask = self.gen_bitmask(p4_call[1][0])
+        maskwidth = 800
+        if mf_prim_subtype_action[call[1]] == 'mod_meta_const':
+          maskwidth = 256
+        leftshift = str(maskwidth - (fo + fw))
+        mask = self.gen_bitmask(p4_call[1][0])
         aparams.append(val)
         aparams.append(leftshift)
-        aparams.append(emask)
+        aparams.append(mask)
+      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const':
+        if type(p4_call[1][1]) == int:
+          aparams.append(str(p4_call[1][1]))
+        else:
+          aparams.append('[val]')
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_stdmeta_ingressport':
         return aparams
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_extracted':
@@ -985,30 +1018,32 @@ class HP4C:
           rshift = dst_offset - src_offset
         else:
           lshift = src_offset - dst_offset
-        aparams.append(lshift)
-        aparams.append(rshift)
+        aparams.append(str(lshift))
+        aparams.append(str(rshift))
         aparams.append(self.gen_bitmask(p4_call[1][0]))
-      elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
+      elif (mf_prim_subtype_action[call[1]] == 'mod_meta_extracted' or
+            mf_prim_subtype_action[call[1]] == 'mod_extracted_meta'):
         dst_offset = self.field_offsets[str(p4_call[1][0])]
         src_offset = self.field_offsets[str(p4_call[1][1])]
         lshift = 0
         rshift = 0
-        dst_revo = 256 - (dst_offset + p4_call[1][0].width)
-        src_revo = 800 - (src_offset + p4_call[1][1].width)
-
+        dstmaskwidth = 800
+        srcmaskwidth = 256
+        if mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
+          dstmaskwidth = 256
+          srcmaskwidth = 800
+        dst_revo = dstmaskwidth - (dst_offset + p4_call[1][0].width)
+        src_revo = srcmaskwidth - (src_offset + p4_call[1][1].width)
         if src_revo > dst_revo:
           rshift = src_revo - dst_revo
         else:
           lshift = dst_revo - src_revo
-        tmask = self.gen_bitmask(p4_call[1][0])
-        emask = self.gen_bitmask(p4_call[1][1])
-        aparams.append(lshift)
-        aparams.append(rshift)
-        aparams.append(tmask)
-        aparams.append(emask)
-      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
-        # TODO
-        pass
+        dstmask = self.gen_bitmask(p4_call[1][0])
+        srcmask = self.gen_bitmask(p4_call[1][1])
+        aparams.append(str(lshift))
+        aparams.append(str(rshift))
+        aparams.append(dstmask)
+        aparams.append(srcmask)
     return aparams
 
   def build(self):
