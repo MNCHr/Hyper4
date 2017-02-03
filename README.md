@@ -8,11 +8,11 @@ The main development effort has been the HyPer4 *persona*, a P4 program capable 
 
 ## Demo branch
 
-If you want to see the version HyPer4 as it was when the paper was produced, including working mininet demonstrations with step-by-step instructions, checkout the demo branch.  In the demo branch, all instructions for running the demonstrations are in the README in the top directory.
+If you want to see the version HyPer4 as it was when the paper was produced, including working mininet demonstrations with step-by-step instructions, checkout the demo branch.  In the demo branch, all instructions for running the demonstrations are in the README in the top directory.  This branch assumes [bmv2][5] at commit f53451a280b7bb27b5f2b8410ab086122ee77526, and has not been tested extensively on later versions of bmv2.
 
 ## Related Work
 
-The [Flowvisor][4] project virtualizes the *control plane* and relies on [OpenFlow][5], which has a fixed data plane (relative to [P4][2]).
+The [Flowvisor][4] project virtualizes the *control plane* and relies on [OpenFlow][6], which has a fixed data plane (relative to [P4][2]).
 
 [References]: #
 
@@ -20,4 +20,5 @@ The [Flowvisor][4] project virtualizes the *control plane* and relies on [OpenFl
 [2]: http://arxiv.org/pdf/1312.1719.pdf "P4: Programming Protocol Independent Packet Processors"
 [3]: https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final232.pdf "Composing Software Defined Networks"
 [4]: http://archive.openflow.org/downloads/technicalreports/openflow-tr-2009-1-flowvisor.pdf "FlowVisor: A Network Virtualization Layer"
-[5]: http://www3.cs.stonybrook.edu/~vyas/teaching/CSE_534/Spring13/papers/OpenFlow.pdf "OpenFlow: Enabling Innovation in Campus Networks"
+[5]: https://github.com/p4lang/behavioral-model/ "Behavioral Model Repository"
+[6]: http://www3.cs.stonybrook.edu/~vyas/teaching/CSE_534/Spring13/papers/OpenFlow.pdf "OpenFlow: Enabling Innovation in Campus Networks"
