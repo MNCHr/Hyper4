@@ -332,7 +332,45 @@ The JSON entry for the DPMU probably needs to include a flag for such entry temp
 Problem: have to generate a separate entry for every match_ID even though every other parameter is the same, when the src field of the modify_field call is a constant (when the src field of the call is an action parameter, we SHOULD have a separate entry for every match_ID)
 Solution: use ternary matching on the match_ID instead.  That way, we can do 0&&&0 to render the match_ID irrelevant; else [val]&&&0b11111111111111111111111 or [val]&&&0x7FFFFF when it should be relevant.
 
-OBJECTIVE 10: Multicasting
+OBJECTIVE 10: Set egress_spec to virtual port as necessary
+
+This objective raises the prospect of a third class of table entries: entries that should be handled only by the switch administrator, who controls the virtual network.  Is this a DPMU function?  May as well be.
+
+If the admin doesn't need virtual networking:
+
+  table_set_default thp4_set_egress_spec _no_op
+
+Otherwise the sorts of commands that should be generated take this form:
+
+  table_add thp4_set_egress_spec a_set_dest_port [program ID] [val] => [virt port]
+
+Those last three things can come from a database that maps programs to program IDs and egress_specs to virtual ports.  So the admin might do a command like this:
+
+./dpmu --virtnet hp4t_l2_switch -p1 63
+
+which should set the mapping of egress_spec 1 to virtual port #63 by producing a command that can be fed to HP4 - a table_modify or a table_add?
+
+ table_modify thp4_set_egress_spec 0 a_set_dest_port 63
+
+assuming that handle 0 corresponds to match params with hp4t_l2_switch's program ID and egress_spec 1.
+
+action a_set_dest_port(port) {
+  modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
+  modify_field(meta_ctrl.virt_egress_port, port);
+}
+
+table thp4_set_egress_spec {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
+  }
+  actions {
+    a_set_dest_port;
+    _no_op;
+  }
+}
+
+OBJECTIVE 11: Multicasting
 
 The multicasting support in HP4 needs a rigorous examination and redesign.  First, we examine how multicasting is supposed to work in P4.
 

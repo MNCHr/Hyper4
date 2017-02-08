@@ -19,40 +19,19 @@ metadata csum_t csum;
 
 metadata intrinsic_metadata_t intrinsic_metadata;
 
-action a_mc_skip() {
-  modify_field(standard_metadata.egress_spec, standard_metadata.egress_spec - 1);
-  modify_field(meta_ctrl.multicast_current_egress, meta_ctrl.multicast_current_egress - 1);
-}
-
-table mc_skip {
-  reads {
-    standard_metadata.egress_spec : exact;
-  }
-  actions {
-    a_mc_skip;
-    a_drop;
-  }
-}
-
 action a_set_dest_port(port) {
   modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
   modify_field(meta_ctrl.virt_egress_port, port);
 }
 
-action a_physical_egress(port) {
-  modify_field(standard_metadata.egress_spec, port);
-}
-
-table t_link {
+table thp4_set_egress_spec {
   reads {
     meta_ctrl.program : exact;
     standard_metadata.egress_spec : exact;
   }
   actions {
     a_set_dest_port;
-    a_physical_egress;
     _no_op;
-    a_drop;
   }
 }
 
@@ -66,13 +45,8 @@ control ingress {
     }
     [+ endsloop +]
   }
-  if (meta_ctrl.mc_flag == 1) {
-    if (standard_metadata.egress_spec == standard_metadata.ingress_port) {
-      apply(mc_skip);
-    }
-  }
 
-  apply(t_link);
+  apply(thp4_set_egress_spec);
 }
 
 field_list clone_fl {
@@ -140,6 +114,9 @@ control egress {
       }
     }
   }
+
+  // TODO: egress filtering
+
   if(meta_ctrl.virt_egress_port > 0) {
     apply(tegr_virtnet);
   }
