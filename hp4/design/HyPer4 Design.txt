@@ -1,3 +1,50 @@
+HyPer4 Subsystems
+
+Ingress
+- context setting
+  - tset_context
+
+  When a packet is received from a physical port, we must assign the program ID and the virtual ingress port.  The virtual ingress port assignment removes the need to think about the physical ingress port as a possible match field when managing any of the virtual program's tables that, when run natively, would match on the standard_metadata.ingress_port.  Virtual programs may not even be connected to any physical ports directly.  This virtual ingress port assignment therefore makes the HP4 virtual network easier to manage - we can rewire virtual programs without worrying about the physical ingress ports.
+
+  The match fields should include standard_metadata and parsed representation fields.
+
+- inbound virtual networking
+  - tset_virtnet
+
+  When a packet is handed over to another virtual program after having been processed by a virtual program already (we know this because the virtual egress port is non-zero), we need to copy the virtual egress port to the virtual ingress port and reset the virtual egress port in order to adopt the correct perspective of the current virtual program.
+
+- recirculation cleanup
+  - tset_recirc
+
+  Quite honestly I don't know what this is doing.  It assumes that in some cases, the meta_ctrl.clone_program field is set for some reason, and if so, we need to copy the value to the meta_ctrl.program field and reset meta_ctrl.clone_program to 0.  The mystery is that meta_ctrl.clone_program is never written to anywhere in HP4.  What was the idea?
+
+- parsing
+  - tset_control
+  - tset_inspect_XX_YY
+- parsed representation to HP4 metadata
+  - tset_pr_XX_YY
+- pipeline configuration
+  - tset_pipeline
+- match-action
+- egress_spec to port
+  - t_link
+
+  We need to handle the setting of the egress_spec.  Two options:
+  - compiler interprets a modify_field, where the dest field is the egress_spec, as a modify_field where the dest field is meta_ctrl.virt_egress_port.  At some point we set the egress_spec to the ingress_port, just because the packet has to be handled by some port.  But then we need to look at the virt_egress_port and possibly change the egress_spec to a physical port that the virt_egress_port is mapped to.  Or we do nothing because the packet is destined for another virtual program.
+  - compiler does not reinterpret the modify_field, with egress_spec as the dest field.  We get to the end of ingress and now we look at the egress_spec and set the virt_egress_port according to the egress_spec->virt_egress_port map, while the egress_spec is set to the ingress_port (because the packet has to be handled by some port).  Or we might instead just change the egress_spec because the packet should be sent out a physical port.
+    
+      
+
+Egress
+- multicast
+- checksum
+- resize parsed representation
+- HP4 metadata to parsed representation
+- outbound virtual networking
+- [egress filtering]
+
+-----
+
 HyPer4 Design
 
 v0.1 Features
