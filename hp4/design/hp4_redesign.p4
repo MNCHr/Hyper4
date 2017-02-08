@@ -1,3 +1,9 @@
+control ingress {
+  setup();
+  // match-action...
+  apply(
+}
+
 action a_set_context(program_ID) {
   modify_field(meta_ctrl.program, program_ID);
 }
@@ -19,12 +25,6 @@ table tset_in_virtnet {
   actions {
     a_virt_ports_cleanup;
   }
-}
-
-control ingress {
-  setup();
-  // match-action...
-  apply(
 }
 
 control setup {
