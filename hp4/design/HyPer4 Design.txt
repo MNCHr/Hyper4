@@ -43,11 +43,20 @@ Ingress
   This subsystem handles the core functionality of the virtual program, performing equivalent matches and executing actions as chained instances of single primitives.
 
 - egress_spec to port
-  - t_link (rename: thp4_set_egress_spec)
+  - t_link (rename: thp4_handle_egress_spec)
 
-  We need to handle the setting of the egress_spec.  Two options:
-  - compiler interprets a modify_field, where the dest field is the egress_spec, as a modify_field where the dest field is meta_ctrl.virt_egress_port.  At some point we set the egress_spec to the ingress_port, just because the packet has to be handled by some port.  But then we need to look at the virt_egress_port and possibly change the egress_spec to a physical port that the virt_egress_port is mapped to.  Or we do nothing because the packet is destined for another virtual program.
-  - compiler does not reinterpret the modify_field, with egress_spec as the dest field.  We get to the end of ingress and now we look at the egress_spec and set the virt_egress_port according to the egress_spec->virt_egress_port map, while the egress_spec is set to the ingress_port (because the packet has to be handled by some port).  Or we might instead just change the egress_spec because the packet should be sent out a physical port.     
+  We need to handle the egress_spec.  Two options:
+  - [NOT SELECTED] Option #1: The compiler reinterprets modify_field calls where the dest field is the egress_spec, as modify_field calls where the dest field is meta_ctrl.virt_egress_port.  At the end of ingress, we have a table thp4_handle_egress that matches on program ID and virt_egress_port.  IF the virt_egress_port is linked to a physical port, the triggered action should set the egress_spec accordingly.  Otherwise the virt_egress_port is linked to another program's logical virt_ingress_port, and we set egress_spec to ingress_port because egress activities must be handled at some port.
+
+  - [SELECTED] Option #2: The compiler does not reinterpret modify_field calls where egress_spec is the dest field.  At the end of ingress, we have a table thp4_handle_egress that matches on the program ID and the egress_spec.  Now depending on how the HP4 device administrator has configured the virtual program, the egress_spec may correspond directly with a physical port, in which case we do nothing, or it may correspond with a virtual port for this program that is linked to the virtual port of another program, in which case, we need to set the virt_egress_port according to the egress_spec->virt_egress_port map, while the egress_spec is set to the ingress_port (because the packet has to be handled by some port).
+
+In option 1, consider a program in which, natively, we have some forwarding table where the entries commonly trigger an action that modifies the egress_spec according to an action parameter.  Now we host this program in HP4.  Each time the program's admin wants to populate the forwarding table, the DPMU has to convert egress_spec values to the corresponding virtual egress port values.  And there might be multiple such tables in a given program hosted in HP4.  On the other hand, with option 1, the DPMU does not have to do the translation.  Rather, only the HP4 admin has to maintain thp4_handle_egress entries to indicate how a virtual program's egress_spec values map either to physical ports or to other virtual program's virtual ingress ports.
+
+Either way, the program admin can remain oblivious to the actual port correspondence.  For the HP4 admin, option 1 leads to editing a config file that the DPMU reads to do the substitutions properly, in addition to managing the thp4_handle_egress table.  Option 2 can be handled the same way, but doesn't have to be: it allows managing port correspondence via entries in the thp4_handle_egress table.
+
+The real challenge is that, in an arbitrary program, the egress_spec can be set in a number of ways: the source value can be from an action parameter, another field (user-defined metadata, standard metadata, parsed representation), or a constant.  With option 1, we have to implement compiler support for each possibility.  This actually may not be too difficult though it will involve modifying HP4 as well as the compiler.
+
+All things considered, option 2 seems the best approach for simplicity of implementation and management.
 
 Egress
 - multicast
