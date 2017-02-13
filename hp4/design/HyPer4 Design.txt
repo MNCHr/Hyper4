@@ -1,12 +1,15 @@
 HyPer4 Subsystems
 
 Ingress
+
+Something to consider, with testing: copy the ext header stack elements to extracted.data BEFORE doing the matching on the parsed representation, so we do it against extracted.data instead of ext elements, allowing us to do everything with one table that has a ternary match against extracted.data.
+
 - context setting
   - tset_context
 
   When a packet is received from a physical port, we must assign the program ID and the virtual ingress port.  The virtual ingress port assignment removes the need to think about the physical ingress port as a possible match field when managing any of the virtual program's tables that, when run natively, would match on the standard_metadata.ingress_port.  Virtual programs may not even be connected to any physical ports directly.  This virtual ingress port assignment therefore makes the HP4 virtual network easier to manage - we can rewire virtual programs without worrying about the physical ingress ports.
 
-  The match fields should include standard_metadata and parsed representation fields.
+  The match fields should include standard_metadata fields.  We don't look at the parsed representation fields here, but the tset_parse_select_XX_YY tables provide the chance to change the program ID based on the parsed representation.
 
 - inbound virtual networking
   - tset_virtnet

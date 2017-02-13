@@ -4,6 +4,9 @@ action a_set_context(program_ID) {
 
 table tset_context {
   reads {
+    standard_metadata.ingress_port : ternary;
+    standard_metadata.packet_length : ternary;
+    standard_metadata.instance_type : ternary;
   }
   actions {
     a_set_context;
@@ -98,15 +101,40 @@ table thp4_multicast {
 table thp4_egress_filter_case1 { actions { _drop; }}
 table thp4_egress_filter_case2 { actions { _drop; }}
 
+field_list fl_virt_net {
+  meta_ctrl.program;
+  meta_ctrl.virt_egress_port;
+  standard_metadata;
+}
+
+// maybe don't mod the program ID here but do it in setup
+action a_virt_net_forward(next_prog) {
+  modify_field(meta_ctrl.program, next_prog);
+  recirculate(fl_virt_net);
+}
+
+table thp4_out_virtnet {
+  reads {
+    meta_ctrl.program : exact;
+    meta_ctrl.virt_egress_port : exact;
+  }
+  actions {
+    a_virt_net_forward;
+  }
+}
+
 control egress {
   if(meta_ctrl.mc_flag == 1) {
     apply(thp4_multicast);
   }
 
-  // egress filtering
+  // egress filtering, recirculation
   if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
     if(meta_ctrl.virt_egress_port == 0) {
       apply(thp4_egress_filter_case1);
+    }
+    else {
+      apply(thp4_out_virtnet);
     }
   }
   if(meta_ctrl.virt_egress_port == meta_ctrl.virt_ingress_port) {
@@ -114,4 +142,6 @@ control egress {
       apply(thp4_egress_filter_case2);
     }
   }
+  // deparsing prep
+  // - needs to happen even if we are recirculating because otherwise parsing won't work
 }
