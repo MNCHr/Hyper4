@@ -36,6 +36,22 @@ Something to consider, with testing: copy the ext header stack elements to extra
 
   Once we have the parsed representation in a header stack, we copy all elements of the stack to a single metadata field to make arbitrary matching feasible.
 
+  DESIGN OPTIONS:
+  - Option #1: Let this happen after tset_parse_select tables when parse_ctrl.next_action == PROCEED.  Advantage is that it is only invoked once, after the packet has been fully parsed.  Disadvantage is that tset_parse_select tables must examine the ext header stack, and we've broken up the process in groups of ten stack elements / bytes to inspect at a time.  In other words, the tset_parse_select process is awkward.
+  - Option #2: Do it first, before even tset_context.  Advantage: simplifies tset_parse_select to a single table, and tset_context also can read the extracted.data metadata field to determine how to set the program ID instead of handling this in tset_parse_select.  In terms of development effort, this is the way to go.  Disadvantage: for packets that must be resubmitted more than once in order to fully parse them, this copying process is invoked in every iteration of that loop.
+
+We like option 2 but out of concern for performance we should evaluate it first.  Evaluation plan:
+
+- Create a simple, non-HP4 program that parses up to the transport layer and simply forwards the packet.
+- Create a program that uses the HP4 parser and relevant setup tables, but functionally does nothing but forwards the packet.  Use option 1.
+- Same but option 2.
+- For each, measure these things:
+  - Throughput: via iperf
+  - Latency: wireshark: time between appearing one interface and the other.  Do percentile distribution charts.
+    - light load
+    - moderate load
+    - heavy load
+
 - pipeline configuration
   - tset_pipeline
 
