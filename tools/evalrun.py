@@ -19,6 +19,7 @@ import datetime
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+from scapy.all import sniff, IP, TCP
 import code
 
 # get run#
@@ -32,24 +33,40 @@ filestart2 = "run" + sys.argv[1] + "-eth2"
 
 file1pcap = filestart1 + ".pcap"
 file2pcap = filestart2 + ".pcap"
-file1txt = filestart1 + ".txt"
-file2txt = filestart2 + ".txt"
+#file1txt = filestart1 + ".txt"
+#file2txt = filestart2 + ".txt"
 
 # use tcpdump -r to convert .pcap files to .txt
-execstr1 = "tcpdump -r " + file1pcap + " > " + file1txt
-execstr2 = "tcpdump -r " + file2pcap + " > " + file2txt
-os.system(execstr1)
-os.system(execstr2)
+#execstr1 = "tcpdump -r " + file1pcap + " > " + file1txt
+#execstr2 = "tcpdump -r " + file2pcap + " > " + file2txt
+#os.system(execstr1)
+#os.system(execstr2)
 
 times1 = {}
 times2 = {}
 diffs = []
 
-curr_year = int(time.strftime("%Y"))
-curr_month = int(time.strftime("%m"))
-curr_day = int(time.strftime("%d"))
+#curr_year = int(time.strftime("%Y"))
+#curr_month = int(time.strftime("%m"))
+#curr_day = int(time.strftime("%d"))
 
 # process the two files
+packets_eth1 = sniff(offline=file1pcap)
+print("%s processed" % file1pcap)
+packets_eth2 = sniff(offline=file2pcap)
+print("%s processed" % file2pcap)
+
+if len(packets_eth1) < 1000:
+  print("WARNING: number of samples in " + file1pcap + "(%d) less than 1000; percentile values may not be appropriate" % len(packets_eth1))
+if len(packets_eth2) < 1000:
+  print("WARNING: number of samples in " + file2pcap + "(%d) less than 1000; percentile values may not be appropriate" % len(packets_eth2))
+if len(packets_eth1) != len(packets_eth2):
+  print("WARNING: " + file1pcap + " and " + file2pcap + " do not have the same number of samples")
+
+for packet in packets_eth1:
+  
+
+'''
 i = 0
 with open(file1txt, 'r') as f1:
   for line in f1:
@@ -58,11 +75,13 @@ with open(file1txt, 'r') as f1:
     t = datetime.datetime.strptime( line.split()[0], "%H:%M:%S.%f" )
     t = t.replace(year=curr_year, month=curr_month, day=curr_day)
     ip = line.split(' ')[2]
+    code.interact(local=locals())
     seq = int(line.split(', ')[2].split('seq ')[1])
     times1[(ip, seq)] = time.mktime(t.timetuple()) + (t.microsecond / 1000000.0)
 
 if i < 1000:
   print("WARNING: number of samples in " + file1txt + " (%d) less than 1000; percentile values may not be appropriate" % i)
+'''
 
 j = 0
 with open(file2txt, 'r') as f2:
