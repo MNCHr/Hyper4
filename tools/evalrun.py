@@ -56,16 +56,35 @@ print("%s processed" % file1pcap)
 packets_eth2 = sniff(offline=file2pcap)
 print("%s processed" % file2pcap)
 
-if len(packets_eth1) < 1000:
-  print("WARNING: number of samples in " + file1pcap + "(%d) less than 1000; percentile values may not be appropriate" % len(packets_eth1))
-if len(packets_eth2) < 1000:
-  print("WARNING: number of samples in " + file2pcap + "(%d) less than 1000; percentile values may not be appropriate" % len(packets_eth2))
+if len(packets_eth1) < 10000:
+  print("WARNING: number of samples in " + file1pcap + "(%d) less than 10000; percentile values may not be appropriate" % len(packets_eth1))
+if len(packets_eth2) < 10000:
+  print("WARNING: number of samples in " + file2pcap + "(%d) less than 10000; percentile values may not be appropriate" % len(packets_eth2))
 if len(packets_eth1) != len(packets_eth2):
-  print("WARNING: " + file1pcap + " and " + file2pcap + " do not have the same number of samples")
+  print("WARNING: %s (%d) and %s (%d) do not have the same number of samples" % (file1pcap, len(packets_eth1), file2pcap, len(packets_eth2)))
 
-for packet in packets_eth1:
-  
+for pkt in packets_eth1:
+  if IP in pkt:
+    ip = pkt[IP].src
+  else:
+    continue
+  if TCP in pkt:
+    seq = pkt[TCP].seq
+  else:
+    continue
+  times1[(ip, seq)] = pkt.time
 
+for pkt in packets_eth2:
+  if IP in pkt:
+    ip = pkt[IP].src
+  else:
+    continue
+  if TCP in pkt:
+    seq = pkt[TCP].seq
+  else:
+    continue
+  times2[(ip, seq)] = pkt.time
+code.interact(local=locals())
 '''
 i = 0
 with open(file1txt, 'r') as f1:
@@ -82,34 +101,26 @@ with open(file1txt, 'r') as f1:
 if i < 1000:
   print("WARNING: number of samples in " + file1txt + " (%d) less than 1000; percentile values may not be appropriate" % i)
 '''
-
-j = 0
-with open(file2txt, 'r') as f2:
-  j += 1
-  for line in f2:
-    # store the time in an array
-    t = datetime.datetime.strptime( line.split()[0], "%H:%M:%S.%f" )
-    t = t.replace(year=curr_year, month=curr_month, day=curr_day)
-    ip = line.split(' ')[2]
-    seq = int(line.split(', ')[2].split('seq ')[1])
-    times2[(ip, seq)] = time.mktime(t.timetuple()) + (t.microsecond / 1000000.0)
-
-if j < 1000:
-  print("WARNING: number of samples in " + file2txt + " (%d) less than 1000; percentile values may not be appropriate" % j)
-
-if i != j:
-  print("WARNING: " + file1txt + " and " + file2txt + " do not have the same number of samples")
-
+lostpkts = []
 # - calculate difference between corresponding timestamps
 for key in times1.keys():
-  diffs.append( abs(round( (times2[key] - times1[key]) * 1000, 3)) )
+  if key not in times2:
+    print("Key %s in times1 not found in times2" % str(key))
+    lostpkts.append(('in 1 not 2', key, times1[key]))
+  else:
+    diffs.append( abs(round( (times2[key] - times1[key]) * 1000, 3)) )
 
+for key in times2.keys():
+  if key not in times1:
+    print("Key %s in times2 not found in times1" % str(key))
+    lostpkts.append(('in 2 not 1', key, times1[key]))
+code.interact(local=locals())
 arr = np.array(diffs)
 
 density, bins = np.histogram(arr, density=True)
 unity_density = density / density.sum()
 #pbins = np.arange(0, 104, 4)
-pbins = np.array([0, 50, 90, 99, 99.9, 100])
+pbins = np.array([0, 50, 90, 99, 99.9, 99.99, 100])
 pindices = np.arange(len(pbins))
 percentile = np.zeros(len(pbins))
 for i in range(len(pbins)):
