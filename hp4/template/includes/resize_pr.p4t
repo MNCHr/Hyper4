@@ -5,7 +5,7 @@
 action a_resize_pr_[+X+]() { pop(ext, 100); push(ext, [+X+]); }
 [+ endsloop +]
 
-table tegr_resize_pr {
+table t_resize_pr {
   reads {
     parse_ctrl.numbytes : exact;
   }

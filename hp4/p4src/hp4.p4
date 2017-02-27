@@ -27,40 +27,24 @@ metadata csum_t csum;
 
 metadata intrinsic_metadata_t intrinsic_metadata;
 
-action a_mc_skip() {
-  modify_field(standard_metadata.egress_spec, standard_metadata.egress_spec - 1);
-  modify_field(meta_ctrl.multicast_current_egress, meta_ctrl.multicast_current_egress - 1);
-}
-
-table mc_skip {
-  reads {
-    standard_metadata.egress_spec : exact;
-  }
-  actions {
-    a_mc_skip;
-    a_drop;
-  }
-}
-
-action a_set_dest_port(port) {
+action a_handle_egress_virt(port) {
   modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
   modify_field(meta_ctrl.virt_egress_port, port);
 }
 
-action a_physical_egress(port) {
+action a_handle_egress_phys(port) {
   modify_field(standard_metadata.egress_spec, port);
 }
 
-table t_link {
+table thp4_handle_egress {
   reads {
     meta_ctrl.program : exact;
     standard_metadata.egress_spec : exact;
   }
   actions {
-    a_set_dest_port;
-    a_physical_egress;
+    a_handle_egress_virt;
+    a_handle_egress_phys;
     _no_op;
-    a_drop;
   }
 }
 
@@ -84,13 +68,8 @@ control ingress {
       stage4(); // stages.p4
     }
   }
-  if (meta_ctrl.mc_flag == 1) {
-    if (standard_metadata.egress_spec == standard_metadata.ingress_port) {
-      apply(mc_skip);
-    }
-  }
 
-  apply(t_link);
+  apply(thp4_handle_egress);
 }
 
 field_list clone_fl {
@@ -104,7 +83,7 @@ action mod_and_clone(port) {
   clone_egress_pkt_to_egress(port, clone_fl);
 }
 
-table tegr_multicast {
+table thp4_multicast {
   reads {
     meta_ctrl.program : exact;
     meta_ctrl.multicast_seq_id : exact;
@@ -117,48 +96,65 @@ table tegr_multicast {
   }
 }
 
+table thp4_egress_filter_case1 { actions { _drop; }}
+table thp4_egress_filter_case2 { actions { _drop; }}
+
 field_list fl_virt_net {
   meta_ctrl.program;
   meta_ctrl.virt_egress_port;
   standard_metadata;
 }
 
-action a_virt_net(next_prog) {
+action a_virt_net_forward(next_prog) {
   modify_field(meta_ctrl.program, next_prog);
   recirculate(fl_virt_net);
 }
 
-table tegr_virtnet {
+table thp4_out_virtnet {
   reads {
     meta_ctrl.program : exact;
     meta_ctrl.virt_egress_port : exact;
   }
   actions {
     _no_op;
-    a_virt_net;
+    a_virt_net_forward;
   }
 }
 
 control egress {
   if(meta_ctrl.mc_flag == 1) {
-    apply(tegr_multicast);
+    apply(thp4_multicast);
   }
-  apply(tegr_csum16); // checksums.p4
-  apply(tegr_resize_pr); // resize_pr.p4
-  apply(tegr_pr_SEB); // deparse_prep.p4 but names are different!
+
+  // egress filtering, recirculation
+  if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
+    if(meta_ctrl.virt_egress_port == 0) {
+      apply(thp4_egress_filter_case1);
+    }
+    else {
+      apply(thp4_out_virtnet);
+    }
+  }
+  if(meta_ctrl.virt_egress_port == meta_ctrl.virt_ingress_port) {
+    if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
+      apply(thp4_egress_filter_case2);
+    }
+  }
+
+  apply(t_checksum);          // checksums.p4
+  apply(t_resize_pr);         // resize_pr.p4
+  apply(t_prep_deparse_SEB);  // deparse_prep.p4
   if(parse_ctrl.numbytes > 20) {
-    apply(tegr_pr_20_39);
+    apply(t_prep_deparse_20_39);
     if(parse_ctrl.numbytes > 40) {
-      apply(tegr_pr_40_59);
+      apply(t_prep_deparse_40_59);
       if(parse_ctrl.numbytes > 60) {
-        apply(tegr_pr_60_79);
+        apply(t_prep_deparse_60_79);
         if(parse_ctrl.numbytes > 80) {
-          apply(tegr_pr_80_99);
+          apply(t_prep_deparse_80_99);
         }
       }
     }
   }
-  if(meta_ctrl.virt_egress_port > 0) {
-    apply(tegr_virtnet);
-  }
+
 }

@@ -294,9 +294,9 @@ class HP4C:
   def gen_tset_context_entry(self):
     self.commands.append(HP4_Command("table_add",
                                        "tset_context",
-                                       "set_program",
+                                       "a_set_context",
                                        ["[PPORT]"],
-                                       ["[program ID]", "[VPORT_0]"]))
+                                       ["[program ID]"]))
 
   def process_parse_state(self, parse_state, pc_state):
     # track pc - ps membership
@@ -368,7 +368,7 @@ class HP4C:
           unsupported(startbytes, endbytes)
         else:
           self.pc_action[pc_state] = '[INSPECT_SEB]'
-          self.tics_table_names[tics_pc_state] = 'tset_inspect_SEB'
+          self.tics_table_names[tics_pc_state] = 'tset_parse_select_SEB'
       else:
         bound = self.args.seb + 10
         while bound <= 100:
@@ -540,7 +540,7 @@ class HP4C:
       self.walk_parse_tree(next_state, next_states_pcs[next_state])
       self.offset = save_offset
 
-  def gen_tset_control_entries(self):
+  def gen_tset_parse_control_entries(self):
     self.walk_parse_tree(self.h.p4_parse_states['start'], 0)
 
     for key in self.pc_action.keys():
@@ -548,18 +548,18 @@ class HP4C:
       if key == 0:
         if self.pc_bits_extracted[0] > (self.args.seb * 8):
           self.commands.append(HP4_Command("table_add",
-                                           "tset_control",
+                                           "tset_parse_control",
                                            "extract_more",
                                            ["[program ID]", "0"],
                                            [str(self.pc_bits_extracted[0]), "1"]))
           self.commands.append(HP4_Command("table_add",
-                                           "tset_control",
+                                           "tset_parse_control",
                                            "set_next_action",
                                            ["[program ID]", "1"],
                                            [self.pc_action[0], "1"]))
         else:
           self.commands.append(HP4_Command("table_add",
-                                           "tset_control",
+                                           "tset_parse_control",
                                            "set_next_action",
                                            ["[program ID]", "0"],
                                            [self.pc_action[0], "1"]))
@@ -571,12 +571,12 @@ class HP4C:
 
       else:
         self.commands.append(HP4_Command("table_add",
-                                         "tset_control",
+                                         "tset_parse_control",
                                          "set_next_action",
                                          ["[program ID]", str(key)],
                                          [self.pc_action[key], str(key)]))
 
-  def gen_tset_inspect_entries(self):
+  def gen_tset_parse_select_entries(self):
     for t in self.tics_list:
       if t.next_parse_state != 'ingress':
         if self.pc_bits_extracted[t.next_pc_state] > self.pc_bits_extracted[t.curr_pc_state]:
@@ -613,7 +613,7 @@ class HP4C:
                                        []))
       bound += 10
 
-  def gen_tset_pipeline_entries(self):
+  def gen_tset_pipeline_config_entries(self):
     # USEFUL DATA STRUCTURES:
     # self.ps_to_pc = {p4_parse_state : pc_state}
     # self.pc_to_ps = {pc_state : p4_parse_state}
@@ -640,12 +640,12 @@ class HP4C:
           ps = self.pc_to_ps[prec_pc]
           for call in ps.call_sequence:
             if call[0].value != 'extract':
-              print("ERROR (gen_tset_pipeline_entries): unsupported call %s" % call[0].value)
+              print("ERROR (gen_tset_pipeline_config_entries): unsupported call %s" % call[0].value)
               exit()
             pc_headers[pc_state].append(call[1])
         for call in ingress_ps.call_sequence:
           if call[0].value != 'extract':
-            print("ERROR (gen_tset_pipeline_entries): unsupported call %s" % call[0].value)
+            print("ERROR (gen_tset_pipeline_config_entries): unsupported call %s" % call[0].value)
             exit()
           pc_headers[pc_state].append(call[1])
 
@@ -696,7 +696,7 @@ class HP4C:
         valstr = '0x' + '%x' % val
 
         self.commands.append(HP4_Command("table_add",
-                                         "tset_pipeline",
+                                         "tset_pipeline_config",
                                          "a_set_pipeline",
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
@@ -1072,11 +1072,11 @@ class HP4C:
   def build(self):
     self.collect_headers()
     self.collect_actions()
-    self.gen_tset_context_entry()
-    self.gen_tset_control_entries()
-    self.gen_tset_inspect_entries()
+    #self.gen_tset_context_entry()
+    self.gen_tset_parse_control_entries()
+    self.gen_tset_parse_select_entries()
     self.gen_tset_pr_entries()
-    self.gen_tset_pipeline_entries()
+    self.gen_tset_pipeline_config_entries()
     self.gen_tX_templates()
     self.gen_action_entries()
 

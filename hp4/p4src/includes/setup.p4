@@ -159,20 +159,18 @@ table tset_pr_80_99 {
   }
 }
 
-action set_program(program, virt_ingress_port) {
+action a_set_context(program) {
   modify_field(meta_ctrl.program, program);
-  modify_field(meta_ctrl.virt_ingress_port, virt_ingress_port);
 }
 
 table tset_context {
   reads {
-    standard_metadata.ingress_port : exact; // range not yet supported by bmv2
-    //standard_metadata.packet_length : exact; // range not yet supported by bmv2
-    //standard_metadata.instance_type : exact; // range not yet supported by bmv2
-    //extracted.data : ternary;
+    standard_metadata.ingress_port : exact; // TODO: ternary
+    //standard_metadata.packet_length : ternary;
+    //standard_metadata.instance_type : ternary;
   }
   actions {
-    set_program;
+    a_set_context;
   }
 }
 
@@ -207,7 +205,7 @@ action extract_more_chg_program(numbytes, programID) {
   resubmit(fl_extract_more);
 }
 
-table tset_control {
+table tset_parse_control {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -220,7 +218,7 @@ table tset_control {
   }
 }
 
-table tset_inspect_SEB {
+table tset_parse_select_SEB {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state: exact;
@@ -253,7 +251,7 @@ table tset_inspect_SEB {
   }
 }
 
-table tset_inspect_20_29 {
+table tset_parse_select_20_29 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -276,7 +274,7 @@ table tset_inspect_20_29 {
   }
 }
 
-table tset_inspect_30_39 {
+table tset_parse_select_30_39 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -299,7 +297,7 @@ table tset_inspect_30_39 {
   }
 }
 
-table tset_inspect_40_49 {
+table tset_parse_select_40_49 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -322,7 +320,7 @@ table tset_inspect_40_49 {
   }
 }
 
-table tset_inspect_50_59 {
+table tset_parse_select_50_59 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -345,7 +343,7 @@ table tset_inspect_50_59 {
   }
 }
 
-table tset_inspect_60_69 {
+table tset_parse_select_60_69 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -368,7 +366,7 @@ table tset_inspect_60_69 {
   }
 }
 
-table tset_inspect_70_79 {
+table tset_parse_select_70_79 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -391,7 +389,7 @@ table tset_inspect_70_79 {
   }
 }
 
-table tset_inspect_80_89 {
+table tset_parse_select_80_89 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -414,7 +412,7 @@ table tset_inspect_80_89 {
   }
 }
 
-table tset_inspect_90_99 {
+table tset_parse_select_90_99 {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -444,7 +442,7 @@ action a_set_pipeline(tableID, val) {
   modify_field(extracted.validbits, val);
 }
 
-table tset_pipeline {
+table tset_pipeline_config {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.state : exact;
@@ -459,13 +457,8 @@ action a_virt_ports_cleanup() {
   modify_field(meta_ctrl.virt_egress_port, 0);
 }
 
-table tset_virtnet {
-  reads {
-    meta_ctrl.program : exact;
-    meta_ctrl.virt_egress_port : exact;
-  }
+table tset_in_virtnet {
   actions {
-    a_drop;
     a_virt_ports_cleanup;
   }
 }
@@ -483,44 +476,41 @@ table tset_recirc {
 
 // ------ Setup
 control setup {
-  if (meta_ctrl.stage == INIT) { //_condition_0
+  if (meta_ctrl.stage == INIT) {
     if (meta_ctrl.program == 0) {
       apply(tset_context);
     }
     if (meta_ctrl.virt_egress_port > 0) {
-      apply(tset_virtnet);
-      if (meta_ctrl.clone_program > 0) {
-        apply(tset_recirc);
-      }
+      apply(tset_in_virtnet);
     }
   }
-  apply(tset_control);
+  apply(tset_parse_control);
   if(parse_ctrl.next_action == INSPECT_SEB) {
-    apply(tset_inspect_SEB);
+    apply(tset_parse_select_SEB);
   }
   if(parse_ctrl.next_action == INSPECT_20_29) {
-    apply(tset_inspect_20_29);
+    apply(tset_parse_select_20_29);
   }
   if(parse_ctrl.next_action == INSPECT_30_39) {
-    apply(tset_inspect_30_39);
+    apply(tset_parse_select_30_39);
   }
   if(parse_ctrl.next_action == INSPECT_40_49) {
-    apply(tset_inspect_40_49);
+    apply(tset_parse_select_40_49);
   }
   if(parse_ctrl.next_action == INSPECT_50_59) {
-    apply(tset_inspect_50_59);
+    apply(tset_parse_select_50_59);
   }
   if(parse_ctrl.next_action == INSPECT_60_69) {
-    apply(tset_inspect_60_69);
+    apply(tset_parse_select_60_69);
   }
   if(parse_ctrl.next_action == INSPECT_70_79) {
-    apply(tset_inspect_70_79);
+    apply(tset_parse_select_70_79);
   }
   if(parse_ctrl.next_action == INSPECT_80_89) {
-    apply(tset_inspect_80_89);
+    apply(tset_parse_select_80_89);
   }
   if(parse_ctrl.next_action == INSPECT_90_99) {
-    apply(tset_inspect_90_99);
+    apply(tset_parse_select_90_99);
   }
   if(parse_ctrl.next_action == PROCEED) {
     apply(tset_pr_SEB);
@@ -536,6 +526,6 @@ control setup {
         }
       }
     }
-    apply(tset_pipeline);
+    apply(tset_pipeline_config);
   }
 }

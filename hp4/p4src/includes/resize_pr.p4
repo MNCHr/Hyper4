@@ -111,7 +111,7 @@ action a_resize_pr_98() { pop(ext, 100); push(ext, 98); }
 action a_resize_pr_99() { pop(ext, 100); push(ext, 99); }
 action a_resize_pr_100() { pop(ext, 100); push(ext, 100); }
 
-table tegr_resize_pr {
+table t_resize_pr {
   reads {
     parse_ctrl.numbytes : exact;
   }
