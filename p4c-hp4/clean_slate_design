@@ -1,5 +1,39 @@
 CLEAN SLATE DESIGN
 
+?: table invoked 0 or 1 times
+*: table class invoked 0 or more times
+
+Three entry sources:
+- compiler
+- DPMU (template provided by compiler)
+- sysadmin (template could be provided by compiler)
+
+Any default entries must be universally applicable to any/all virtually hosted programs.
+
+--- ingress ---											|	
+[ ] tset_context?										|	sysadmin
+[ ] tset_in_virtnet?								|	compiler: static default
+[X] tset_parse_control							| compiler
+[X] tset_parse_select_SEB?					| compiler
+[X] tset_parse_select_XX_YY*				| compiler
+[X] tset_pr_SEB?										| compiler: static default
+[X] tset_pr_XX_YY*									| compiler: static default
+[X] tset_pipeline_config?						| compiler
+[>] tX_[source_type]_[match_type]?	| compiler/DPMU
+[>] tX_stdmeta_[stdmeta_field]?			| compiler/DPMU
+[ ] t_[primitive]_XY?								|
+[ ] tstgXY_update_state?						|
+[ ] thp4_handle_egress?							|
+--- egress ---
+[ ] thp4_multicast?									|
+[ ] thp4_egress_filter_case1?				|
+[ ] thp4_out_virtnet?								|
+[ ] thp4_egress_filter_case2?				|
+[ ] t_checksum											|
+[ ] t_resize_pr											|
+[ ] t_prep_deparse_SEB							|
+[ ] t_prep_deparse_XX_YY*						|
+
 Ultimately we need the offsets for any source P4 program's fields represented in HP4's extracted.data field.  In support of this goal we need to ensure that the final time HP4 exits the setup control function, it has identified the path taken through the parser, corresponding to the parse control state.
 
 OBJECTIVE 1: generate tset_control table entries

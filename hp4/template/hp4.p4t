@@ -49,9 +49,8 @@ control ingress {
       stage[+X+](); // stages.p4
     }
     [+ endsloop +]
+    apply(thp4_handle_egress);
   }
-
-  apply(thp4_handle_egress);
 }
 
 field_list clone_fl {

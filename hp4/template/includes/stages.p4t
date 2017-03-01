@@ -31,10 +31,10 @@ table tstg[+X+][+Y+]_update_state {
 
 [+ sloop +]
 control stage[+X+] {
-  match_[+X+]();
+  match_[+X+](); // match.p4
   [+ nif +]
   if(meta_ctrl.stage_state != COMPLETE) {
-    switch_primitivetype_[+X+][+Y+]();
+    switch_primitivetype_[+X+][+Y+](); // switch_primitivetype.p4
     apply(tstg[+X+][+Y+]_update_state);
   [+ endnif +]
 }

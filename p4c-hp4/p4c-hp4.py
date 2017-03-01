@@ -355,7 +355,7 @@ class HP4C:
       self.pc_bits_extracted[pc_state] += maxcurr
       self.pc_bits_extracted_curr[pc_state] = maxcurr
   
-      # pc_action[pc_state] = 'inspect_XX_YY'
+      # pc_action[pc_state] = 'parse_select_XX_YY'
       if startbytes >= endbytes:
         print("ERROR: startbytes(%i) > endbytes(%i)" % (startbytes, endbytes))
         print("parse_state: %s" % parse_state)
@@ -376,13 +376,13 @@ class HP4C:
             if endbytes >= bound:
               unsupported(startbytes, endbytes)
             else:
-              namecore = 'inspect_' + str(bound - 10) + '_' + str(bound - 1)
+              namecore = 'parse_select_' + str(bound - 10) + '_' + str(bound - 1)
               self.pc_action[pc_state] = '[' + namecore.upper() + ']'
               self.tics_table_names[tics_pc_state] = 'tset_' + namecore
               break
           bound += 10
       if pc_state not in self.pc_action:
-        print("ERROR: did not find inspect_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
+        print("ERROR: did not find parse_select_XX_YY function for startbytes(%i) and endbytes(%i)" % (startbytes, endbytes))
         exit()
 
   def fill_tics_match_params(self, criteria_fields, values, pc_state):
@@ -1072,7 +1072,7 @@ class HP4C:
   def build(self):
     self.collect_headers()
     self.collect_actions()
-    #self.gen_tset_context_entry()
+    self.gen_tset_context_entry()
     self.gen_tset_parse_control_entries()
     self.gen_tset_parse_select_entries()
     self.gen_tset_pr_entries()
