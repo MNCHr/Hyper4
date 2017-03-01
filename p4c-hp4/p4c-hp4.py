@@ -298,6 +298,13 @@ class HP4C:
                                        ["[PPORT]"],
                                        ["[program ID]"]))
 
+  def gen_tset_virtnet_entry(self):
+    self.commands.append(HP4_Command("table_set_default",
+                                      "tset_in_virtnet",
+                                      "a_virt_ports_cleanup",
+                                      [],
+                                      []))
+
   def process_parse_state(self, parse_state, pc_state):
     # track pc - ps membership
     if self.ps_to_pc.has_key(parse_state) is False:
@@ -1069,16 +1076,45 @@ class HP4C:
         aparams.append(srcmask)
     return aparams
 
+  def gen_thp4_egress_filter_entries(self):
+    self.commands.append(HP4_Command("table_set_default",
+                                      "thp4_egress_filter_case1",
+                                      "a_drop",
+                                      [],
+                                      []))
+    self.commands.append(HP4_Command("table_set_default",
+                                      "thp4_egress_filter_case2",
+                                      "a_drop",
+                                      [],
+                                      []))
+
+  def gen_t_prep_deparse_entries(self):
+    suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']
+    for suffix in suffixes:
+      tname = 't_prep_deparse_' + suffix
+      aname = 'a_prep_deparse_' + suffix
+      self.commands.append(HP4_Command("table_set_default",
+                                        tname,
+                                        aname,
+                                        [],
+                                        []))
+
   def build(self):
     self.collect_headers()
     self.collect_actions()
     self.gen_tset_context_entry()
+    self.gen_tset_virtnet_entry()
     self.gen_tset_parse_control_entries()
     self.gen_tset_parse_select_entries()
     self.gen_tset_pr_entries()
     self.gen_tset_pipeline_config_entries()
     self.gen_tX_templates()
     self.gen_action_entries()
+    # TODO: self.gen_thp4_multicast_entries()
+    self.gen_thp4_egress_filter_entries()
+    # TODO: self.gen_t_checksum_entries()
+    # TODO: self.gen_t_resize_pr_entries()
+    self.gen_t_prep_deparse_entries()
 
   def write_output(self):
     out = open(self.args.output, 'w')

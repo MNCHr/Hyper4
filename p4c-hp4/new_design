@@ -14,7 +14,7 @@ Any default entries must be universally applicable to any/all virtually hosted p
 
 ### ingress														|	entry producer
 - [ ] tset_context?										|	sysadmin
-- [ ] tset_in_virtnet?								|	compiler: static default
+- [X] tset_in_virtnet?								|	compiler: static default
 - [X] tset_parse_control							| compiler
 - [X] tset_parse_select_SEB?					| compiler
 - [X] tset_parse_select_XX_YY*				| compiler
@@ -34,13 +34,13 @@ Any default entries must be universally applicable to any/all virtually hosted p
 - [ ] thp4_handle_egress?							| sysadmin
 ### egress
 - [ ] thp4_multicast?									| compiler/DPMU
-- [ ] thp4_egress_filter_case1?				| compiler: static default
+- [X] thp4_egress_filter_case1?				| compiler: static default
 - [ ] thp4_out_virtnet?								| sysadmin
-- [ ] thp4_egress_filter_case2?				| compiler: static default
+- [X] thp4_egress_filter_case2?				| compiler: static default
 - [ ] t_checksum											| compiler
 - [ ] t_resize_pr											| compiler
-- [ ] t_prep_deparse_SEB							| compiler: static default
-- [ ] t_prep_deparse_XX_YY*						| compiler: static default
+- [X] t_prep_deparse_SEB							| compiler: static default
+- [X] t_prep_deparse_XX_YY*						| compiler: static default
 
 Sysadmin involvement is typically because the table could result in a write to a sensitive field that shouldn't be directly writable by a non-privileged user:
 - meta_ctrl.program

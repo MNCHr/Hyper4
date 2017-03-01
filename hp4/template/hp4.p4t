@@ -77,8 +77,8 @@ table thp4_multicast {
   }
 }
 
-table thp4_egress_filter_case1 { actions { _drop; }}
-table thp4_egress_filter_case2 { actions { _drop; }}
+table thp4_egress_filter_case1 { actions { a_drop; }}
+table thp4_egress_filter_case2 { actions { a_drop; }}
 
 field_list fl_virtnet {
   meta_ctrl.program;
