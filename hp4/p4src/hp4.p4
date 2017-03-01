@@ -67,9 +67,8 @@ control ingress {
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) {
       stage4(); // stages.p4
     }
+    apply(thp4_handle_egress);
   }
-
-  apply(thp4_handle_egress);
 }
 
 field_list clone_fl {
@@ -86,8 +85,8 @@ action mod_and_clone(port) {
 table thp4_multicast {
   reads {
     meta_ctrl.program : exact;
-    meta_ctrl.multicast_seq_id : exact;
-    meta_ctrl.multicast_current_egress : exact;
+    meta_ctrl.mcast_grp_id : exact;
+    meta_ctrl.mcast_current_egress : exact;
     standard_metadata.ingress_port : ternary;
   }
   actions {
@@ -99,15 +98,15 @@ table thp4_multicast {
 table thp4_egress_filter_case1 { actions { _drop; }}
 table thp4_egress_filter_case2 { actions { _drop; }}
 
-field_list fl_virt_net {
+field_list fl_virtnet {
   meta_ctrl.program;
   meta_ctrl.virt_egress_port;
   standard_metadata;
 }
 
-action a_virt_net_forward(next_prog) {
+action a_virtnet_forward(next_prog) {
   modify_field(meta_ctrl.program, next_prog);
-  recirculate(fl_virt_net);
+  recirculate(fl_virtnet);
 }
 
 table thp4_out_virtnet {
@@ -117,7 +116,7 @@ table thp4_out_virtnet {
   }
   actions {
     _no_op;
-    a_virt_net_forward;
+    a_virtnet_forward;
   }
 }
 

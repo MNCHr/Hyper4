@@ -1,55 +1,72 @@
-CLEAN SLATE DESIGN
+# P4C-HP4 DESIGN
+
+## Implementation Checklist
 
 ?: table invoked 0 or 1 times
 *: table class invoked 0 or more times
 
-Three entry sources:
+Three entry producers:
 - compiler
-- DPMU (template provided by compiler)
+- user through DPMU (template provided by compiler)
 - sysadmin (template could be provided by compiler)
 
 Any default entries must be universally applicable to any/all virtually hosted programs.
 
---- ingress ---											|	
-[ ] tset_context?										|	sysadmin
-[ ] tset_in_virtnet?								|	compiler: static default
-[X] tset_parse_control							| compiler
-[X] tset_parse_select_SEB?					| compiler
-[X] tset_parse_select_XX_YY*				| compiler
-[X] tset_pr_SEB?										| compiler: static default
-[X] tset_pr_XX_YY*									| compiler: static default
-[X] tset_pipeline_config?						| compiler
-[>] tX_[source_type]_[match_type]?	| compiler/DPMU
-[>] tX_stdmeta_[stdmeta_field]?			| compiler/DPMU
-[ ] t_[primitive]_XY?								|
-[ ] tstgXY_update_state?						|
-[ ] thp4_handle_egress?							|
---- egress ---
-[ ] thp4_multicast?									|
-[ ] thp4_egress_filter_case1?				|
-[ ] thp4_out_virtnet?								|
-[ ] thp4_egress_filter_case2?				|
-[ ] t_checksum											|
-[ ] t_resize_pr											|
-[ ] t_prep_deparse_SEB							|
-[ ] t_prep_deparse_XX_YY*						|
+### ingress														|	entry producer
+- [ ] tset_context?										|	sysadmin
+- [ ] tset_in_virtnet?								|	compiler: static default
+- [X] tset_parse_control							| compiler
+- [X] tset_parse_select_SEB?					| compiler
+- [X] tset_parse_select_XX_YY*				| compiler
+- [X] tset_pr_SEB?										| compiler: static default
+- [X] tset_pr_XX_YY*									| compiler: static default
+- [X] tset_pipeline_config?						| compiler
+- [ ] tX_[source_type]_[match_type]?	| compiler/DPMU
+    - [X] compiler
+    - [ ] DPMU
+- [ ] tX_stdmeta_[stdmeta_field]?			| compiler/DPMU
+    - [X] compiler
+    - [ ] DPMU
+- [ ] t_[primitive]_XY?								| compiler/DPMU
+    - [X] compiler
+    - [ ] DPMU
+- [X] tstgXY_update_state?						| compiler
+- [ ] thp4_handle_egress?							| sysadmin
+### egress
+- [ ] thp4_multicast?									| compiler/DPMU
+- [ ] thp4_egress_filter_case1?				| compiler: static default
+- [ ] thp4_out_virtnet?								| sysadmin
+- [ ] thp4_egress_filter_case2?				| compiler: static default
+- [ ] t_checksum											| compiler
+- [ ] t_resize_pr											| compiler
+- [ ] t_prep_deparse_SEB							| compiler: static default
+- [ ] t_prep_deparse_XX_YY*						| compiler: static default
+
+Sysadmin involvement is typically because the table could result in a write to a sensitive field that shouldn't be directly writable by a non-privileged user:
+- meta_ctrl.program
+- standard_metadata.egress_spec
+- meta_ctrl.virt_egress_port
+
+The thp4_multicast table produces a case where the user should be able to determine values to write to egress_spec, but at the same time these values should be constrained to adhere to the sysadmin's view of the virtual program's connectivity.  Hence these entries should be templates for filling in by the DPMU.
+
+## Older Material
 
 Ultimately we need the offsets for any source P4 program's fields represented in HP4's extracted.data field.  In support of this goal we need to ensure that the final time HP4 exits the setup control function, it has identified the path taken through the parser, corresponding to the parse control state.
 
-OBJECTIVE 1: generate tset_control table entries
+OBJECTIVE 1: generate tset_parse_control table entries
 (Later objectives will handle tset_inspect_XX_YY entries and other tables in setup.p4.)
 
-HP4's task is to apply tset_control for every pc.state to determine whether to extract more, inspect extracted bytes, or proceed to ingress.
+HP4's task is to apply tset_parse_control for every pc.state to determine whether to extract more, inspect extracted bytes, or proceed to ingress.
 
 A pc.state corresponds to a path segment in the parse tree of the source P4.  A path segment starts at 'start' or immediately following a conditional jump (from a select statement).  It terminates either at an unconditional jump to ingress, or at a conditional jump (i.e., select statement).  Note a pc.state is not the same thing as a parse_state (HLIR's term for a parse function in the source P4 program).
 
 We refer to the jump to ingress (action: PROCEED) or to the select statement (action: INSPECT_XX_YY) as the path segment terminator.
 
-So pc.state == 0 corresponds to the initial state of HP4 after a packet has been received.  We can reserve pc.state == 1 to the state of HP4 when prepared to carry out the inital path segment terminator.  Whether the action in tset_control [action] [program ID] 0 => [numbytes | next_action] 1 is extract_more or set_next_action, the action's state parameter should always be 1.
+So pc.state == 0 corresponds to the initial state of HP4 after a packet has been received.  We can reserve pc.state == 1 to the state of HP4 when prepared to carry out the inital path segment terminator.  Whether the action in tset_parse_control [action] [program ID] 0 => [numbytes | next_action] 1 is extract_more or set_next_action, the action's state parameter should always be 1.
 
 The number of pc.states should be upper bounded by 1 + the total number of entries across all select statements.
 
-Remember that the tset_inspect_XX_YY table handling the select statement is responsible for extracting more bytes and updating the pc.state, so that by the time HP4 applies tset_control again, pc.state will be updated and enough bytes will have been extracted to handle the next path segment terminator.
+Remember that the tset_inspect_XX_YY table handling the select statement is responsible for extracting more bytes and updating the pc.state, so that by the time HP4 applies tset_parse_control again, pc.state will be updated and enough bytes will have been extracted to handle the next path segment terminator.
 
 action set_next_action(next_action, state) {
   modify_field(parse_ctrl.next_action, next_action);
@@ -63,7 +80,7 @@ action extract_more(numbytes, state) {
   resubmit(fl_extract_more);
 }
 
-table tset_control {
+table tset_parse_control {
   reads {
     meta_ctrl.program : exact;
     parse_ctrl.numbytes : exact;
@@ -87,9 +104,9 @@ field_offsets (dictionary):
 - key: (integer) pc.state
 - value: (integer) offset
 
-There is only one case where the tset_control entry will have extract_more as the action: pc.state is 0 and the number of bytes extracted prior to the first path segment terminator is more than SEB.
+There is only one case where the tset_parse_control entry will have extract_more as the action: pc.state is 0 and the number of bytes extracted prior to the first path segment terminator is more than SEB.
 
-We have bits_extracted[0] = args.SEB, always.  HP4C traverses the parse tree until the first terminator, having populated bits_needed_total such that we have an entry for the key consisting of the terminator's parse_state and all preceding parse_states.  Then HP4C can determine the first tset_control entry to issue: extract_more or set_next_action (for a PROCEED or INSPECT_XX_YY as appropriate).
+We have bits_extracted[0] = args.SEB, always.  HP4C traverses the parse tree until the first terminator, having populated bits_needed_total such that we have an entry for the key consisting of the terminator's parse_state and all preceding parse_states.  Then HP4C can determine the first tset_parse_control entry to issue: extract_more or set_next_action (for a PROCEED or INSPECT_XX_YY as appropriate).
 
 Objective 1 Algorithm: Go through the parse tree of the source P4 and identify all path segments, i.e., pc.states, their byte requirements, and their terminators.  Each extract statement should update field_offsets and bits_extracted.  For conditional jump terminators, use field_offsets to identify the byte range to inspect to properly handle the select statement.  Also for conditional jump terminators, look for the use of 'current' and update bits_extracted accordingly.  Prior to recursing for each condition of a conditional jump terminator, update the current pc.state, and set bits_extracted to that of the previous pc.state minus any bits required by 'current'.
 

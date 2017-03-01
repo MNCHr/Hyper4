@@ -49,8 +49,8 @@ header_type meta_ctrl_t {
     stage : 1; // INIT, NORM.
     next_table : 4;
     stage_state : 2; // CONTINUE, COMPLETE - 1 bit should be enough, certainly 2
-    multicast_current_egress : 8;
-    multicast_seq_id : 8;
+    mcast_current_egress : 8;
+    mcast_grp_id : 8;
     stdmeta_ID : 3;
     next_stage : 5;
     mc_flag : 1;

@@ -425,33 +425,33 @@ table tstg49_update_state {
 }
 
 control stage1 {
-  match_1();
+  match_1(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
-    switch_primitivetype_11();
+    switch_primitivetype_11(); // switch_primitivetype.p4
     apply(tstg11_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      switch_primitivetype_12();
+      switch_primitivetype_12(); // switch_primitivetype.p4
       apply(tstg12_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        switch_primitivetype_13();
+        switch_primitivetype_13(); // switch_primitivetype.p4
         apply(tstg13_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          switch_primitivetype_14();
+          switch_primitivetype_14(); // switch_primitivetype.p4
           apply(tstg14_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            switch_primitivetype_15();
+            switch_primitivetype_15(); // switch_primitivetype.p4
             apply(tstg15_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              switch_primitivetype_16();
+              switch_primitivetype_16(); // switch_primitivetype.p4
               apply(tstg16_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                switch_primitivetype_17();
+                switch_primitivetype_17(); // switch_primitivetype.p4
                 apply(tstg17_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  switch_primitivetype_18();
+                  switch_primitivetype_18(); // switch_primitivetype.p4
                   apply(tstg18_update_state);
                   if(meta_ctrl.stage_state != COMPLETE) {
-                    switch_primitivetype_19();
+                    switch_primitivetype_19(); // switch_primitivetype.p4
                     apply(tstg19_update_state);
                   }
                 }
@@ -465,33 +465,33 @@ control stage1 {
 }
 
 control stage2 {
-  match_2();
+  match_2(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
-    switch_primitivetype_21();
+    switch_primitivetype_21(); // switch_primitivetype.p4
     apply(tstg21_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      switch_primitivetype_22();
+      switch_primitivetype_22(); // switch_primitivetype.p4
       apply(tstg22_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        switch_primitivetype_23();
+        switch_primitivetype_23(); // switch_primitivetype.p4
         apply(tstg23_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          switch_primitivetype_24();
+          switch_primitivetype_24(); // switch_primitivetype.p4
           apply(tstg24_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            switch_primitivetype_25();
+            switch_primitivetype_25(); // switch_primitivetype.p4
             apply(tstg25_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              switch_primitivetype_26();
+              switch_primitivetype_26(); // switch_primitivetype.p4
               apply(tstg26_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                switch_primitivetype_27();
+                switch_primitivetype_27(); // switch_primitivetype.p4
                 apply(tstg27_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  switch_primitivetype_28();
+                  switch_primitivetype_28(); // switch_primitivetype.p4
                   apply(tstg28_update_state);
                   if(meta_ctrl.stage_state != COMPLETE) {
-                    switch_primitivetype_29();
+                    switch_primitivetype_29(); // switch_primitivetype.p4
                     apply(tstg29_update_state);
                   }
                 }
@@ -505,33 +505,33 @@ control stage2 {
 }
 
 control stage3 {
-  match_3();
+  match_3(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
-    switch_primitivetype_31();
+    switch_primitivetype_31(); // switch_primitivetype.p4
     apply(tstg31_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      switch_primitivetype_32();
+      switch_primitivetype_32(); // switch_primitivetype.p4
       apply(tstg32_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        switch_primitivetype_33();
+        switch_primitivetype_33(); // switch_primitivetype.p4
         apply(tstg33_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          switch_primitivetype_34();
+          switch_primitivetype_34(); // switch_primitivetype.p4
           apply(tstg34_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            switch_primitivetype_35();
+            switch_primitivetype_35(); // switch_primitivetype.p4
             apply(tstg35_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              switch_primitivetype_36();
+              switch_primitivetype_36(); // switch_primitivetype.p4
               apply(tstg36_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                switch_primitivetype_37();
+                switch_primitivetype_37(); // switch_primitivetype.p4
                 apply(tstg37_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  switch_primitivetype_38();
+                  switch_primitivetype_38(); // switch_primitivetype.p4
                   apply(tstg38_update_state);
                   if(meta_ctrl.stage_state != COMPLETE) {
-                    switch_primitivetype_39();
+                    switch_primitivetype_39(); // switch_primitivetype.p4
                     apply(tstg39_update_state);
                   }
                 }
@@ -545,33 +545,33 @@ control stage3 {
 }
 
 control stage4 {
-  match_4();
+  match_4(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
-    switch_primitivetype_41();
+    switch_primitivetype_41(); // switch_primitivetype.p4
     apply(tstg41_update_state);
     if(meta_ctrl.stage_state != COMPLETE) {
-      switch_primitivetype_42();
+      switch_primitivetype_42(); // switch_primitivetype.p4
       apply(tstg42_update_state);
       if(meta_ctrl.stage_state != COMPLETE) {
-        switch_primitivetype_43();
+        switch_primitivetype_43(); // switch_primitivetype.p4
         apply(tstg43_update_state);
         if(meta_ctrl.stage_state != COMPLETE) {
-          switch_primitivetype_44();
+          switch_primitivetype_44(); // switch_primitivetype.p4
           apply(tstg44_update_state);
           if(meta_ctrl.stage_state != COMPLETE) {
-            switch_primitivetype_45();
+            switch_primitivetype_45(); // switch_primitivetype.p4
             apply(tstg45_update_state);
             if(meta_ctrl.stage_state != COMPLETE) {
-              switch_primitivetype_46();
+              switch_primitivetype_46(); // switch_primitivetype.p4
               apply(tstg46_update_state);
               if(meta_ctrl.stage_state != COMPLETE) {
-                switch_primitivetype_47();
+                switch_primitivetype_47(); // switch_primitivetype.p4
                 apply(tstg47_update_state);
                 if(meta_ctrl.stage_state != COMPLETE) {
-                  switch_primitivetype_48();
+                  switch_primitivetype_48(); // switch_primitivetype.p4
                   apply(tstg48_update_state);
                   if(meta_ctrl.stage_state != COMPLETE) {
-                    switch_primitivetype_49();
+                    switch_primitivetype_49(); // switch_primitivetype.p4
                     apply(tstg49_update_state);
                   }
                 }
