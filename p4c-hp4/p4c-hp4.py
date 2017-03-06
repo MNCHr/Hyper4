@@ -1088,6 +1088,17 @@ class HP4C:
                                       [],
                                       []))
 
+  def gen_t_checksum_entries(self):
+    # verify presence of ipv4 checksum
+    for flc in self.h.p4_field_list_calculations.values():
+      for fl in flc.input:
+        count = 0
+        for field in fl.fields:
+          count += field.width
+        if count == 144:
+          if flc.algorithm == 'csum16' and flc.output_width == 16:
+            # TODO
+
   def gen_t_prep_deparse_entries(self):
     suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']
     for suffix in suffixes:
