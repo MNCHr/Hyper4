@@ -913,8 +913,10 @@ class HP4C:
             us_aname = 'finish_action'
             # aparams for finish_action: next_stage
             next_table = self.h.p4_tables[table_name].next_[action]
-            code.interact(local=locals())
-            us_aparams.append(str(self.table_to_trep[next_table].stage))
+            if next_table == None:
+              us_aparams.append('0')
+            else:
+              us_aparams.append(str(self.table_to_trep[next_table].stage))
           else:
             # aparams for update_state: primitive_type, primitive_subtype
             next_call = action.call_sequence[idx + 1]
