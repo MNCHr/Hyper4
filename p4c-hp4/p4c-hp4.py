@@ -116,7 +116,7 @@ stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
               'clone_spec': '[STDMETA_CLONE_SPEC]'}
 
 def parse_args(args):
-  parser = argparse.ArgumentParser(description='HP4 Compiler')
+  parser = argparse.ArgumentParser(description='P4->HP4 Compiler')
   parser.add_argument('input', help='path for input .p4',
                     type=str)
   parser.add_argument('-o', '--output', help='path for output .hp4t file',
@@ -913,6 +913,7 @@ class HP4C:
             us_aname = 'finish_action'
             # aparams for finish_action: next_stage
             next_table = self.h.p4_tables[table_name].next_[action]
+            code.interact(local=locals())
             us_aparams.append(str(self.table_to_trep[next_table].stage))
           else:
             # aparams for update_state: primitive_type, primitive_subtype
@@ -1090,14 +1091,19 @@ class HP4C:
 
   def gen_t_checksum_entries(self):
     # verify presence of ipv4 checksum
-    for flc in self.h.p4_field_list_calculations.values():
-      for fl in flc.input:
-        count = 0
-        for field in fl.fields:
-          count += field.width
-        if count == 144:
-          if flc.algorithm == 'csum16' and flc.output_width == 16:
-            # TODO
+
+    for cf in self.h.calculated_fields:
+      for statement in cf[1]:
+        if statement[0] == 'update':
+          flc = self.h.p4_field_list_calculation[statement[1]]
+          for fl in flc.input:
+            count = 0
+            for field in fl.fields:
+              count += field.width
+            if count == 144:
+              if flc.algorithm == 'csum16' and flc.output_width == 16:
+                # TODO
+                pass
 
   def gen_t_prep_deparse_entries(self):
     suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']

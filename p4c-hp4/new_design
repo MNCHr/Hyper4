@@ -50,15 +50,36 @@ Sysadmin involvement is typically because the table could result in a write to a
 The thp4_multicast table produces a case where the user should be able to determine values to write to egress_spec, but at the same time these values should be constrained to adhere to the sysadmin's view of the virtual program's connectivity.  Hence these entries should be templates for filling in by the DPMU.
 
 t_checksum: Scan the code to find:
-- field_list_calculation
-  - at least one of the field_lists has 144 bits total
-  - algorithm is csum16
-  - output_width is 16 bits
 - calculated_field
   - at least one update statement
-    - cond type: valid
+    - cond type: valid or no condition
       - header_ref: a header with 160 bits in it
-  - no verify statements (not supported yet)
+  - verify statement: issue WARNING: Unsupported
+  - field_list_calculation
+    - at least one of the field_lists has 144 bits total
+    - algorithm is csum16
+    - output_width is 16 bits
+    - if the flc doesn't meet all three reqmts, issue
+      ERROR: Unsupported
+
+We need to explore the impact of a possibly present if_cond in the calculated field declaration.
+- Present:
+  - operator: 'valid'
+    left operand N/A
+    right operand: header or field reference
+    * t_checksum reads:
+      - extracted.validbits: generate a t_checksum entry
+        for every value of extracted.validbits that could have the right operand marked as valid
+        - for key in self.vbits.keys():
+            if fref == key[1]:
+              match_param = format(self.vbits[key], '#x')
+  - operator: '=='
+    left operand: field reference
+    right operand: value
+    * Issue ERROR: Unsupported and quit
+- Not Present:
+  * t_checksum reads:
+    - extracted.validbits: 0&&&0 (don't care)
 
 ## Older Material
 
