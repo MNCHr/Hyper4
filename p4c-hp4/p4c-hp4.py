@@ -1092,20 +1092,66 @@ class HP4C:
                                       []))
 
   def gen_t_checksum_entries(self):
-    # verify presence of ipv4 checksum
-
+    self.commands.append(HP4_Command("table_set_default",
+                                        "t_checksum",
+                                        "_no_op",
+                                        [],
+                                        []))
+    # detect presence of ipv4 checksum & handle
+    cf_none_types = 0
+    cf_valid_types = 0
     for cf in self.h.calculated_fields:
       for statement in cf[1]:
         if statement[0] == 'update':
-          flc = self.h.p4_field_list_calculation[statement[1]]
+          flc = self.h.p4_field_list_calculations[statement[1]]
           for fl in flc.input:
             count = 0
+            min_field_offset = 1000
+            min_field = None
             for field in fl.fields:
               count += field.width
+              if field.offset < min_field_offset:
+                min_field_offset = field.offset
+                min_field = field
             if count == 144:
               if flc.algorithm == 'csum16' and flc.output_width == 16:
-                # TODO
-                pass
+                if statement[2] == None:
+                  cf_none_types += 1
+                  if (cf_none_types + cf_valid_types) > 1:
+                    print("ERROR: Unsupported: multiple checksums")
+                    exit()
+                  else:
+                    # Calculate rshift_base parameter
+                    #  This is the amount to R-shift extracted.data such
+                    #  that the first two bytes of the ipv4 header are
+                    #  right aligned
+                    key = min_field.instance.name + '.' + min_field.name
+                    # TODO: remove assumption that extracted.data is 800 bits
+                    aparam = str(784 - self.field_offsets[key])
+                    self.commands.append(HP4_Command("table_add",
+                                                      "t_checksum",
+                                                      "a_ipv4_csum16",
+                                                      ['[program ID]', '0&&&0'],
+                                                      [aparam]))
+                else:
+                  if statement[2].op == 'valid':
+                    # TODO
+                    cf_valid_types += 1
+                    if (cf_none_types + cf_valid_types) > 1:
+                      print("ERROR: Unsupported: multiple checksums")
+                      exit()
+                    else:
+                  else:
+                    print("ERROR: Unsupported if_cond in calculated field: %s" % statement[2].op)
+                    exit()
+              else:
+                print("ERROR: Unsupported checksum (%s, %i)" % (flc.algorithm, flc.output_width))
+                exit()
+            else:
+              print("ERROR: Unsupported checksum - field list of %i bits" % count)
+              exit()
+        else:
+          print("WARNING: Unsupported update_verify_spec for calculated field: %s" % statement[0])
 
   def gen_t_prep_deparse_entries(self):
     suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']
