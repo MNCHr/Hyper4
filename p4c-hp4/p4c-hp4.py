@@ -1144,12 +1144,12 @@ class HP4C:
                       for key in self.vbits.keys():
                         if statement[2].right == key[1]:
                           mparams = ['[program ID]']
-                          # TODO: FIX THIS: adhere to ternary match format (value&&&mask)
-                          mparams.append(format(self.vbits[key], '#x')])
+                          val = format(self.vbits[key], '#x')
+                          mparams.append(val + '&&&' + val)
                           self.commands.append(HP4_Command("table_add",
                                                             "t_checksum",
                                                             "a_ipv4_csum16",
-                                                            [mparams],
+                                                            mparams,
                                                             [aparam]))
                   else:
                     print("ERROR: Unsupported if_cond op in calculated field: %s" % statement[2].op)
@@ -1187,7 +1187,7 @@ class HP4C:
     self.gen_action_entries()
     # TODO: self.gen_thp4_multicast_entries()
     self.gen_thp4_egress_filter_entries()
-    # TODO: self.gen_t_checksum_entries()
+    self.gen_t_checksum_entries()
     # TODO: self.gen_t_resize_pr_entries()
     self.gen_t_prep_deparse_entries()
 
