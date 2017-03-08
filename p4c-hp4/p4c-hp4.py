@@ -1163,6 +1163,17 @@ class HP4C:
         else:
           print("WARNING: Unsupported update_verify_spec for calculated field: %s" % statement[0])
 
+  def gen_t_resize_pr_entries(self):
+    # TODO: full implementation as the following primitives get support:
+    # - add_header | remove_header | truncate | push | pop | copy_header*
+    # * maybe (due to possibility of making previously invalid header
+    #   valid)
+    self.commands.append(HP4_Command("table_set_default",
+                                       "t_resize_pr",
+                                       "_no_op",
+                                       [],
+                                       []))
+
   def gen_t_prep_deparse_entries(self):
     suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']
     for suffix in suffixes:
@@ -1188,7 +1199,7 @@ class HP4C:
     # TODO: self.gen_thp4_multicast_entries()
     self.gen_thp4_egress_filter_entries()
     self.gen_t_checksum_entries()
-    # TODO: self.gen_t_resize_pr_entries()
+    self.gen_t_resize_pr_entries()
     self.gen_t_prep_deparse_entries()
 
   def write_output(self):

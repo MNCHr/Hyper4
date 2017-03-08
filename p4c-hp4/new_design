@@ -72,7 +72,8 @@ We need to explore the impact of a possibly present if_cond in the calculated fi
         for every value of extracted.validbits that could have the right operand marked as valid
         - for key in self.vbits.keys():
             if fref == key[1]:
-              match_param = format(self.vbits[key], '#x')
+              val = format(self.vbits[key], '#x')
+              match_param = val + '&&&' + val
   - operator: '=='
     left operand: field reference
     right operand: value
@@ -80,6 +81,14 @@ We need to explore the impact of a possibly present if_cond in the calculated fi
 - Not Present:
   * t_checksum reads:
     - extracted.validbits: 0&&&0 (don't care)
+
+gen_t_resize_pr_entries:  for every possible value of parse_ctrl.numbytes, we need an entry.  We *could* just add all 100 possible entries and be done.
+
+But this could be prohibitively expensive in terms of space and time.
+
+Need to scan the program for primitives that manipulate the parsed representation's structure: add_header, remove_header, truncate, push, pop, and possibly, copy_header.  Need to take into account whether such primitives are called conditionally or unconditionally.  This implies we should build a tree of possible parse_ctrl.numbytes values, where the tree structure mirrors that of the ingress pipeline.  In other words, build the parse_ctrl.numbytes value tree during walk_ingress_pipeline.
+
+For now, we defer this activity until the PR-manipulating primitives become supported in p4c-hp4.
 
 ## Older Material
 
