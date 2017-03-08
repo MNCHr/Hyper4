@@ -1115,19 +1115,19 @@ class HP4C:
                 min_field = field
             if count == 144:
               if flc.algorithm == 'csum16' and flc.output_width == 16:
+                # Calculate rshift_base parameter
+                #  This is the amount to R-shift extracted.data such
+                #  that the first two bytes of the ipv4 header are
+                #  right aligned
+                key = min_field.instance.name + '.' + min_field.name
+                # TODO: remove assumption that extracted.data is 800 bits
+                aparam = str(784 - self.field_offsets[key])
                 if statement[2] == None:
                   cf_none_types += 1
                   if (cf_none_types + cf_valid_types) > 1:
                     print("ERROR: Unsupported: multiple checksums")
                     exit()
-                  else:
-                    # Calculate rshift_base parameter
-                    #  This is the amount to R-shift extracted.data such
-                    #  that the first two bytes of the ipv4 header are
-                    #  right aligned
-                    key = min_field.instance.name + '.' + min_field.name
-                    # TODO: remove assumption that extracted.data is 800 bits
-                    aparam = str(784 - self.field_offsets[key])
+                  else:                    
                     self.commands.append(HP4_Command("table_add",
                                                       "t_checksum",
                                                       "a_ipv4_csum16",
@@ -1135,14 +1135,24 @@ class HP4C:
                                                       [aparam]))
                 else:
                   if statement[2].op == 'valid':
-                    # TODO
                     cf_valid_types += 1
                     if (cf_none_types + cf_valid_types) > 1:
                       print("ERROR: Unsupported: multiple checksums")
                       exit()
                     else:
+                      # TODO: reduce entries by isolating relevant bit
+                      for key in self.vbits.keys():
+                        if statement[2].right == key[1]:
+                          mparams = ['[program ID]']
+                          # TODO: FIX THIS: adhere to ternary match format (value&&&mask)
+                          mparams.append(format(self.vbits[key], '#x')])
+                          self.commands.append(HP4_Command("table_add",
+                                                            "t_checksum",
+                                                            "a_ipv4_csum16",
+                                                            [mparams],
+                                                            [aparam]))
                   else:
-                    print("ERROR: Unsupported if_cond in calculated field: %s" % statement[2].op)
+                    print("ERROR: Unsupported if_cond op in calculated field: %s" % statement[2].op)
                     exit()
               else:
                 print("ERROR: Unsupported checksum (%s, %i)" % (flc.algorithm, flc.output_width))
