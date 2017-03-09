@@ -49,6 +49,12 @@ Sysadmin involvement is typically because the table could result in a write to a
 
 The thp4_multicast table produces a case where the user should be able to determine values to write to egress_spec, but at the same time these values should be constrained to adhere to the sysadmin's view of the virtual program's connectivity.  Hence these entries should be templates for filling in by the DPMU.
 
+But there is no standard P4 way to multicast.  In bmv2, you do this:
+  modify_field(intrinsic_metadata.mcast_grp, mcast_grp);
+after first defining the intrinsic_metadata header type to include the mcast_grp field.  And then also via the CLI you have to set up the multicast groups.
+
+I'm not sure how it is done in Agilio but let's find out.  I think, however, that we should not do multicasting the way we have been, via cloning to other egress ports one by one in a loop.  Rather, we know that no matter what there is no standard way of multicasting and so if a target has implemented multicasting via intrinsic_metadata, we should just have the target-specific code spliced in when we generate the HyPer4 .p4 from the templates.  So the user, when generating HyPer4 via gen_hp4.sh / p4t, should specify the target via command line option, and the appropriate code is spliced in.  We treat a modify_field(intrinsic_metadata.field, src) as another modify_field subtype.
+
 t_checksum: Scan the code to find:
 - calculated_field
   - at least one update statement
