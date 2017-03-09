@@ -53,6 +53,13 @@ But there is no standard P4 way to multicast.  In bmv2, you do this:
   modify_field(intrinsic_metadata.mcast_grp, mcast_grp);
 after first defining the intrinsic_metadata header type to include the mcast_grp field.  And then also via the CLI you have to set up the multicast groups.
 
+In Agilio, whether you want to multicast OR send to a single physical or virtual port, you simply:
+  modify_field(standard_metadata.egress_spec, spec);
+The spec parameter here will be:
+- 0x0000 - 0x007F: physical port
+- 0x0200 - 0x020F: multicast group
+- 0x0300 - 0x031F: virtual port 
+
 I'm not sure how it is done in Agilio but let's find out.  I think, however, that we should not do multicasting the way we have been, via cloning to other egress ports one by one in a loop.  Rather, we know that no matter what there is no standard way of multicasting and so if a target has implemented multicasting via intrinsic_metadata, we should just have the target-specific code spliced in when we generate the HyPer4 .p4 from the templates.  So the user, when generating HyPer4 via gen_hp4.sh / p4t, should specify the target via command line option, and the appropriate code is spliced in.  We treat a modify_field(intrinsic_metadata.field, src) as another modify_field subtype.
 
 t_checksum: Scan the code to find:
