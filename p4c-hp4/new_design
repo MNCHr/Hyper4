@@ -37,7 +37,7 @@ Any default entries must be universally applicable to any/all virtually hosted p
 - [X] thp4_egress_filter_case1?				| compiler: static default
 - [ ] thp4_out_virtnet?								| sysadmin
 - [X] thp4_egress_filter_case2?				| compiler: static default
-- [ ] t_checksum											| compiler
+- [X] t_checksum											| compiler
 - [ ] t_resize_pr											| compiler
 - [X] t_prep_deparse_SEB							| compiler: static default
 - [X] t_prep_deparse_XX_YY*						| compiler: static default
@@ -60,7 +60,24 @@ The spec parameter here will be:
 - 0x0200 - 0x020F: multicast group
 - 0x0300 - 0x031F: virtual port 
 
-I'm not sure how it is done in Agilio but let's find out.  I think, however, that we should not do multicasting the way we have been, via cloning to other egress ports one by one in a loop.  Rather, we know that no matter what there is no standard way of multicasting and so if a target has implemented multicasting via intrinsic_metadata, we should just have the target-specific code spliced in when we generate the HyPer4 .p4 from the templates.  So the user, when generating HyPer4 via gen_hp4.sh / p4t, should specify the target via command line option, and the appropriate code is spliced in.  We treat a modify_field(intrinsic_metadata.field, src) as another modify_field subtype.
+I expect most P4 targets will do it this way instead of the bmv2 / intrinsic metadata way.
+
+So we should not do multicasting the way we have been, via cloning to other egress ports one by one in a loop.  If the target is Agilio-like, then we have nothing explicit to do beyond supporting modify_field with egress_spec as the destination field (which is already done).  If the target is bmv2-like, then we should splice in target-specific code when HyPer4 is generated from the templates.  The user, when generating HyPer4 via gen_hp4.sh / p4t, should specify the target via command line option, and the appropriate code is spliced in.  We then treat a modify_field(intrinsic_metadata.field, src) as another modify_field subtype.
+
+WAY AHEAD:
+- 1. Change HyPer4 templates to include the following intrinsic_metadata_t header type if the target is bmv2 simple_switch:
+      header_type intrinsic_metadata_t {
+        fields {
+          ingress_global_timestamp : 48; // * Not required, but useful
+          lf_field : 8;                  // * Not required; may be useful in the future (for generate_digest)
+          mcast_grp : 16;                // multicasting
+          egress_rid : 16;               // multicasting
+          resubmit_flag : 8;             // resubmit
+          recirculate_flag : 8;          // recirculate
+        }
+      }
+- 2. Add HyPer4 template support for modify_field on intrinsic_metadata.mcast_grp when the target is bmv2 simple_switch (all other fields are either read-only or not currently necessary)
+- 3. Add p4c-hp4 support for modify_field on intrinsic_metadata.mcast_grp
 
 t_checksum: Scan the code to find:
 - calculated_field

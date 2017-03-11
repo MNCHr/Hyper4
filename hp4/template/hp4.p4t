@@ -59,24 +59,6 @@ field_list clone_fl {
   extracted;
 }
 
-action mod_and_clone(port) {
-  modify_field(meta_ctrl.multicast_current_egress, port);
-  clone_egress_pkt_to_egress(port, clone_fl);
-}
-
-table thp4_multicast {
-  reads {
-    meta_ctrl.program : exact;
-    meta_ctrl.mcast_grp_id : exact;
-    meta_ctrl.mcast_current_egress : exact;
-    standard_metadata.ingress_port : ternary;
-  }
-  actions {
-    mod_and_clone;
-    _no_op;
-  }
-}
-
 table thp4_egress_filter_case1 { actions { a_drop; }}
 table thp4_egress_filter_case2 { actions { a_drop; }}
 
@@ -103,12 +85,8 @@ table thp4_out_virtnet {
 }
 
 control egress {
-  if(meta_ctrl.mc_flag == 1) {
-    apply(thp4_multicast);
-  }
-
   // egress filtering, recirculation
-  if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
+  if(standard_metadata.egress_port == standard_metadata.ingress_port) {
     if(meta_ctrl.virt_egress_port == 0) {
       apply(thp4_egress_filter_case1);
     }
