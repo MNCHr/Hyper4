@@ -202,6 +202,7 @@ class P4tParser:
         directive = line.split("+")[1].strip().upper()
         if directive == "ENDTARGET":
           end_index = temp_nextline - 1
+          break
         elif temp_nextline == len(self.lines):
           print("Error: missing ENDTARGET directive")
           exit()
@@ -209,7 +210,6 @@ class P4tParser:
       del self.lines[start_index]
       del self.lines[end_index - 1]
       self.nextline -= 1
-      code.interact(local=locals())
     else:
       self.nextline = end_index + 1
 

@@ -75,8 +75,9 @@ action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
 }
 // TODO: add rest of the modify_field actions
 
-// for bmv2-ss only: modify_field on intrinsic_metadata.mcast_grp
 [+ target bmv2-ss +]
+// for bmv2-ss only: modify_field on intrinsic_metadata.mcast_grp
+// 80
 action mod_intmeta_mcast_grp_const(val) {
   modify_field(intrinsic_metadata.mcast_grp, val);
 }

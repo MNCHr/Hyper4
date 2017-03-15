@@ -85,6 +85,12 @@ action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
 }
 // TODO: add rest of the modify_field actions
 
+// for bmv2-ss only: modify_field on intrinsic_metadata.mcast_grp
+// 80
+action mod_intmeta_mcast_grp_const(val) {
+  modify_field(intrinsic_metadata.mcast_grp, val);
+}
+
 action _no_op() {
   no_op();
 }
@@ -111,6 +117,7 @@ table t_mod_11 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -136,6 +143,7 @@ table t_mod_12 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -161,6 +169,7 @@ table t_mod_13 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -186,6 +195,7 @@ table t_mod_14 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -211,6 +221,7 @@ table t_mod_15 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -236,6 +247,7 @@ table t_mod_16 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -261,6 +273,7 @@ table t_mod_17 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -286,6 +299,7 @@ table t_mod_18 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -311,6 +325,7 @@ table t_mod_19 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -336,6 +351,7 @@ table t_mod_21 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -361,6 +377,7 @@ table t_mod_22 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -386,6 +403,7 @@ table t_mod_23 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -411,6 +429,7 @@ table t_mod_24 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -436,6 +455,7 @@ table t_mod_25 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -461,6 +481,7 @@ table t_mod_26 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -486,6 +507,7 @@ table t_mod_27 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -511,6 +533,7 @@ table t_mod_28 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -536,6 +559,7 @@ table t_mod_29 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -561,6 +585,7 @@ table t_mod_31 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -586,6 +611,7 @@ table t_mod_32 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -611,6 +637,7 @@ table t_mod_33 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -636,6 +663,7 @@ table t_mod_34 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -661,6 +689,7 @@ table t_mod_35 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -686,6 +715,7 @@ table t_mod_36 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -711,6 +741,7 @@ table t_mod_37 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -736,6 +767,7 @@ table t_mod_38 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -761,6 +793,7 @@ table t_mod_39 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -786,6 +819,7 @@ table t_mod_41 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -811,6 +845,7 @@ table t_mod_42 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -836,6 +871,7 @@ table t_mod_43 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -861,6 +897,7 @@ table t_mod_44 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -886,6 +923,7 @@ table t_mod_45 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -911,6 +949,7 @@ table t_mod_46 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -936,6 +975,7 @@ table t_mod_47 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -961,6 +1001,7 @@ table t_mod_48 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -986,6 +1027,7 @@ table t_mod_49 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1132,3 +1174,4 @@ control do_modify_field_48 {
 control do_modify_field_49 {
   apply(t_mod_49);
 }
+
