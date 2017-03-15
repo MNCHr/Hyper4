@@ -34,6 +34,7 @@ TODO: add forms of sloop good for parser-related constructs
 """
 import argparse
 import re
+import code
 
 parser = argparse.ArgumentParser(description='P4 template processor')
 parser.add_argument('input', help='path for input file',
@@ -43,6 +44,8 @@ parser.add_argument('-o', '--output', help='path for output .p4 file',
 parser.add_argument('-ns', '--numstages', help='max number of match action stages',
                     type=int, action="store", default='3')
 parser.add_argument('-np', '--numprimitives', help='max number of primitives per match action stage', type=int, action="store", default='3')
+parser.add_argument('-t', '--target', help='target device: bmv2-ss | agilio',
+                    type=str, action="store", default='bmv2-ss')
 
 args = parser.parse_args()
 
@@ -183,6 +186,33 @@ class P4tParser:
       self.out += indent + "}\n"
       indent = indent[:-2]
 
+  def handle_target(self, startmarker):
+    # bmv2-ss | agilio
+    target = startmarker.split("+")[1].strip().split()[1].upper()
+    if target != 'BMV2-SS' and target != 'AGILIO':
+      print("Error: Unsupported target in %s: %s" % (args.input, target))
+      exit()
+    start_index = self.nextline - 1
+    end_index = 0
+    temp_nextline = self.nextline
+    while temp_nextline < len(self.lines):
+      line = self.lines[temp_nextline]
+      temp_nextline += 1
+      if line.strip().startswith("[+"):
+        directive = line.split("+")[1].strip().upper()
+        if directive == "ENDTARGET":
+          end_index = temp_nextline - 1
+        elif temp_nextline == len(self.lines):
+          print("Error: missing ENDTARGET directive")
+          exit()
+    if args.target.upper() == target:
+      del self.lines[start_index]
+      del self.lines[end_index - 1]
+      self.nextline -= 1
+      code.interact(local=locals())
+    else:
+      self.nextline = end_index + 1
+
   def process(self):
     while self.done() == False:
       self.out = ""
@@ -204,13 +234,20 @@ class P4tParser:
             self.handle_dloop(line)
           elif directive == "NIF":
             self.handle_nif(line)
+          elif "TARGET" in directive:
+            self.handle_target(line)
+          else:
+            print("Error: directive %s" % directive)
+            exit()
         else:
           self.out += line
       self.lines = [e + '\n' for e in self.out.split('\n')]
     return self.out
 
 def main():
-
+  if args.target.upper() != 'BMV2-SS' and args.target.upper() != 'AGILIO':
+    print("Error: Unsupported target in commandline argument: %s" % args.target)
+    exit()
   with open(args.input, 'r') as fin:
     lines = fin.readlines()
 
