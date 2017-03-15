@@ -11,8 +11,8 @@ header_type csum_t {
   }
 }
 
-// Unfortunately, despite the stated goal of HyPer4 to provide target independent features,
-//  bmv2 requires this intrinsic metadata structure in order to do a resubmit
+//  bmv2 simple switch requires this intrinsic metadata structure
+[+ target bmv2-ss +]
 header_type intrinsic_metadata_t {
   fields {
         ingress_global_timestamp : 48;
@@ -23,6 +23,7 @@ header_type intrinsic_metadata_t {
         recirculate_flag : 8;
   }
 }
+[+ endtarget +]
 
 header_type parse_ctrl_t {
   fields {

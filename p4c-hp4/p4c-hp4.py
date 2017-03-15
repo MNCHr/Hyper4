@@ -68,7 +68,8 @@ mf_prim_subtype_ID = {('meta', 'ingress_port'): '1',
                       ('egress_spec', 'ingress_port'): '11',
                       ('ext', 'ext'): '12',
                       ('meta', 'ext'): '13',
-                      ('ext', 'meta'): '14'}
+                      ('ext', 'meta'): '14',
+                      ('mcast_grp', 'const'): '80'}
 
 mf_prim_subtype_action = {'1': 'mod_meta_stdmeta_ingressport',
                           '2': 'mod_meta_stdmeta_packetlength',
@@ -83,7 +84,8 @@ mf_prim_subtype_action = {'1': 'mod_meta_stdmeta_ingressport',
                           '11': 'mod_stdmeta_egressspec_stdmeta_ingressport',
                           '12': 'mod_extracted_extracted',
                           '13': 'mod_meta_extracted',
-                          '14': 'mod_extracted_meta'}
+                          '14': 'mod_extracted_meta',
+                          '80': 'mod_intmeta_mcast_grp_const'}
 
 a2f_prim_subtype_ID = {'add': '1', 'sub': '2'}
 
@@ -868,6 +870,12 @@ class HP4C:
             first = call[1][0].name
           else:
             print("ERROR: Unexpected stdmeta field %s as dst in modify_field primitive" % call[1][0].name)
+            exit()
+        elif call[1][0].instance.name == 'intrinsic_metadata':
+          if call[1][0].name == 'mcast_grp':
+            first = call[1][0].name
+          else:
+            print("ERROR: Unexpected intmeta field %s as dst in modify_field primitive" % call[1][0].name)
             exit()
         else: # user-defined metadata
           first = 'meta'

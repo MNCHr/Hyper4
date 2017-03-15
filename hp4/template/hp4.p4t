@@ -17,7 +17,9 @@ metadata extracted_t extracted;
 metadata tmeta_t tmeta;
 metadata csum_t csum;
 
+[+ target bmv2-ss +]
 metadata intrinsic_metadata_t intrinsic_metadata;
+[+ endtarget +]
 
 action a_handle_egress_virt(port) {
   modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);

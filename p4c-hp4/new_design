@@ -65,7 +65,7 @@ I expect most P4 targets will do it this way instead of the bmv2 / intrinsic met
 So we should not do multicasting the way we have been, via cloning to other egress ports one by one in a loop.  If the target is Agilio-like, then we have nothing explicit to do beyond supporting modify_field with egress_spec as the destination field (which is already done).  If the target is bmv2-like, then we should splice in target-specific code when HyPer4 is generated from the templates.  The user, when generating HyPer4 via gen_hp4.sh / p4t, should specify the target via command line option, and the appropriate code is spliced in.  We then treat a modify_field(intrinsic_metadata.field, src) as another modify_field subtype.
 
 WAY AHEAD:
-- 1. Change HyPer4 templates to include the following intrinsic_metadata_t header type if the target is bmv2 simple_switch:
+- 1. [DONE] Change HyPer4 templates to include the following intrinsic_metadata_t header type if the target is bmv2 simple_switch:
       header_type intrinsic_metadata_t {
         fields {
           ingress_global_timestamp : 48; // * Not required, but useful
