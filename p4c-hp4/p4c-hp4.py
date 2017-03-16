@@ -955,7 +955,7 @@ class HP4C:
             match_ID_param = '0&&&0'
             for param in p4_call[1]:
               if type(param) == p4_hlir.hlir.p4_imperatives.p4_signature_ref:
-                match_ID_param = '[val]&&&0x7FFFFF'
+                match_ID_param = '[match ID]&&&0x7FFFFF'
                 istemplate = True
                 break
             mparams.append(match_ID_param)
@@ -1039,7 +1039,8 @@ class HP4C:
         aparams.append(val)
         aparams.append(leftshift)
         aparams.append(mask)
-      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const':
+      elif (mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const' or
+            mf_prim_subtype_action[call[1]] == 'mod_intmeta_mcast_grp_const'):
         if type(p4_call[1][1]) == int:
           aparams.append(str(p4_call[1][1]))
         else:
@@ -1085,6 +1086,7 @@ class HP4C:
         aparams.append(str(rshift))
         aparams.append(dstmask)
         aparams.append(srcmask)
+    code.interact(local=locals())
     return aparams
 
   def gen_thp4_egress_filter_entries(self):

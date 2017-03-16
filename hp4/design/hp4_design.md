@@ -34,7 +34,7 @@ When a packet is handed over to another virtual program after having been proces
 
 #### parsing
 
-table *tset\_parse\_control*
+table *tset\_parse\_control*  
 table *tset\_parse\_select\_XX\_YY*
 
 This subsystem handles parsing.  It provides the mechanisms for inspecting parsed representation values to determine whether a resubmit is required to extract more bytes.  At the end we are left with a header stack that contains the parsed representation.  

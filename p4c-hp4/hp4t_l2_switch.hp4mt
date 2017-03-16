@@ -68,9 +68,11 @@
       "[program ID]", 
       "80", 
       "3", 
-      "[val]&&&0x7FFFFF"
+      "[match ID]&&&0x7FFFFF"
     ], 
-    "action_params": [], 
+    "action_params": [
+      "[val]"
+    ], 
     "table": "t_mod_11", 
     "action": "mod_intmeta_mcast_grp_const", 
     "command": "table_add"
@@ -84,7 +86,7 @@
       "[program ID]", 
       "9", 
       "2", 
-      "[val]&&&0x7FFFFF"
+      "[match ID]&&&0x7FFFFF"
     ], 
     "action_params": [
       "[val]"
