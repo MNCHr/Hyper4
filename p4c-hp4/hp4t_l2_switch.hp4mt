@@ -1,0 +1,96 @@
+[
+  {
+    "source_action": "forward", 
+    "__module__": "__main__", 
+    "source_table": "dmac", 
+    "__class__": "HP4_Match_Command", 
+    "match_params": [
+      "[program ID]", 
+      "[val]&&&0xffffffffffff[94x00s]"
+    ], 
+    "action_params": [
+      "2", 
+      "[match ID]", 
+      "[DONE]", 
+      "[MODIFY_FIELD]", 
+      "9"
+    ], 
+    "table": "t1_extracted_exact", 
+    "action": "init_program_state", 
+    "command": "table_add"
+  }, 
+  {
+    "source_action": "broadcast", 
+    "__module__": "__main__", 
+    "source_table": "dmac", 
+    "__class__": "HP4_Match_Command", 
+    "match_params": [
+      "[program ID]", 
+      "[val]&&&0xffffffffffff[94x00s]"
+    ], 
+    "action_params": [
+      "3", 
+      "[match ID]", 
+      "[DONE]", 
+      "[MODIFY_FIELD]", 
+      "80"
+    ], 
+    "table": "t1_extracted_exact", 
+    "action": "init_program_state", 
+    "command": "table_add"
+  }, 
+  {
+    "source_action": "_drop", 
+    "__module__": "__main__", 
+    "source_table": "dmac", 
+    "__class__": "HP4_Match_Command", 
+    "match_params": [
+      "[program ID]", 
+      "[val]&&&0xffffffffffff[94x00s]"
+    ], 
+    "action_params": [
+      "1", 
+      "[match ID]", 
+      "[DONE]", 
+      "[DROP]", 
+      "0"
+    ], 
+    "table": "t1_extracted_exact", 
+    "action": "init_program_state", 
+    "command": "table_add"
+  }, 
+  {
+    "source_action": "broadcast", 
+    "__module__": "__main__", 
+    "source_table": "dmac", 
+    "__class__": "HP4_Match_Command", 
+    "match_params": [
+      "[program ID]", 
+      "80", 
+      "3", 
+      "[val]&&&0x7FFFFF"
+    ], 
+    "action_params": [], 
+    "table": "t_mod_11", 
+    "action": "mod_intmeta_mcast_grp_const", 
+    "command": "table_add"
+  }, 
+  {
+    "source_action": "forward", 
+    "__module__": "__main__", 
+    "source_table": "dmac", 
+    "__class__": "HP4_Match_Command", 
+    "match_params": [
+      "[program ID]", 
+      "9", 
+      "2", 
+      "[val]&&&0x7FFFFF"
+    ], 
+    "action_params": [
+      "[val]"
+    ], 
+    "table": "t_mod_11", 
+    "action": "mod_stdmeta_egressspec_const", 
+    "command": "table_add"
+  }
+]

@@ -1223,8 +1223,8 @@ def main():
   args = parse_args(sys.argv[1:])
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.build()
-  #hp4c.write_output()
-  code.interact(local=locals())
+  hp4c.write_output()
+  #code.interact(local=locals())
 
 if __name__ == '__main__':
   main()
