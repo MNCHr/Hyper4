@@ -38,7 +38,7 @@ Any default entries must be universally applicable to any/all virtually hosted p
 - [ ] thp4_out_virtnet?								| sysadmin
 - [X] thp4_egress_filter_case2?				| compiler: static default
 - [X] t_checksum											| compiler
-- [ ] t_resize_pr											| compiler
+- [P] t_resize_pr											| compiler
 - [X] t_prep_deparse_SEB							| compiler: static default
 - [X] t_prep_deparse_XX_YY*						| compiler: static default
 
@@ -47,7 +47,16 @@ Sysadmin involvement is typically because the table could result in a write to a
 - standard_metadata.egress_spec
 - meta_ctrl.virt_egress_port
 
-The thp4_multicast table produces a case where the user should be able to determine values to write to egress_spec, but at the same time these values should be constrained to adhere to the sysadmin's view of the virtual program's connectivity.  Hence these entries should be templates for filling in by the DPMU.
+## MULTICASTING
+
+There are three types of multicasting HyPer4 might need to do on behalf of a virtual program:
+- only to physical ports (and switch virtual ports, e.g., vf0_* on Agilio)
+- only to HP4 virtual ports
+- to physical and HP4 virtual ports
+
+### only to physical ports
+
+The user should be able to determine values to write to egress_spec, but at the same time these values should be constrained to adhere to the sysadmin's view of the virtual program's connectivity.  Hence these entries should be templates for filling in by the DPMU.
 
 But there is no standard P4 way to multicast.  In bmv2, you do this:
   modify_field(intrinsic_metadata.mcast_grp, mcast_grp);
@@ -76,8 +85,12 @@ WAY AHEAD:
           recirculate_flag : 8;          // recirculate
         }
       }
-- 2. Add HyPer4 template support for modify_field on intrinsic_metadata.mcast_grp when the target is bmv2 simple_switch (all other fields are either read-only or not currently necessary)
-- 3. Add p4c-hp4 support for modify_field on intrinsic_metadata.mcast_grp
+- 2. [DONE] Add HyPer4 template support for modify_field on intrinsic_metadata.mcast_grp when the target is bmv2 simple_switch (all other fields are either read-only or not currently necessary)
+- 3. [DONE] Add p4c-hp4 support for modify_field on intrinsic_metadata.mcast_grp
+
+### 
+
+## t_checksum
 
 t_checksum: Scan the code to find:
 - calculated_field
