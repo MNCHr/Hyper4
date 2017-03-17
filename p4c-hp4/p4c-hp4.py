@@ -162,6 +162,13 @@ class HP4_Match_Command(HP4_Command):
     self.source_table = source_table
     self.source_action = source_action
 
+class HP4_Primitive_Command(HP4_Command):
+  def __init__(self, source_table, source_action, command, table, action, mparams, aparams, src_aparam_id):
+    HP4_Command.__init__(self, command, table, action, mparams, aparams)
+    self.source_table = source_table
+    self.source_action = source_action
+    self.src_aparam_id = src_aparam_id
+
 def convert_to_builtin_type(obj):
   d = { '__class__':obj.__class__.__name__, '__module__':obj.__module__, }
   d.update(obj.__dict__)
@@ -961,13 +968,17 @@ class HP4C:
             mparams.append(match_ID_param)
           aparams = self.gen_action_aparams(p4_call, call)
           if istemplate == True:
-            self.command_templates.append(HP4_Match_Command(table_name,
+            idx = -1
+            if type(p4_call[1][1] == p4_hlir.hlir.p4_imperatives.p4_signature_ref):
+              idx = p4_call[1][1].idx
+            self.command_templates.append(HP4_Primitive_Command(table_name,
                                             action.name,
                                             "table_add",
                                             tname,
                                             aname,
                                             mparams,
-                                            aparams))
+                                            aparams,
+                                            str(idx)))
           else:
             self.commands.append(HP4_Command("table_add",
                                          tname,

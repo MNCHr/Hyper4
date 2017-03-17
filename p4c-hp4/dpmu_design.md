@@ -14,6 +14,8 @@ What is unclear is how to associate the source action parameters with their prim
 
 In p4c-hp4.py, focus on gen\_action\_entries and gen\_action\_aparams.  Basically in the p4\_call we can look at p4\_call[1][1] and if it is 'sig(n)' then the type will be p4\_hlir.hlir.p4\_imperatives.p4\_signature\_ref and it will have an idx attribute, which is the ordinal number of the source action parameter.
 
+But where do we store it?  Currently, we have HP4\_Match\_Command as the only subclass of HP4\_Command, but we should probably have a separate subclass, perhaps called HP4\_Primitive\_Command.
+
 ## t1\_extracted\_exact
 
 - [program ID]: DPMU state initialized at startup via commandline arguments

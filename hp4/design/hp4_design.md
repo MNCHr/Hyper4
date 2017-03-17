@@ -8,6 +8,9 @@
 - [ ] p4c-hp4 test: arp-proxy
 - [ ] p4c-hp4 test: firewall
 - [ ] p4c-hp4 test: router
+- [ ] ADE: match.p4 / switch\_stdmeta.p4 / setup.p4: redesign stdmetadata matching.  Consolidate all stdmetadata fields into a single metadata field and copy metadata matching.  Eliminate the two-step process (but introduce a mandatory new table in setup to do the consolidation - unless we can merge this with another step.  Candidates: tset\_context, tset\_pr\_SEB, or tset\_pipeline\_config).
+- [ ] ADE: match.p4 / switch\_stdmeta.p4 / setup.p4: redesign stdmetadata matching.  Include every stdmetadata field in the tX\_stdmeta\_exact table as a ternary match.  Turn off by using 0&&&0, turn on with [val]&&&[all 1s for as many bits as the width of each field].
+- [ ] ADE: match.p4 / switch\_stdmeta.p4 / setup.p4: redesign stdmetadata matching.  Create a distinct table for each possible field (ingress\_port, packet\_length, instance\_type, egress\_spec) at the same level as the rest of the tX\_<source\_field\_type>\_<match\_type> tables.
 - [ ] ADE: setup.p4: [link](#parsed-representation-to-hp4-metadata) copy ext header stack elements to extracted.data BEFORE doing the matching on the parsed representation, so we do it against extracted.data instead of ext elements, allowing us to do everything with one table that has a ternary match against extracted.data
 
 ADE: Alternative Design Evaluation
