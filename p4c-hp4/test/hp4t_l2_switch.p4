@@ -31,15 +31,12 @@ action _drop() {
 }
 
 // .hp4 ACTION_ID: 2
-action forward(bogus, port) {
-  modify_field(standard_metadata.egress_spec, bogus);
+action forward(port) {
   modify_field(standard_metadata.egress_spec, port);
 }
 
 // .hp4 ACTION_ID: 3
-action broadcast(junk, bogus, mcast) {
-  modify_field(intrinsic_metadata.mcast_grp, junk);
-  modify_field(intrinsic_metadata.mcast_grp, bogus);
+action broadcast(mcast) {
   modify_field(intrinsic_metadata.mcast_grp, mcast);
 }
 

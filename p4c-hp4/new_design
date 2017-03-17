@@ -363,7 +363,7 @@ As a static utility:
 
 Static utility looks a little cleaner and is probably simpler to implement, too, but we likely want to get rid of the -i (initialize counters) option and have DPMU talk to HyPer4 to set the counters.  But the problem is we have to supply the template file every time?  How annoying is that?  Resolve this by maintaining a master template file, which is appended everytime dpmu is invoked with the -t option.  Repurpose -i for reinitializing the master template file.
 
-- [ ] Establish template file format
+- [X] Establish template file format
 - [ ] Connect to HyPer4, obtain list of all tX tables, and initialize counters
 - [ ] Read template files and set up {src_table : template} as well as
       {src_action : action_ID} maps
