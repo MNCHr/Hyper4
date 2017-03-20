@@ -8,6 +8,9 @@ Need to produce entries for:
 - t1\_extracted\_exact
 - t\_mod\_11
 
+Command line:
+- ./dpmu -p 22222 -t hp4t\_l2\_switch.hp4mt -P 1 -c 
+
 We can use 'dmac' and 'forward' to form a key to look up relevant template entries.  We should expect a match table template, and potentially a number of primitive table templates.  The range of the number of primitive table templates has a minimum of 0, and a maximum equal to the number of primitives in the source action.
 
 What is unclear is how to associate the source action parameters with their primitives.  It is easy enough to come up with some kind of mapping in the compiler: {primitive: ordinal number of source action parameter}.  Then we just have to include the ordinal number of the source action parameter in the template entry.
@@ -29,3 +32,22 @@ But where do we store it?  Currently, we have HP4\_Match\_Command as the only su
 - [program ID]: DPMU state initialized at startup via commandline arguments
 - [match ID]: DPMU state initialized at startup, updated with every user entry passed through the DPMU
 - [val]: UE1 action parameter, [port of h1]
+
+## Connecting to bmv2 CLI
+
+Ref: p4lang/behavioral-model/tools/runtime_CLI.py
+
+standard\_client, mc\_client = thrift\_connect(args.thrift_ip, args.thrift\_port, RuntimeAPI.get\_thrift\_services(args.pre))
+
+load\_json\_config(standard\_client, args.json)
+
+RuntimeAPI(args.pre, standard\_client, mc\_client).cmdloop()
+
+thrift\_connect:
+- wrapper method in runtime\_CLI.py: return utils.thrift\_connect(...)
+
+- [X] Need: import bmpy\_utils as utils
+- [ ] RuntimeAPI::do\_table\_set\_default
+      - [ ] Need RuntimeAPI::parse\_runtime\_data
+      - [ ] Need runtime_CLI.py::parse\_runtime\_data
+- [ ] RuntimeAPI::do\_table\_add
