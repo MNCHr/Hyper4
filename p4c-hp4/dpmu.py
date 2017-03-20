@@ -7,6 +7,8 @@ import code
 import bmpy_utils as utils
 import runtime_CLI
 
+hp4_commands = []
+
 def parse_args(args):
   class ActionToPreType(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
@@ -39,12 +41,22 @@ def parse_args(args):
                       type=str, action="store")
   return parser.parse_args(args)
 
-def write_output():
-  pass
+def process_command(template, command):
+  src_table = command.split()[1]
+  src_action = command.split()[2]
+  # TODO...
+
+def write_output(args):
+  standard_client, mc_client = runtime_CLI.thrift_connect(args.thrift_ip, args.port,
+      runtime_CLI.RuntimeAPI.get_thrift_services(args.pre)
+  )
+  json = '../hp4/hp4.json'
+  runtime_CLI.load_json_config(standard_client, json)
+  #for command in hp4_commands:
+    
 
 def main():
   args = parse_args(sys.argv[1:])
-  # code.interact(local=locals())
   '''
   standard_client, mc_client = thrift_connect(args.thrift_ip, args.thrift_port,
       RuntimeAPI.get_thrift_services(args.pre)
@@ -58,13 +70,21 @@ def main():
   #entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
   #rta.do_table_add('<table name> <action name> <match fields> => <action parameters> [priority]')
   '''
+  with open(args.template) as template_file:
+    template = json.load(template_file)
+
   if args.file is not None:
-    pass
+    lines = [line.rstrip('\n') for line in open(args.file)]
+    for line in lines:
+      process_command(template, line)
   elif args.command is not None:
-    print(args.command)
+    process_command(template, args.command)
   else:
     print("ERROR: Require either -c: single command, or -f: file including one or more commands")
     exit()
+
+  #write_output(args)
+  #code.interact(local=locals())
 
 if __name__ == '__main__':
   main()

@@ -60,44 +60,6 @@
     "command": "table_add"
   }, 
   {
-    "source_action": "forward", 
-    "__module__": "__main__", 
-    "src_aparam_id": "0", 
-    "source_table": "dmac", 
-    "__class__": "HP4_Primitive_Command", 
-    "match_params": [
-      "[program ID]", 
-      "9", 
-      "2", 
-      "[match ID]&&&0x7FFFFF"
-    ], 
-    "action_params": [
-      "[val]"
-    ], 
-    "table": "t_mod_11", 
-    "action": "mod_stdmeta_egressspec_const", 
-    "command": "table_add"
-  }, 
-  {
-    "source_action": "forward", 
-    "__module__": "__main__", 
-    "src_aparam_id": "1", 
-    "source_table": "dmac", 
-    "__class__": "HP4_Primitive_Command", 
-    "match_params": [
-      "[program ID]", 
-      "9", 
-      "2", 
-      "[match ID]&&&0x7FFFFF"
-    ], 
-    "action_params": [
-      "[val]"
-    ], 
-    "table": "t_mod_12", 
-    "action": "mod_stdmeta_egressspec_const", 
-    "command": "table_add"
-  }, 
-  {
     "source_action": "broadcast", 
     "__module__": "__main__", 
     "src_aparam_id": "0", 
@@ -117,41 +79,22 @@
     "command": "table_add"
   }, 
   {
-    "source_action": "broadcast", 
+    "source_action": "forward", 
     "__module__": "__main__", 
-    "src_aparam_id": "1", 
+    "src_aparam_id": "0", 
     "source_table": "dmac", 
     "__class__": "HP4_Primitive_Command", 
     "match_params": [
       "[program ID]", 
-      "80", 
-      "3", 
+      "9", 
+      "2", 
       "[match ID]&&&0x7FFFFF"
     ], 
     "action_params": [
       "[val]"
     ], 
-    "table": "t_mod_12", 
-    "action": "mod_intmeta_mcast_grp_const", 
-    "command": "table_add"
-  }, 
-  {
-    "source_action": "broadcast", 
-    "__module__": "__main__", 
-    "src_aparam_id": "2", 
-    "source_table": "dmac", 
-    "__class__": "HP4_Primitive_Command", 
-    "match_params": [
-      "[program ID]", 
-      "80", 
-      "3", 
-      "[match ID]&&&0x7FFFFF"
-    ], 
-    "action_params": [
-      "[val]"
-    ], 
-    "table": "t_mod_13", 
-    "action": "mod_intmeta_mcast_grp_const", 
+    "table": "t_mod_11", 
+    "action": "mod_stdmeta_egressspec_const", 
     "command": "table_add"
   }
 ]

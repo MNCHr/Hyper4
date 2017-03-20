@@ -1097,7 +1097,6 @@ class HP4C:
         aparams.append(str(rshift))
         aparams.append(dstmask)
         aparams.append(srcmask)
-    code.interact(local=locals())
     return aparams
 
   def gen_thp4_egress_filter_entries(self):

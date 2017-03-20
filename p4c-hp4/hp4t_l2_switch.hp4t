@@ -3,11 +3,8 @@ table_set_default tset_in_virtnet a_virt_ports_cleanup
 table_add tset_parse_control set_next_action [program ID] 0 => [PROCEED] 1
 table_set_default tset_pr_SEB a_pr_import_SEB
 table_add tset_pipeline_config a_set_pipeline [program ID] 1 => [EXTRACTED_EXACT] 0x80000000000000000000
-table_add tstg11_update_state update_state [program ID] 2 => [MODIFY_FIELD] 9
-table_add tstg12_update_state finish_action [program ID] 2 => 0
-table_add tstg11_update_state update_state [program ID] 3 => [MODIFY_FIELD] 80
-table_add tstg12_update_state update_state [program ID] 3 => [MODIFY_FIELD] 80
-table_add tstg13_update_state finish_action [program ID] 3 => 0
+table_add tstg11_update_state finish_action [program ID] 3 => 0
+table_add tstg11_update_state finish_action [program ID] 2 => 0
 table_add t_drop_11 a_drop =>
 table_add tstg11_update_state finish_action [program ID] 1 => 0
 table_set_default thp4_egress_filter_case1 a_drop
