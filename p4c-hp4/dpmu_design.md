@@ -9,11 +9,11 @@ Need to produce entries for:
 - t\_mod\_11
 
 Command line:
-- ./dpmu -p 22222 -t hp4t\_l2\_switch.hp4mt -P 1 -c 
+- ./dpmu -p 22222 -t hp4t\_l2\_switch.hp4mt -P 1 -c 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
 
 We can use 'dmac' and 'forward' to form a key to look up relevant template entries.  We should expect a match table template, and potentially a number of primitive table templates.  The range of the number of primitive table templates has a minimum of 0, and a maximum equal to the number of primitives in the source action.
 
-What is unclear is how to associate the source action parameters with their primitives.  It is easy enough to come up with some kind of mapping in the compiler: {primitive: ordinal number of source action parameter}.  Then we just have to include the ordinal number of the source action parameter in the template entry.
+What is unclear is how to associate the source action parameters with their primitives.  It is easy enough to come up with some kind of mapping in the compiler: {primitive: ordinal number of source action parameter}.  Then we just have to include the ordinal number of the source action parameter in the template entry.  UPDATE: This is called src\_aparam\_id.
 
 In p4c-hp4.py, focus on gen\_action\_entries and gen\_action\_aparams.  Basically in the p4\_call we can look at p4\_call[1][1] and if it is 'sig(n)' then the type will be p4\_hlir.hlir.p4\_imperatives.p4\_signature\_ref and it will have an idx attribute, which is the ordinal number of the source action parameter.
 
@@ -22,6 +22,15 @@ But where do we store it?  Currently, we have HP4\_Match\_Command as the only su
 ## t1\_extracted\_exact
 
 - [program ID]: DPMU state initialized at startup via commandline arguments
+  Let's flesh this out a bit.  Anticipated sequence of operation:
+  1. (admin) Load P4 device with HP4
+  2. (user) send request for service, include source.p4, pub key?, instance name(s)
+  3. (admin) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
+  4. (admin) Prepare for loading: source.hp4t --hp4l--> source.hp4
+   - Specify program ID
+  5. (admin) Load HP4 with source.hp4
+   - `<path to sswitch_CLI>` `<port of P4 device>` `<` source.hp4
+
 - [val]: UE1 match parameter, [MAC of h2]
 - [match ID]: DPMU state initialized at startup, updated with every user entry passed through the DPMU
 - [DONE]: definitions file shared with hp4l
