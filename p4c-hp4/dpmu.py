@@ -21,23 +21,23 @@ def parse_args(args):
       setattr(namespace, self.dest, PreType.from_str(values))
 
   parser = argparse.ArgumentParser(description='Data Plane Management Unit')
-  parser.add_argument('-p', '--port', help='Thrift port for HyPer4',
-                      type=int, action="store", default=9090)
-  parser.add_argument('--thrift-ip', help='Thrift IP address for table updates',
+
+  parser.add_argument('--port', help='port for DPMU',
+                      type=int, action="store", default=33333)
+  parser.add_argument('--hp4-ip', help='IP address for HP4',
                       type=str, action="store", default='localhost')
+  parser.add_argument('--hp4-port', help='port for HyPer4',
+                      type=int, action="store", default=9090)
   parser.add_argument('--pre', help='Packet Replication Engine used by target',
                       type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
                       default=runtime_CLI.PreType.SimplePre, action=ActionToPreType)
-  parser.add_argument('-i', '--initialize', help='initialize DPMU state',
+  parser.add_argument('--server', help='flag starts DPMU as a server',
                       action="store_true")
-  parser.add_argument('-t', '--template', help='template file (.hp4mt)',
-                      type=str, action="store")
-  parser.add_argument('-P', '--pid', help='program ID',
-                      type=str, action="store")
+
   group = parser.add_mutually_exclusive_group()
-  group.add_argument('-c', '--command', help='single table command',
+  group.add_argument('--command', help='single table command',
                      type=str, action="store")
-  group.add_argument('-f', '--file', help='file containing table commands',
+  group.add_argument('--file', help='file containing table commands',
                       type=str, action="store")
   return parser.parse_args(args)
 
@@ -47,7 +47,7 @@ def process_command(template, command):
   # TODO...
 
 def write_output(args):
-  standard_client, mc_client = runtime_CLI.thrift_connect(args.thrift_ip, args.port,
+  standard_client, mc_client = runtime_CLI.thrift_connect(args.hp4_ip, args.hp4_port,
       runtime_CLI.RuntimeAPI.get_thrift_services(args.pre)
   )
   json = '../hp4/hp4.json'

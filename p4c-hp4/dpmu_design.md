@@ -24,12 +24,12 @@ Basic client/server network programming in python is found at www.bogotobogo.com
 
 Pattern of communication:
   0. Admin loads P4 device with HP4 and starts DPMU server
-     ./dpmu --server --port 33333 --hp4-port 22222 &
+     ./dpmu server --port 33333 --hp4-port 22222 2>&1 &
      
   1. (user) send request for service, include source.p4, instance name(s)
-     ./dpmu --client --port 33333 --load source.p4
+     ./dpmu client --port 33333 --load source.p4
      With no instance name(s) supplied, the default is to create a single instance with the same name as the source P4 program, without the .p4 extension.
-     ./dpmu --client --port 33333 --load source.p4 --instance-list "src1 src2 src3"
+     ./dpmu client --port 33333 --load source.p4 --instance-list "src1 src2 src3"
 
   2. (dpmu) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
   3. (dpmu) Prepare for loading: source.hp4t --hp4l--> `<instance name>`.hp4
@@ -38,7 +38,8 @@ Pattern of communication:
    - `<path to sswitch_CLI> <port of P4 device> < <instance name>.hp4`
   5. (dpmu) return success/fail for each requested instance
   6. (user) send table transaction formatted for source.p4, designated for a certain instance
-     ./dpmu --client --port 33333 --instance `<instance name>` --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
+     ./dpmu client --port 33333 --instance `<instance name>` --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
+     ./dpmu client --port 33333 --instance `<instance name>` --file `<path to file with commands>`
 
   7. (dpmu) check validity of instance, translate transaction, return success/fail
 
@@ -60,17 +61,24 @@ Pattern of communication:
 
 Ref: p4lang/behavioral-model/tools/runtime_CLI.py
 
-standard\_client, mc\_client = thrift\_connect(args.thrift_ip, args.thrift\_port, RuntimeAPI.get\_thrift\_services(args.pre))
+import bmpy\_utils as utils
+import runtime\_CLI
 
-load\_json\_config(standard\_client, args.json)
+standard\_client, mc\_client = thrift\_connect(args.thrift\_ip, args.thrift\_port, runtime\_CLI.RuntimeAPI.get\_thrift\_services(args.pre))
+json = '../hp4/hp4.json'
+runtime\_CLI.load\_json\_config(standard\_client, json)
+rta = runtime\_CLI.RuntimeAPI('SimplePre', standard\_client)
+rta.do\_table\_add(`<table name> <action name> <match fields> => <action parameters [priority]`)
 
-RuntimeAPI(args.pre, standard\_client, mc\_client).cmdloop()
+Other useful commands:
+- table = runtime\_CLI.TABLES`[<table name>]`
+- rta.do\_table\_dump(`<table name>`)
+- entry = standard\_client.bm\_mt\_get\_entries(0, `<table name>`)`[<idx>]`
 
-thrift\_connect:
-- wrapper method in runtime\_CLI.py: return utils.thrift\_connect(...)
+## organization
 
-- [X] Need: import bmpy\_utils as utils
-- [ ] RuntimeAPI::do\_table\_set\_default
-      - [ ] Need RuntimeAPI::parse\_runtime\_data
-      - [ ] Need runtime_CLI.py::parse\_runtime\_data
-- [ ] RuntimeAPI::do\_table\_add
+Tasks DPMU must accomplish:
+- Run as a server in the background and demonstrate ability to receive commands
+- Connect to running instance of HP4 and demonstrate ability to add table entries
+- Compile and load source.p4 into running instance of HP4
+- Translate transactions for source.p4 into transactions for HP4
