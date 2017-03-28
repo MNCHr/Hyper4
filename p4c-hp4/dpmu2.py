@@ -6,14 +6,37 @@ import json
 import code
 import bmpy_utils as utils
 import runtime_CLI
+import socket
 
 def server(args):
   print("server")
   print(args)
 
+  hp4_client, mc_client = thrift_connect(args.hp4_ip, args.hp4_port,
+                              RuntimeAPI.get_thrift_services(args.pre))
+  json = '/home/ubuntu/hp4-src/hp4/hp4.json'
+  runtime_CLI.load_json_config(hp4_client, json)
+  rta = runtime__CLI.RuntimeAPI('SimplePre', hp4_client)
+
+  serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  host = socket.gethostname()
+  serversocket.bind((host, args.port))
+  serversocket.listen(5)
+
+  while True:
+    clientsocket,addr = serversocket.accept()
+    print("Got a connection from %s" % str(addr))
+    data = clientsocket.recv(1024)
+    print(data)
+    # TODO: create do_load(), do_instance()
+    # In do_instance, we'll have rta.do_table_add(...)
+    clientsocket.sendall('response')
+    clientsocket.close()
+
 def client_load(args):
   print("client_load")
   print(args)
+  
 
 def client_instance(args):
   print("client_instance")
