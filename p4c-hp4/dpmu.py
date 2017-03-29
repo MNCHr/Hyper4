@@ -17,11 +17,18 @@ standard_client.bm_mt_get_entries(0, '<table name>')
 entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
 '''
 
-def do_load():
-  pass
+class DPMU_Server():
+  def __init__(self, rta):
+    self.next_PID = 1
+    self.instances = {}
+    self.rta = rta
 
-def do_instance():
-  pass
+  def do_load(self):
+    return 'DO_LOAD'
+
+  def do_instance(self):
+    # rta.do_table_add(...)
+    return 'DO_INSTANCE'
 
 def server(args):
   print("server")
@@ -38,6 +45,8 @@ def server(args):
   serversocket.bind((host, args.port))
   serversocket.listen(5)
 
+  dserver = DPMU_Server(rta)
+
   while True:
     clientsocket,addr = serversocket.accept()
     print("Got a connection from %s" % str(addr))
@@ -45,19 +54,37 @@ def server(args):
     print(data)
     # TODO: create do_load(), do_instance()
     # In do_instance, we'll have rta.do_table_add(...)
-    clientsocket.sendall('response')
+    response = ''
+    submode = data.split()[0]
+    if submode == 'load':
+      response = dserver.do_load()
+    elif submode == 'instance':
+      response = dserver.do_instance()
+    clientsocket.sendall(response)
     clientsocket.close()
 
 def client_load(args):
   print("client_load")
   print(args)
-  
+  data = 'load ' + args.source
+  if args.instance_list == None:
+    data += ' ' + args.source.split('.')[0]
+  else:
+    for inst in args.instance_list:
+      data += ' ' + inst
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  host = socket.gethostname()
+  s.connect((host, args.port))
+  s.send(data)
+  resp = s.recv(1024)
+  print(resp)
+  s.close()
 
 def process_command(port, iname, command):
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   host = socket.gethostname()
   s.connect((host, port))
-  s.send(iname + ' ' + command)
+  s.send('instance ' + iname + ' ' + command)
   resp = s.recv(1024)
   print(resp)
   s.close()
