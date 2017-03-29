@@ -8,15 +8,30 @@ import bmpy_utils as utils
 import runtime_CLI
 import socket
 
+'''
+potentially useful runtime_CLI methods:
+table = runtime_CLI.TABLES['<table name>']
+rta = runtime_CLI.RuntimeAPI('SimplePre', standard_client)
+rta.do_table_dump('<table name>')
+standard_client.bm_mt_get_entries(0, '<table name>')
+entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
+'''
+
+def do_load():
+  pass
+
+def do_instance():
+  pass
+
 def server(args):
   print("server")
   print(args)
 
-  hp4_client, mc_client = thrift_connect(args.hp4_ip, args.hp4_port,
-                              RuntimeAPI.get_thrift_services(args.pre))
+  hp4_client, mc_client = runtime_CLI.thrift_connect(args.hp4_ip, args.hp4_port,
+                              runtime_CLI.RuntimeAPI.get_thrift_services(args.pre))
   json = '/home/ubuntu/hp4-src/hp4/hp4.json'
   runtime_CLI.load_json_config(hp4_client, json)
-  rta = runtime__CLI.RuntimeAPI('SimplePre', hp4_client)
+  rta = runtime_CLI.RuntimeAPI('SimplePre', hp4_client)
 
   serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   host = socket.gethostname()
@@ -38,9 +53,27 @@ def client_load(args):
   print(args)
   
 
+def process_command(port, iname, command):
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  host = socket.gethostname()
+  s.connect((host, port))
+  s.send(iname + ' ' + command)
+  resp = s.recv(1024)
+  print(resp)
+  s.close()
+
 def client_instance(args):
   print("client_instance")
   print(args)
+  if args.file is not None:
+    lines = [line.rstrip('\n') for line in open(args.file)]
+    for line in lines:
+      process_command(args.port, args.instance_name, line)
+  elif args.command is not None:
+    process_command(args.port, args.instance_name, args.command)
+  else:
+    print("ERROR client instance: require either --command or --file")
+    exit()
 
 def parse_args(args):
   class ActionToPreType(argparse.Action):
