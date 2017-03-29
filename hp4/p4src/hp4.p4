@@ -71,12 +71,6 @@ control ingress {
   }
 }
 
-field_list clone_fl {
-  standard_metadata;
-  meta_ctrl;
-  extracted;
-}
-
 table thp4_egress_filter_case1 { actions { a_drop; }}
 table thp4_egress_filter_case2 { actions { a_drop; }}
 

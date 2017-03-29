@@ -82,5 +82,8 @@ control match_[+X+] {
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t[+X+]_extracted_valid);
   }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t[+X+]_matchless);
+  }
 }
 [+ endsloop +]

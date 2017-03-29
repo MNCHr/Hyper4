@@ -231,6 +231,9 @@ control match_1 {
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t1_extracted_valid);
   }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t1_matchless);
+  }
 }
 
 control match_2 {
@@ -246,6 +249,9 @@ control match_2 {
   }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t2_extracted_valid);
+  }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t2_matchless);
   }
 }
 
@@ -263,6 +269,9 @@ control match_3 {
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t3_extracted_valid);
   }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t3_matchless);
+  }
 }
 
 control match_4 {
@@ -278,5 +287,8 @@ control match_4 {
   }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t4_extracted_valid);
+  }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t4_matchless);
   }
 }

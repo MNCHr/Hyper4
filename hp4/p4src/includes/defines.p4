@@ -38,6 +38,7 @@ defines.p4: Define constants
 #define METADATA_EXACT	2
 #define STDMETA_EXACT	  3
 #define EXTRACTED_VALID 4
+#define MATCHLESS				99
 
 // meta_ctrl.stage_state
 #define COMPLETE	1

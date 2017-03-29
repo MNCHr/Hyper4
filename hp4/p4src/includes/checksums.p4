@@ -54,7 +54,7 @@ action a_ipv4_csum16(rshift_base) {
 table t_checksum {
   reads {
     meta_ctrl.program : exact;
-    extracted.validbits : ternary
+    extracted.validbits : ternary;
   }
   actions {
     a_ipv4_csum16;
