@@ -37,28 +37,25 @@ Pattern of communication:
    - physical port assignment
      Provide update on current set of instances, current table space usage
      (total and per instance), and current port assignments (per instance).
-     
-  3. (user) send request for service, include source.p4, instance name(s)
-     ./dpmu client compile source.p4 --user `<username>` --port 33333
-     With no instance name(s) supplied, the default is to create a single instance with the same name as the source P4 program, without the .p4 extension.
-     ./dpmu client compile source.p4 --user `<username>` --port 33333 --instance-list "inst1 inst2 inst3"
-  4. (dpmu) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
 
-  5. (user) send request for loading, triggering port assignments
-     ./dpmu client load `<instance-name>` [phys-ports]
-  6. (dpmu) Prepare for loading: source.hp4t --hp4l--> `<instance name>`.hp4
+  3. (user) send request for loading, triggering port assignments
+     ./dpmu client load source.p4 --user `<username>` --instance `<instance-name>` [phys-ports]
+  4. (dpmu) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
+  5. (dpmu) Prepare for loading: source.hp4t --hp4l--> `<instance name>`.hp4
    - Create program ID per instance and maintain map `<instance name>: [program ID]`
+   - Maintain instance -> program map `<instance name>`: `<source name>` where source name
+     can be appended with .hp4mt to yield the hp4 match template file name or .hp4t to
+     yield the file supplied to the loader to produce the .hp4
    - Maintain virtual ports map `<instance name: [vport1, vport2, vport3, vport4]>`
      where vportX is automatically determined by DPMU
-  7. (dpmu) Load HP4 with `<instance name>`.hp4
+  6. (dpmu) Load HP4 with `<instance name>`.hp4
    - `<path to sswitch_CLI> <port of P4 device> < <instance name>.hp4`
-  8. (dpmu) return success/fail for each requested instance
+  7. (dpmu) return success/fail for each requested instance
 
-  9. (user) send table transaction formatted for source.p4, designated for a certain instance
+  8. (user) send table transaction formatted for source.p4, designated for a certain instance
      ./dpmu client --port 33333 --instance `<instance name>` --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
      ./dpmu client --port 33333 --instance `<instance name>` --file `<path to file with commands>`
-
-  10. (dpmu) check validity of instance, translate transaction, return success/fail
+  9. (dpmu) check validity of instance, translate transaction, return success/fail
 
 ## t1\_extracted\_exact
 
