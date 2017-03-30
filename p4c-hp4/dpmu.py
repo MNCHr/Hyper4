@@ -19,10 +19,41 @@ entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
 '''
 
 class DPMU_Server():
-  def __init__(self, rta):
+  def __init__(self, rta, entries, phys_ports, userfile):
     self.next_PID = 1
     self.instances = {}
     self.rta = rta
+    self.total_entries = entries
+    self.entries_remaining = entries
+    self.phys_ports = phys_ports
+    self.phys_ports_remaining = list(phys_ports)
+    # key: username
+    # value: (entries, [phys_ports], [instances])
+    self.users = {}
+    if userfile is None:
+      uports = list(phys_ports_remaining)
+      self.users['default'] = (self.entries_remaining, uports, [])
+      self.entries_remaining = 0
+      self.phys_ports_remaining[:] = []
+    else:
+      lines = [line.rstrip('\n') for line in open(userfile)]
+      for line in lines:
+        uname = line.split()[0]
+        uentries = int(line.split()[1])
+        uports = [int(port) for port in line.split()[2:]]
+        if uentries > self.entries_remaining:
+          print("ERROR: userfile %s: requested %i entries for user %s, %i \
+              available" % (userfile, uentries, uname, self.entries_remaining))
+          exit()
+        for port in uports:
+          if port in self.phys_ports_remaining:
+            self.phys_ports_remaining.remove(port)
+          else:
+            print("ERROR: userfile %s: requested port %i not available" % \
+                (userfile, port))
+            exit()
+        self.entries_remaining = self.entries_remaining - uentries
+        self.users[uname] = (uentries, uports, [])
 
   def do_load(self, command):
     srcfile = command.split()[1]
