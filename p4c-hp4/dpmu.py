@@ -7,6 +7,7 @@ import code
 import bmpy_utils as utils
 import runtime_CLI
 import socket
+from subprocess import call
 
 '''
 potentially useful runtime_CLI methods:
@@ -23,10 +24,19 @@ class DPMU_Server():
     self.instances = {}
     self.rta = rta
 
-  def do_load(self):
+  def do_load(self, command):
+    srcfile = command.split()[1]
+    srcname = srcfile.split('.')[0]
+    print("srcfile: " + srcfile)
+    # compile
+    # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
+    if call(["./p4c-hp4", "-o", srcname + ".hp4t", "-m", srcname + ".hp4mt", "-s 20", srcfile]) == 0:
+      for instance in command.split()[2:]:
+        self.instances[instance] = (self.next_PID, srcname + ".hp4t", {})
+    # load
     return 'DO_LOAD'
 
-  def do_instance(self):
+  def do_instance(self, command):
     # rta.do_table_add(...)
     return 'DO_INSTANCE'
 
@@ -57,9 +67,9 @@ def server(args):
     response = ''
     submode = data.split()[0]
     if submode == 'load':
-      response = dserver.do_load()
+      response = dserver.do_load(data)
     elif submode == 'instance':
-      response = dserver.do_instance()
+      response = dserver.do_instance(data)
     clientsocket.sendall(response)
     clientsocket.close()
 

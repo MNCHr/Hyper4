@@ -1233,6 +1233,8 @@ class HP4C:
 
 def main():
   args = parse_args(sys.argv[1:])
+  print("FROM P4C-HP4")
+  print(args)
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.build()
   hp4c.write_output()
