@@ -30,10 +30,14 @@ class DPMU_Server():
     print("srcfile: " + srcfile)
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
-    if call(["./p4c-hp4", "-o", srcname + ".hp4t", "-m", srcname + ".hp4mt", "-s 20", srcfile]) == 0:
+    hp4t = srcname + '.hp4t'
+    hp4mt = srcname + '.hp4mt'
+    if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) == 0:
       for instance in command.split()[2:]:
-        self.instances[instance] = (self.next_PID, srcname + ".hp4t", {})
-    # load
+        self.instances[instance] = (self.next_PID, hp4t, {})
+        # load
+        # hp4l --input <hp4t> --output srcname+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
+        self.next_PID += 1
     return 'DO_LOAD'
 
   def do_instance(self, command):

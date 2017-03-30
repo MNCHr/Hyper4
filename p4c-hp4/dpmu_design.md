@@ -24,31 +24,36 @@ Basic client/server network programming in python is found at www.bogotobogo.com
 
 Pattern of communication:
   0. Admin loads P4 device with HP4 and starts DPMU server
-     ./dpmu server --port 33333 --hp4-port 22222 2>&1 &
+     ./dpmu server --port 33333 --hp4-port 22222 --entries 1000 --phys-ports 4 --users userfile 2>&1 &
+   - userfile format:
+     username max\_table\_entries phys-port1 ... phys-portN
+     ...
+     If no userfile supplied, single user named 'default' created, with all --entries and --phys-ports
 
-  1. (user) send a request for resources
+  1. (user) send a request for resource status
      ./dpmu client user `<username>`
   2. (dpmu) return resource set associated w/ `<username>`:
    - total table entry space
    - physical port assignment
-   - virtual port assignment
-     If the username hasn't been seen before, allocate resources and initialize
-     port assignments to null.  Otherwise, provide update on current set of
-     instances, current table space usage (total and per instance), and current
-     port assignments (per instance).
+     Provide update on current set of instances, current table space usage
+     (total and per instance), and current port assignments (per instance).
      
   3. (user) send request for service, include source.p4, instance name(s)
-     ./dpmu client load --user `<username>` --dpmu-port 33333 --load source.p4
+     ./dpmu client compile source.p4 --user `<username>` --port 33333
      With no instance name(s) supplied, the default is to create a single instance with the same name as the source P4 program, without the .p4 extension.
-     ./dpmu client load --user `<username>` --dpmu-port 33333 --load source.p4 --instance-list "src1 src2 src3"
+     ./dpmu client compile source.p4 --user `<username>` --port 33333 --instance-list "inst1 inst2 inst3"
   4. (dpmu) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
-  5. (user) send port assignment(s)
-     ./dpmu client assign `<instance-name>` [phys-ports]
+
+  5. (user) send request for loading, triggering port assignments
+     ./dpmu client load `<instance-name>` [phys-ports]
   6. (dpmu) Prepare for loading: source.hp4t --hp4l--> `<instance name>`.hp4
    - Create program ID per instance and maintain map `<instance name>: [program ID]`
+   - Maintain virtual ports map `<instance name: [vport1, vport2, vport3, vport4]>`
+     where vportX is automatically determined by DPMU
   7. (dpmu) Load HP4 with `<instance name>`.hp4
    - `<path to sswitch_CLI> <port of P4 device> < <instance name>.hp4`
   8. (dpmu) return success/fail for each requested instance
+
   9. (user) send table transaction formatted for source.p4, designated for a certain instance
      ./dpmu client --port 33333 --instance `<instance name>` --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
      ./dpmu client --port 33333 --instance `<instance name>` --file `<path to file with commands>`
@@ -104,3 +109,9 @@ When a client first connects to the DPMU server, he should receive a list of phy
 We previously considered SSL to secure transactions between the client and the server, and decided the actual use of SSL was not necessary for this research system because it adds nothing of research value.  Similarly, we can decide that actual cryptographic authentication is not necessary for resource management.
 
 Nevertheless, we do have a basic requirement to support user management.  This adds an argument to the client mode at a minimum and a {username: resource_set} dictionary to track for the server.
+
+## client user `<username>`
+
+./dpmu client user `<username>`
+
+Provide status of resource allocation.  Resources must be allocated when the server is invoked.
