@@ -147,6 +147,13 @@ def client_instance(args):
     print("ERROR client instance: require either --command or --file")
     exit()
 
+'''
+  client user <username>
+  - return resource set associated w/ <username>
+  client load source.p4 --user <username> --instance <instance name> [list of phys-ports]
+  client populate <instance name> <[--command 'table_add dmac forward 00:AA:BB:00:00:01 => 1' | --file filename]>
+  server --port 33333 --hp4-port 22222 --entries 1000 --phys-ports 4 --users userfile
+'''
 def parse_args(args):
   class ActionToPreType(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):

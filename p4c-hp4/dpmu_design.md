@@ -1,3 +1,23 @@
+# DPMU Implementation
+
+- [ ] clarify port management
+- [ ] Connect to running instance of HP4
+- [ ] Load userfile: track users, entry limits, and port assignments
+- [ ] client: ./dpmu client user `<username>` returns resource status: total & per instance
+- [ ] server: received ./dpmu client user `<username>` returns resource status: total & per instance
+- [ ] client: ./dpmu client load source.p4 --user `<username>` --instance `<instance-name>` [phys-ports]
+- [ ] server: handle client load source.p4 ... step 1: compile
+- [ ] server: handle client load source.p4 ... step 2a: load prep via hp4l
+- [ ] server: handle client load source.p4 ... step 2b: track instance attributes (prog ID, source, vports)
+- [ ] server: handle client load source.p4 ... step 3: load the program via sswitch_CLI
+- [ ] server: handle client load source.p4 ... step 4: return success/fail to client
+- [ ] client: ./dpmu client populate `<instance name>` --port 33333 --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
+- [ ] client: ./dpmu client populate `<instance name>` --port 33333 --file `<path to file with commands>`
+- [ ] server: handle client populate ... step 1: check validity of instance
+- [ ] server: handle client populate ... step 2: translate transaction
+- [ ] server: handle client populate ... step 3: add table entries to running instance of HP4
+- [ ] server: handle client populate ... step 4: return success/fail
+
 # DPMU Design
 
 Given:
@@ -53,12 +73,13 @@ Pattern of communication:
   7. (dpmu) return success/fail for each requested instance
 
   8. (user) send table transaction formatted for source.p4, designated for a certain instance
-     ./dpmu client --port 33333 --instance `<instance name>` --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
-     ./dpmu client --port 33333 --instance `<instance name>` --file `<path to file with commands>`
+     ./dpmu client populate `<instance name>` --port 33333 --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
+     ./dpmu client populate `<instance name>` --port 33333 --file `<path to file with commands>`
   9. (dpmu) check validity of instance, translate transaction, return success/fail
 
 ## t1\_extracted\_exact
 
+When translating a population request, the task is to replace all bracketed fields in the template with actual values. The following identifies where the values come from for each such template field:
 - [program ID]: DPMU creates and tracks program ID for each requested instance
 - [val]: UE1 match parameter, [MAC of h2]
 - [match ID]: DPMU state initialized upon receiving request for new instance, updated with every user entry passed through the DPMU
@@ -89,23 +110,35 @@ Other useful commands:
 - rta.do\_table\_dump(`<table name>`)
 - entry = standard\_client.bm\_mt\_get\_entries(0, `<table name>`)`[<idx>]`
 
-## organization
-
-Tasks DPMU must accomplish:
--[X] Run as a server in the background and demonstrate ability to receive commands
--[ ] Connect to running instance of HP4 and demonstrate ability to add table entries
--[ ] Compile and load source.p4 into running instance of HP4
--[ ] Translate transactions for source.p4 into transactions for HP4
-
 ## port management
 
-The loader, hp4l, expects, as a command line argument, a list of physical ports to which the virtual program applies.  It is yet unclear how these resources should be managed in a way that integrates well with the established pattern of communication - or whether we must alter that pattern to accommodate port management.
+The issues:
+- properly setting the program ID when the physical port is used for this purpose
+- translating use of physical ports in the source program
+  - source program matches on physical port
+    - standard\_metadata.ingress\_port
+    - standard\_metadata.egress\_spec
+  - source program uses physical port as source in modify_field primitive
+  - source program uses physical port as dest in modify_field primitive
+
+### properly setting the program ID
+The loader, hp4l, expects, as a command line argument, a list of physical ports to which the virtual program applies.
 
 When a client first connects to the DPMU server, he should receive a list of physical resources (number of virtual programs he is allowed and total table space usable by all virtual programs, list of physical ports, and list of virtual ports) associated with some kind of cryptographic token.  In later transactions, he presents the token to authenticate any requests to use those resources.
 
 We previously considered SSL to secure transactions between the client and the server, and decided the actual use of SSL was not necessary for this research system because it adds nothing of research value.  Similarly, we can decide that actual cryptographic authentication is not necessary for resource management.
 
 Nevertheless, we do have a basic requirement to support user management.  This adds an argument to the client mode at a minimum and a {username: resource_set} dictionary to track for the server.
+
+In any case, the compiler generates a template entry:
+- table\_add tset\_context a\_set\_context [PPORT] => [program ID]
+The load prep hp4l takes this and generates one entry for every port in args.phys\_ports.
+
+This requirement is currently implemented.
+
+### translating use of physical ports in the source program
+
+Source program matches on physical port: this is handled in p4c-hp4 in gen\_tX\_templates.  A template entry is created with [STDMETA\_INGRESS\_PORT] as the read field.  hp4l converts this to '1', matching the code in defines.p4 for meta\_ctrl.stdmeta\_ID.
 
 ## client user `<username>`
 
