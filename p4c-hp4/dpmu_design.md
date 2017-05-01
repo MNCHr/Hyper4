@@ -60,6 +60,8 @@ Pattern of communication:
 
   3. (user) send request for loading, triggering port assignments
      ./dpmu client load source.p4 --user `<username>` --instance `<instance-name>` [phys-ports]
+     TODO: Get clarity on what if we want multiple instances now or later, and how to do fine-grained function assignment properly.  Remember we can do direct interaction w/ HP4 via CLI if we have to and it isn't essential for paper objectives.
+
   4. (dpmu) Compile source.p4 --p4c-hp4--> source.hp4t + source.hp4mt
   5. (dpmu) Prepare for loading: source.hp4t --hp4l--> `<instance name>`.hp4
    - Create program ID per instance and maintain map `<instance name>: [program ID]`
