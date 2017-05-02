@@ -1,28 +1,32 @@
 # DPMU Implementation
 
+First Iteration: Single User, no resource tracking, only instance tracking.
+- [ ] client: ./dpmu client load source.p4 --instance `<instance-name>` [phys-ports]
+  - [ ] server handle compiling
+  - [ ] server handle loading prep (hp4l)
+  - [ ] server track vport:instance map
+  - [ ] server track instance attributes: prog ID, source, vports
+  - [ ] Enforce phys-port:instance assignment
+  - [ ] server handle loading via sswitch_CLI
+  - [ ] server return success/fail to client
+- [ ] handle client populate ... step 1: check validity of instance
+- [ ] handle client populate ... step 2: translate transaction
+- [ ] handle client populate ... step 3: add table entries to running instance of HP4
+- [ ] handle client populate ... step 4: return success/fail
+
+./dpmu client populate `<instance name>` --port 33333 --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
+
+Second Iteration
 - [ ] clarify port management
-- [ ] Connect to running instance of HP4
 - [ ] Load userfile: track users, entry limits, and port assignments
-- [ ] client: ./dpmu client user `<username>` returns resource status: total & per instance
-- [ ] server: received ./dpmu client user `<username>` returns resource status: total & per instance
-- [ ] client: ./dpmu client load source.p4 --user `<username>` --instance `<instance-name>` [phys-ports]
-- [ ] server: handle client load source.p4 ... step 1: compile
-- [ ] server: handle client load source.p4 ... step 2a: load prep via hp4l
-- [ ] server: handle client load source.p4 ... step 2b: track instance attributes (prog ID, source, vports)
-- [ ] server: handle client load source.p4 ... step 3: load the program via sswitch_CLI
-- [ ] server: handle client load source.p4 ... step 4: return success/fail to client
-- [ ] client: ./dpmu client populate `<instance name>` --port 33333 --command 'table_add dmac forward 00:AA:BB:00:00:01 => 1'
-- [ ] client: ./dpmu client populate `<instance name>` --port 33333 --file `<path to file with commands>`
-- [ ] server: handle client populate ... step 1: check validity of instance
-- [ ] server: handle client populate ... step 2: translate transaction
-- [ ] server: handle client populate ... step 3: add table entries to running instance of HP4
-- [ ] server: handle client populate ... step 4: return success/fail
+- [ ] server: with each load and populate command received, track resource usage
+- [ ] ./dpmu client user `<username>` returns resource status: total & per instance
 
 # DPMU Design
 
 Given:
 - hp4t\_l2\_switch.p4
-- UE1 table\_add dmac forward [MAC of h2] => [port of h1]
+- a bmv2-style CLI command: table\_add dmac forward [MAC of h2] => [port of h1]
 
 Need to produce entries for:
 - t1\_extracted\_exact
@@ -38,9 +42,9 @@ We add a new subclass of HP4\_Command called HP4\_Primitive\_Command, joining th
 
 ## DPMU as a server
 
-It has become clear that the DPMU should be implemented as a server running in the background, especially because this is easier than initially thought.
+DPMU should be implemented as a server running in the background.
 
-Basic client/server network programming in python is found at www.bogotobogo.com/python/python\_network\_programming\_server\_client.php.  There are only a handful of key lines to worry about.
+Basic client/server network programming in python: www.bogotobogo.com/python/python\_network\_programming\_server\_client.php.
 
 Pattern of communication:
   0. Admin loads P4 device with HP4 and starts DPMU server
