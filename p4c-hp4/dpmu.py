@@ -26,12 +26,12 @@ class DPMU_Server():
     self.total_entries = entries
     self.entries_remaining = entries
     self.phys_ports = phys_ports
-    self.phys_ports_remaining = list(phys_ports)
+    self.phys_ports_remaining = phys_ports.split()
     # key: username
     # value: (entries, [phys_ports], [instances])
     self.users = {}
     if userfile is None:
-      uports = list(phys_ports_remaining)
+      uports = list(self.phys_ports_remaining)
       self.users['default'] = (self.entries_remaining, uports, [])
       self.entries_remaining = 0
       self.phys_ports_remaining[:] = []
@@ -58,7 +58,14 @@ class DPMU_Server():
   def do_load(self, command):
     srcfile = command.split()[1]
     srcname = srcfile.split('.')[0]
-    print("srcfile: " + srcfile)
+    instance = command.split()[2]
+    pports = command.split()[3:]
+    pport_str = ''
+    front_sp = ''
+    for port in pports:
+      pport_str += front_sp
+      pport_str += str(port)
+      front_sp = ' '
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
     hp4t = srcname + '.hp4t'
@@ -67,7 +74,9 @@ class DPMU_Server():
       for instance in command.split()[2:]:
         self.instances[instance] = (self.next_PID, hp4t, {})
         # load
-        # hp4l --input <hp4t> --output srcname+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
+        # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
+        call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
+              "--progID", str(self.next_PID), "--phys_ports", pport_str])
         self.next_PID += 1
     return 'DO_LOAD'
 
@@ -89,8 +98,9 @@ def server(args):
   host = socket.gethostname()
   serversocket.bind((host, args.port))
   serversocket.listen(5)
-
-  dserver = DPMU_Server(rta)
+  # TODO: non-default parameters
+  # def __init__(self, rta, entries, phys_ports, userfile):
+  dserver = DPMU_Server(rta, 100, "1 2 3 4", None)
 
   while True:
     clientsocket,addr = serversocket.accept()
@@ -112,11 +122,18 @@ def client_load(args):
   print("client_load")
   print(args)
   data = 'load ' + args.source
+  # At some point we may want a list of instances...
+  """
   if args.instance_list == None:
     data += ' ' + args.source.split('.')[0]
   else:
     for inst in args.instance_list:
       data += ' ' + inst
+  """
+  # ...but for now:
+  data += ' ' + args.instance
+  for pport in args.pports:
+    data += ' ' + str(pport)
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   host = socket.gethostname()
   s.connect((host, args.port))
@@ -191,9 +208,12 @@ def parse_args(args):
   parser_client_load = pc_subparsers.add_parser('load', help='load P4 program')
   parser_client_load.add_argument('source', help='P4 file to compile and load',
                              type=str, action="store")
-  parser_client_load.add_argument('--instance-list', help='list of instance \
-                                  names to associate with the source P4 \
-                                  program', nargs='*')
+  parser_client_load.add_argument('--instance', help='instance \
+                                  name to associate with the source P4 \
+                                  program', type=str, action="store")
+  parser_client_load.add_argument('pports', help='Physical ports to which \
+                                  the instance should be assigned', type=int,
+                                  nargs='+')
   parser_client_load.set_defaults(func=client_load)
 
   parser_client_instance = pc_subparsers.add_parser('instance',

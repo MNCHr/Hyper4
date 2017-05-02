@@ -16,6 +16,8 @@ parser.add_argument('--virt_ports', help='Numbers to assign to virtual ports 0-3
                     type=str, nargs='*', action="store", default=['65', '66', '67', '68'])
 
 args = parser.parse_args()
+print("FROM HP4L")
+print(args)
 
 f_ac = open(args.input, 'r')
 f_c = open(args.output, 'w')
