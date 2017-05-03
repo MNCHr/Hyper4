@@ -71,13 +71,12 @@ class DPMU_Server():
     hp4t = srcname + '.hp4t'
     hp4mt = srcname + '.hp4mt'
     if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) == 0:
-      for instance in command.split()[2:]:
-        self.instances[instance] = (self.next_PID, hp4t, {})
-        # load
-        # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
-        call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
-              "--progID", str(self.next_PID), "--phys_ports", pport_str])
-        self.next_PID += 1
+      self.instances[instance] = (self.next_PID, hp4t, {})
+      # load
+      # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
+      call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
+            "--progID", str(self.next_PID), "--phys_ports"] + pports)
+      self.next_PID += 1
     return 'DO_LOAD'
 
   def do_instance(self, command):
@@ -103,20 +102,26 @@ def server(args):
   dserver = DPMU_Server(rta, 100, "1 2 3 4", None)
 
   while True:
-    clientsocket,addr = serversocket.accept()
-    print("Got a connection from %s" % str(addr))
-    data = clientsocket.recv(1024)
-    print(data)
-    # TODO: create do_load(), do_instance()
-    # In do_instance, we'll have rta.do_table_add(...)
-    response = ''
-    submode = data.split()[0]
-    if submode == 'load':
-      response = dserver.do_load(data)
-    elif submode == 'instance':
-      response = dserver.do_instance(data)
-    clientsocket.sendall(response)
-    clientsocket.close()
+    clientsocket = None
+    try:
+      clientsocket,addr = serversocket.accept()
+      print("Got a connection from %s" % str(addr))
+      data = clientsocket.recv(1024)
+      print(data)
+      # TODO: create do_load(), do_instance()
+      # In do_instance, we'll have rta.do_table_add(...)
+      response = ''
+      submode = data.split()[0]
+      if submode == 'load':
+        response = dserver.do_load(data)
+      elif submode == 'instance':
+        response = dserver.do_instance(data)
+      clientsocket.sendall(response)
+      clientsocket.close()
+    except KeyboardInterrupt:
+      if clientsocket:
+        clientsocket.close()
+      break
 
 def client_load(args):
   print("client_load")

@@ -1,8 +1,9 @@
 # DPMU Implementation
 
 First Iteration: Single User, no resource tracking, only instance tracking.
+- [X] server: handle shutdown gracefully (release socket)
 - [ ] client: ./dpmu client load source.p4 --instance `<instance-name>` [phys-ports]
-  - [ ] server handle compiling
+  - [X] server handle compiling
   - [ ] server handle loading prep (hp4l)
   - [ ] server track vport:instance map
   - [ ] server track instance attributes: prog ID, source, vports
