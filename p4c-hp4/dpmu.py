@@ -71,19 +71,15 @@ class DPMU_Server():
     srcname = srcfile.split('.')[0]
     instance = command.split()[2]
     pports = command.split()[3:]
-    pport_str = ''
-    front_sp = ''
-    for port in pports:
-      pport_str += front_sp
-      pport_str += str(port)
-      front_sp = ' '
+    code.interact(local=locals())
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
     hp4t = srcname + '.hp4t'
     hp4mt = srcname + '.hp4mt'
     if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) == 0:
       # load
-      # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
+      # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID
+      #      --phys_ports ... --virt_ports ...
       if call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
             "--progID", str(self.next_PID), "--phys_ports"] + pports) == 0:
         self.instances[instance] = (self.next_PID, hp4t, [])
@@ -92,12 +88,11 @@ class DPMU_Server():
           self.virt_ports_instances[vport] = instance
           self.instances[instance][2].append(vport)
         self.next_PID += 1
-        code.interact(local=locals())
         return 'DO_LOAD'
       else:
-        return: 'FAIL_LOAD'
+        return 'FAIL_LOAD'
     else:
-      return: 'FAIL_COMPILE'
+      return 'FAIL_COMPILE'
 
   def do_instance(self, command):
     # rta.do_table_add(...)

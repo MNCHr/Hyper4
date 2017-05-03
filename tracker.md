@@ -19,4 +19,8 @@ Adding support for stateful memory objects will lead to support for:
 
 Required if we want seamless abstraction regardless of actual topology
 
-## dpmu (TODO: review design & code, update task list)
+- [ ] Flowspaces: not just phys ingress port but flowspaces as defined in
+      FlowVisor paper, for setup.p4::tset_context.
+      May have to set a metadata field to the hash of the parsed representation
+       and match on that field instead of trying to match on all possible fields.
+      Implement both ways and compare, report as optimization if hashed is better

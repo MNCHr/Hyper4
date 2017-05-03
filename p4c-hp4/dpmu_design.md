@@ -1,6 +1,8 @@
 # DPMU Implementation
 
 First Iteration: Single User, no resource tracking, only instance tracking.
+- [ ] redesign to support flowspaces, not just phys ingress port, for setting
+      context for program ID
 - [X] server: handle shutdown gracefully (release socket)
 - [ ] client: ./dpmu client load source.p4 --instance `<instance-name>` [phys-ports]
   - [X] server handle compiling
