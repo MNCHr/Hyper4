@@ -21,15 +21,26 @@ entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
 class DPMU_Server():
   def __init__(self, rta, entries, phys_ports, userfile):
     self.next_PID = 1
+    
+    # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
     self.instances = {}
+
     self.rta = rta
     self.total_entries = entries
     self.entries_remaining = entries
     self.phys_ports = phys_ports
     self.phys_ports_remaining = phys_ports.split()
+
+    # 64 vports w/ 4 vports / vfunc = 16 vfuncs supported
+    self.virt_ports_remaining = range(65, 129)
+
+    # map vports (ints) to instances (strs)
+    self.virt_ports_instances = {}
+
     # key: username
     # value: (entries, [phys_ports], [instances])
     self.users = {}
+
     if userfile is None:
       uports = list(self.phys_ports_remaining)
       self.users['default'] = (self.entries_remaining, uports, [])
@@ -71,13 +82,22 @@ class DPMU_Server():
     hp4t = srcname + '.hp4t'
     hp4mt = srcname + '.hp4mt'
     if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) == 0:
-      self.instances[instance] = (self.next_PID, hp4t, {})
       # load
       # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID --phys_ports ... --virt_ports ...
-      call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
-            "--progID", str(self.next_PID), "--phys_ports"] + pports)
-      self.next_PID += 1
-    return 'DO_LOAD'
+      if call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
+            "--progID", str(self.next_PID), "--phys_ports"] + pports) == 0:
+        self.instances[instance] = (self.next_PID, hp4t, [])
+        for i in range(4):
+          vport = self.virt_ports_remaining.pop(0)
+          self.virt_ports_instances[vport] = instance
+          self.instances[instance][2].append(vport)
+        self.next_PID += 1
+        code.interact(local=locals())
+        return 'DO_LOAD'
+      else:
+        return: 'FAIL_LOAD'
+    else:
+      return: 'FAIL_COMPILE'
 
   def do_instance(self, command):
     # rta.do_table_add(...)

@@ -4,9 +4,9 @@ First Iteration: Single User, no resource tracking, only instance tracking.
 - [X] server: handle shutdown gracefully (release socket)
 - [ ] client: ./dpmu client load source.p4 --instance `<instance-name>` [phys-ports]
   - [X] server handle compiling
-  - [ ] server handle loading prep (hp4l)
-  - [ ] server track vport:instance map
-  - [ ] server track instance attributes: prog ID, source, vports
+  - [X] server handle loading prep (hp4l)
+  - [X] server track vport:instance map
+  - [X] server track instance attributes: prog ID, source, vports
   - [ ] Enforce phys-port:instance assignment
   - [ ] server handle loading via sswitch_CLI
   - [ ] server return success/fail to client
