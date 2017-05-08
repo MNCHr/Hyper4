@@ -10,16 +10,71 @@ from subprocess import call
 import code
 
 class DPMU_Server():
-  def __init__(self, hp4_port):
-    self.hp4_port = hp4_port
-    pass
-  def parse_request(self, request):
-    pass
+  def __init__(self, rta, entries, phys_ports, userfile, debug):
+    self.next_PID = 1
+
+    # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
+    self.instances = {}
+
+    self.rta = rta
+    self.total_entries = entries
+    self.entries_remaining = entries
+    self.phys_ports = phys_ports
+    self.phys_ports_remaining = phys_ports.split()
+
+    # 64 vports w/ 4 vports / vfunc = 16 vfuncs supported
+    self.virt_ports_remaining = range(65, 129)
+
+    # map vports (ints) to instances (strs)
+    self.virt_ports_instances = {}
+
+    # key: username
+    # value: (entries, [phys_ports], [instances])
+    self.users = {}
+
+    if userfile is None:
+      uports = list(self.phys_ports_remaining)
+      self.users['default'] = (self.entries_remaining, uports, [])
+      self.entries_remaining = 0
+      self.phys_ports_remaining[:] = []
+    else:
+      lines = [line.rstrip('\n') for line in open(userfile)]
+      for line in lines:
+        uname = line.split()[0]
+        uentries = int(line.split()[1])
+        uports = [int(port) for port in line.split()[2:]]
+        if uentries > self.entries_remaining:
+          print("ERROR: userfile %s: requested %i entries for user %s, %i \
+              available" % (userfile, uentries, uname, self.entries_remaining))
+          exit()
+        for port in uports:
+          if port in self.phys_ports_remaining:
+            self.phys_ports_remaining.remove(port)
+          else:
+            print("ERROR: userfile %s: requested port %i not available" % \
+                (userfile, port))
+            exit()
+        self.entries_remaining = self.entries_remaining - uentries
+        self.users[uname] = (uentries, uports, [])
+
+    self.debug = debug
+
+  def handle_request(self, data):
+    response = ''
+    submode = data.split()[0]
+    if submode == 'load':
+      response = self.handle_load_request(data)
+    elif submode == 'instance':
+      response = dserver.handle_rule_request(data)
+    return response
+
   def handle_load_request(self, request):
-    srcfile = command.split()[1]
+    if (self.debug):
+      print("handle_load_request: " + request)
+    srcfile = request.split()[1]
     srcname = srcfile.split('.')[0]
-    instance = command.split()[2]
-    pports = command.split()[3:]
+    instance = request.split()[2]
+    pports = request.split()[3:]
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
     hp4t = srcname + '.hp4t'
@@ -41,6 +96,8 @@ class DPMU_Server():
     self.next_PID += 1
 
     # load
+    code.interact(local=locals())
+    # self.rta.do_table_add(...)
 
 
   def handle_rule_request(self, request):
@@ -69,7 +126,7 @@ def server(args):
   serversocket.listen(5)
   # TODO: non-default parameters
   # def __init__(self, rta, entries, phys_ports, userfile):
-  dserver = DPMU_Server(rta, 100, "1 2 3 4", None)
+  dserver = DPMU_Server(rta, 100, "1 2 3 4", None, args.debug)
 
   while True:
     clientsocket = None
@@ -81,12 +138,7 @@ def server(args):
       if(args.debug):
         print(data)
       # In do_instance, we'll have rta.do_table_add(...)
-      response = ''
-      submode = data.split()[0]
-      if submode == 'load':
-        response = dserver.handle_load_request(data)
-      elif submode == 'instance':
-        response = dserver.handle_rule_request(data)
+      response = dserver.handle_request(data)
       clientsocket.sendall(response)
       clientsocket.close()
     except KeyboardInterrupt:
@@ -95,7 +147,21 @@ def server(args):
       break
 
 def load(args):
-  pass
+  if(args.debug):
+    print("client load")
+    print(args)
+  data = 'load ' + args.source
+  data += ' ' + args.instance
+  for pport in args.pports:
+    data += ' ' + str(pport)
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  host = socket.gethostname()
+  s.connect((host, args.port))
+  s.send(data)
+  resp = s.recv(1024)
+  if(args.debug):
+    print(resp)
+  s.close()
 
 def rule(args):
   pass
