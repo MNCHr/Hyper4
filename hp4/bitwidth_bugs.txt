@@ -1,0 +1,8 @@
+Incorrect bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
+- mod_stdmeta_egressspec_meta
+  - rightshift: 9
+  - tmask: 9
+- mod_meta_extracted
+  - leftshift: 256
+  - leftshift: 256
+  - emask: 256

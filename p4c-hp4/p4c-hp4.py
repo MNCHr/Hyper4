@@ -976,6 +976,7 @@ class HP4C:
             mparams.append(match_ID_param)
           aparams = self.gen_action_aparams(p4_call, call)
           if istemplate == True:
+            aparams.append('0') # meta_primitive_state.match_ID mparam matters
             idx = -1
             if type(p4_call[1][1] == p4_hlir.hlir.p4_imperatives.p4_signature_ref):
               idx = p4_call[1][1].idx
@@ -988,6 +989,8 @@ class HP4C:
                                             aparams,
                                             str(idx)))
           else:
+            # meta_primitive_state.match_ID mparam does not matter
+            aparams.append(str(MAX_PRIORITY))
             self.commands.append(HP4_Command("table_add",
                                          tname,
                                          aname,
@@ -1064,8 +1067,8 @@ class HP4C:
           aparams.append(str(p4_call[1][1]))
         else:
           aparams.append('[val]')
-      elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_stdmeta_ingressport':
-        return aparams
+      #elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_stdmeta_ingressport':
+      #  return aparams
       elif mf_prim_subtype_action[call[1]] == 'mod_extracted_extracted':
         # aparams:
         # - leftshift (how far should src field be shifted to align w/ dst)
