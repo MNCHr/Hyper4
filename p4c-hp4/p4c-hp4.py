@@ -628,14 +628,14 @@ class HP4C:
       if bound >= 100:
         print("ERROR: unsupported max extraction of %i bytes" % max_extracted)
         exit()
-      tablename = 'tset_pr_' + str(bound) + '_' + str(bound + 9)
-      action = 'a_pr_import_' + str(bound) + '_' + str(bound + 9)
+      tablename = 'tset_pr_' + str(bound) + '_' + str(bound + 19)
+      action = 'a_pr_import_' + str(bound) + '_' + str(bound + 19)
       self.commands.append(HP4_Command("table_set_default",
                                        tablename,
                                        action,
                                        [],
                                        []))
-      bound += 10
+      bound += 20
 
   def gen_tset_pipeline_config_entries(self):
     # USEFUL DATA STRUCTURES:
