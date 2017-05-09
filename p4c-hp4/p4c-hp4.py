@@ -15,6 +15,8 @@ CRITERIA = 1
 NEXT_PARSE_STATE = 1
 CASE_ENTRIES = 2
 
+MAX_PRIORITY = 2147483647
+
 primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'add_header': '[ADD_HEADER]',
                 'copy_header': '[COPY_HEADER]',
@@ -155,6 +157,7 @@ class TICS(HP4_Command):
     self.curr_pc_state = 0
     self.next_pc_state = 0
     self.next_parse_state = ''
+    self.priority = 0
 
 class HP4_Match_Command(HP4_Command):
   def __init__(self, source_table, source_action, command, table, action, mparams, aparams):
@@ -402,6 +405,7 @@ class HP4C:
         exit()
 
   def fill_tics_match_params(self, criteria_fields, values, pc_state):
+    #code.interact(local=locals())
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
       exit()
@@ -518,6 +522,9 @@ class HP4C:
         t.curr_pc_state = curr_pc_state
         t.table = self.tics_table_names[curr_pc_state]
         t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0], t.curr_pc_state)
+        if case_entry[0][0][0] == 'default':
+          t.priority = MAX_PRIORITY
+        # code.interact(local=locals())
         # case_entry: (list of values, next parse_state)
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]
@@ -544,7 +551,7 @@ class HP4C:
           t.next_parse_state = 'ingress'
           t.next_pc_state = t.curr_pc_state
           t.action = 'set_next_action'
-          t.action_params = ['[PROCEED]', str(t.next_pc_state)]
+          t.action_params = ['[PROCEED]', str(t.next_pc_state), str(t.priority)]
         self.tics_list.append(t)
     else:
       print("ERROR: Unknown directive in return statement: %s" \
@@ -597,7 +604,8 @@ class HP4C:
       if t.next_parse_state != 'ingress':
         if self.pc_bits_extracted[t.next_pc_state] > self.pc_bits_extracted[t.curr_pc_state]:
           t.action = "extract_more"
-          t.action_params = [str(self.pc_bits_extracted[t.next_pc_state]), str(t.next_pc_state)]
+          bytes = int(math.ceil(self.pc_bits_extracted[t.next_pc_state] / 8.0))
+          t.action_params = [str(bytes), str(t.next_pc_state), str(t.priority)]
         else:
           print("TODO: support direct jump to new parse node without extracting more")
           exit()
