@@ -96,8 +96,15 @@ class DPMU_Server():
     self.next_PID += 1
 
     # load
-    code.interact(local=locals())
-    # self.rta.do_table_add(...)
+    with open(instance+'.hp4', 'r') as f:
+      for line in f:
+        if line.split()[0] == 'table_add':
+          self.rta.do_table_add(line.split('table_add ')[1])
+        elif line.split()[0] == 'table_set_default':
+          self.rta.do_table_set_default(line.split('table_set_default ')[1])
+    
+    return 'OK'
+    # code.interact(local=locals())
 
 
   def handle_rule_request(self, request):
