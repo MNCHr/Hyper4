@@ -68,35 +68,60 @@ class DPMU_Server():
       response = dserver.handle_rule_request(data)
     return response
 
+  def parse_load_request(self, request):
+    uname = request.split()[1]
+    fp4 = request.split()[2]
+    fname = fp4.split('.')[0]
+    fhp4t = fname + '.hp4t'
+    fhp4mt = fname + '.hp4mt'
+    finst_name = request.split()[3]
+    context = request.split()[4:]
+    return uname, fp4, fhp4t, fhp4mt, finst_name, context
+
+  def validate_load_request(self, uname, fname, context):
+    pass
+
+  def compile_load_request(self, fp4, fhp4t_name, fhp4mt_name):
+    pass
+
+  def link_load_request(self, fhp4t, context, finst_name):
+    pass
+
+  def load_load_request(self, finst):
+    pass
+
+  # TODO: continue splitting this function up
   def handle_load_request(self, request):
     if (self.debug):
       print("handle_load_request: " + request)
-    srcfile = request.split()[1]
-    srcname = srcfile.split('.')[0]
-    instance = request.split()[2]
-    pports = request.split()[3:]
+
+    uname,
+    fp4,
+    fhp4t,
+    fhp4mt,
+    finst_name,
+    context = self.parse_load_request(request)
+
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
-    hp4t = srcname + '.hp4t'
-    hp4mt = srcname + '.hp4mt'
-    if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) != 0:
-      return 'ERROR: could not compile ' + srcfile
+    if call(["./p4c-hp4", "-o", fhp4t, "-m", fhp4mt, "-s 20", fp4]) != 0:
+      return 'ERROR: could not compile ' + fp4
 
-    # link
-    if call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
-            "--progID", str(self.next_PID), "--phys_ports"] + pports) != 0:
-      return 'ERROR: could not link ' + hp4t
+    # link... TODO: refine handling of context
+    if call(["../tools/hp4l", "--input", fhp4t, "--output", finst_name+'.hp4',
+            "--progID", str(self.next_PID), "--phys_ports"] + context) != 0:
+      return 'ERROR: could not link ' + fhp4t
 
     # track
-    self.instances[instance] = (self.next_PID, hp4t, [])
+    self.instances[finst_name] = (self.next_PID, fhp4t, [])
     for i in range(4):
       vport = self.virt_ports_remaining.pop(0)
-      self.virt_ports_instances[vport] = instance
-      self.instances[instance][2].append(vport)
+      self.virt_ports_instances[vport] = finst_name
+      self.instances[finst_name][2].append(vport)
     self.next_PID += 1
 
     # load
-    with open(instance+'.hp4', 'r') as f:
+    with open(finst_name+'.hp4', 'r') as f:
       for line in f:
         if line.split()[0] == 'table_add':
           self.rta.do_table_add(line.split('table_add ')[1])
@@ -207,6 +232,7 @@ def parse_args(args):
   parser_server.set_defaults(func=server)
 
   # client
+  parser_client.add_argument('user', help='username', type=str, action="store")
   parser_client.add_argument('--port', help='port for DPMU',
                              type=int, action="store", default=33333)
   pc_subparsers = parser_client.add_subparsers(dest = 'subcommand')
