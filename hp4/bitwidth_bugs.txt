@@ -2,10 +2,40 @@ BLUF ACTIONS:
 -[X] modify_field.p4t: edit mod_meta_extracted so that emask is applied after
                        leftshift and rightshift
 -[X] regenerate hp4 from templates
--[ ] p4c-hp4: ensure mod_stdmeta_egressspec_meta is handled correctly
+-[X] p4c-hp4: ensure mod_stdmeta_egressspec_meta is handled correctly
 -[ ] p4c-hp4: ensure mod_meta_extracted is handled correctly
+  -[ ] test: table matching on parsed representation field
+   -- mask should be 100B
+  -[ ] test: table matching on metadata field
+   -- mask should be 32B
+  -[ ] test: modify_field([metadata field], const)
+   -- mask should be 32B
+  -[ ] test: modify_field([parsed rep field], [parsed rep field])
+   -- mask should be 100B
+  -[ ] test: modify_field([metadata field], [parsed rep field])
+   -- mask should be 32B
+  -[ ] test: modify_field([parsed rep field], [metadata field])
+   -- mask should be 100B
 
 NOTES / THOUGHT PROCESS
+
+Methods to focus on:
+- gen_bitmask
+- gen_action_aparams, for the following cases:
+  - mod_stdmeta_egressspec_meta
+  - mod_meta_extracted
+  - mod_extracted_meta
+
+This is the line from arp_proxy.p4 that triggers trouble when compiled:
+  modify_field(meta.temp, arp.sender_IP);
+-[X] The issue is with gen_bitmask.  The fix is to add an explicit maskwidth parameter instead of assuming we can calculate it based on whether the field.instance is metadata or parsed representation.
+-[ ] Another issue with gen_bitmask: it assumes the offset is according to field_offsets[field_name] but mod_meta_extracted performs a bitshift before applying the mask so it will be different.  Need to ensure masks are computed correctly for the following cases:
+  mod_stdmeta_egressspec_meta
+  mod_meta_extracted
+  mod_extracted_meta
+-[ ] We also need to edit the handling of the mod_meta_extracted case to reflect the new order of bitwise operations and the knowledge that the mask will be 32B in width.
+
+*EARLIER*
 
 Unexpected bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
 - mod_stdmeta_egressspec_meta

@@ -725,7 +725,7 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
-  def gen_bitmask(self, field):
+  def gen_bitmask(self, field, maskwidth):
     mask = '0x'
     offset = self.field_offsets[str(field)]
     bytes_written = offset / 8
@@ -746,9 +746,9 @@ class HP4C:
         bits_left = 0
       mask += hex(byte)[2:]
       bytes_written += 1
-    maskwidth = 100
-    if field.instance.metadata:
-      maskwidth = 32
+    # maskwidth = 100
+    # if field.instance.metadata:
+    #  maskwidth = 32
     mask += '[' + str(maskwidth - bytes_written) + 'x00s]'
     #while bytes_written < 100:
     #  mask += '00'
@@ -783,7 +783,10 @@ class HP4C:
           if field.instance.name == 'standard_metadata':
             aparams = [stdmeta_ID[field.name]]
           else:
-            mp = '[val]&&&' + self.gen_bitmask(field)
+            maskwidth = 100
+            if field.instance.metadata:
+              maskwidth = 32
+            mp = '[val]&&&' + self.gen_bitmask(field, maskwidth)
             match_params.append(mp)
         match_params_list.append(match_params)
 
@@ -1053,11 +1056,11 @@ class HP4C:
           val = '[val]'
         fo = self.field_offsets[str(p4_call[1][0])]
         fw = p4_call[1][0].width
-        maskwidth = 800
+        maskwidthbits = 800
         if mf_prim_subtype_action[call[1]] == 'mod_meta_const':
-          maskwidth = 256
-        leftshift = str(maskwidth - (fo + fw))
-        mask = self.gen_bitmask(p4_call[1][0])
+          maskwidthbits = 256
+        leftshift = str(maskwidthbits - (fo + fw))
+        mask = self.gen_bitmask(p4_call[1][0], maskwidthbits / 8)
         aparams.append(val)
         aparams.append(leftshift)
         aparams.append(mask)
@@ -1084,30 +1087,29 @@ class HP4C:
           lshift = src_offset - dst_offset
         aparams.append(str(lshift))
         aparams.append(str(rshift))
-        aparams.append(self.gen_bitmask(p4_call[1][0]))
-      elif (mf_prim_subtype_action[call[1]] == 'mod_meta_extracted' or
-            mf_prim_subtype_action[call[1]] == 'mod_extracted_meta'):
+        aparams.append(self.gen_bitmask(p4_call[1][0], 100))
+      elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
         dst_offset = self.field_offsets[str(p4_call[1][0])]
         src_offset = self.field_offsets[str(p4_call[1][1])]
         lshift = 0
         rshift = 0
-        dstmaskwidth = 800
-        srcmaskwidth = 256
-        if mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
-          dstmaskwidth = 256
-          srcmaskwidth = 800
-        dst_revo = dstmaskwidth - (dst_offset + p4_call[1][0].width)
-        src_revo = srcmaskwidth - (src_offset + p4_call[1][1].width)
+        dstmaskwidthbits = 256
+        srcmaskwidthbits = 800
+        dst_revo = dstmaskwidthbits - (dst_offset + p4_call[1][0].width)
+        src_revo = srcmaskwidthbits - (src_offset + p4_call[1][1].width)
         if src_revo > dst_revo:
           rshift = src_revo - dst_revo
         else:
           lshift = dst_revo - src_revo
-        dstmask = self.gen_bitmask(p4_call[1][0])
-        srcmask = self.gen_bitmask(p4_call[1][1])
+        dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
+        srcmask = self.gen_bitmask(p4_call[1][1], dstmaskwidthbits / 8)
+        code.interact(local=locals())
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
         aparams.append(srcmask)
+      elif mr_prim_subtype_action[call[1]] == 'mod_extracted_meta':
+        
     return aparams
 
   def gen_thp4_egress_filter_entries(self):
