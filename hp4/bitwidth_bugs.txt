@@ -1,4 +1,4 @@
-Incorrect bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
+Unexpected bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
 - mod_stdmeta_egressspec_meta
   - rightshift: 9
   - tmask: 9
@@ -6,3 +6,22 @@ Incorrect bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
   - leftshift: 256
   - leftshift: 256
   - emask: 256
+
+However, this isn't a bug. When copying from a wider field to a narrower field,
+the leading bytes (Most Significant Bytes / MSBs) are ignored.  The widths of
+all parameters involved in the calculation of the value to copy to the source
+may be restricted to the width of the source field without loss of generality.
+
+Current implementations of these actions:
+
+action mod_stdmeta_egressspec_meta(rightshift, tmask) {
+  modify_field(standard_metadata.egress_spec, (tmeta.data >> rightshift) & tmask);
+}
+
+- Change: remove tmask parameter and substitute 0b111111111 where it was used.
+
+action mod_meta_extracted(leftshift, rightshift, tmeta_mask, emask) {
+  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (( (extracted.data & emask) << leftshift) >> rightshift));
+}
+
+- Change: 
