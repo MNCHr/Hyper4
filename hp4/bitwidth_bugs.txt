@@ -1,11 +1,20 @@
+BLUF ACTIONS:
+-[X] modify_field.p4t: edit mod_meta_extracted so that emask is applied after
+                       leftshift and rightshift
+-[X] regenerate hp4 from templates
+-[ ] p4c-hp4: ensure mod_stdmeta_egressspec_meta is handled correctly
+-[ ] p4c-hp4: ensure mod_meta_extracted is handled correctly
+
+NOTES / THOUGHT PROCESS
+
 Unexpected bitwidths JSON produced by p4c-bmv2 for actions in modify_field.p4:
 - mod_stdmeta_egressspec_meta
-  - rightshift: 9
-  - tmask: 9
+  - rightshift: 9 (expected: 8)
+  - tmask: 9 (expected: 256)
 - mod_meta_extracted
-  - leftshift: 256
-  - leftshift: 256
-  - emask: 256
+  - leftshift: 256 (expected: 10)
+  - rightshift: 256 (expected: 10)
+  - emask: 256 (expected: 800)
 
 However, this isn't a bug. When copying from a wider field to a narrower field,
 the leading bytes (Most Significant Bytes / MSBs) are ignored.  The widths of
@@ -18,10 +27,26 @@ action mod_stdmeta_egressspec_meta(rightshift, tmask) {
   modify_field(standard_metadata.egress_spec, (tmeta.data >> rightshift) & tmask);
 }
 
-- Change: remove tmask parameter and substitute 0b111111111 where it was used.
+- Change: remove tmask parameter and substitute 0b1 1111 1111 = 0x1FF where it was used.
+
+action mod_stdmeta_egressspec_meta(rightshift) {
+  modify_field(standard_metadata.egress_spec, (tmeta.data >> rightshift) & 0x1FF);
+}
+
+- But is it even necessary to mask?  We know that only the 9 LSbs will be used.  We should experiment.  0x11224488 = 0b 000100010010001001.000100100.01000.  0b0 0010 0100 = 0x24 = 0d36.
+
+- Conclusion: We still need tmask, in order to use an 8-bit or smaller metadata field to supply the value for egress_spec.  Because the modify_field operation assumes the source is 9 bits, if we simply rightshift and mask by 0x1FF, we may erroneously include bits that aren't part of the logical metadata source field.
+
+
 
 action mod_meta_extracted(leftshift, rightshift, tmeta_mask, emask) {
   modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (( (extracted.data & emask) << leftshift) >> rightshift));
 }
 
-- Change: 
+- Change: reorder bitwise operations operating on extracted.data so that emask is applied last.
+
+action mod_meta_extracted(leftshift, rightshift, tmeta_mask, emask) {
+  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (((extracted.data << leftshift) >> rightshift) & emask));
+}
+
+Need to update compiler to reflect understanding that all action parameters will be limited in width to the width of the destination field in the modify_field call.
