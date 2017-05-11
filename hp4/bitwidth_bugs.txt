@@ -29,11 +29,11 @@ Methods to focus on:
 This is the line from arp_proxy.p4 that triggers trouble when compiled:
   modify_field(meta.temp, arp.sender_IP);
 -[X] The issue is with gen_bitmask.  The fix is to add an explicit maskwidth parameter instead of assuming we can calculate it based on whether the field.instance is metadata or parsed representation.
--[ ] Another issue with gen_bitmask: it assumes the offset is according to field_offsets[field_name] but mod_meta_extracted performs a bitshift before applying the mask so it will be different.  Need to ensure masks are computed correctly for the following cases:
-  mod_stdmeta_egressspec_meta
-  mod_meta_extracted
-  mod_extracted_meta
--[ ] We also need to edit the handling of the mod_meta_extracted case to reflect the new order of bitwise operations and the knowledge that the mask will be 32B in width.
+-[X] Another issue with gen_bitmask: it assumes the offset is according to field_offsets[field_name] but mod_meta_extracted performs a bitshift before applying the mask so it will be different.  Need to ensure masks are computed correctly for the following cases:
+ -[X] mod_stdmeta_egressspec_meta
+ -[X] mod_meta_extracted
+ -[X] mod_extracted_meta
+-[X] We also need to edit the handling of the mod_meta_extracted case to reflect the new order of bitwise operations and the knowledge that the mask will be min(dst_field.width, src_field.width) in width
 
 *EARLIER*
 

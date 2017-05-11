@@ -75,13 +75,13 @@ action mod_extracted_extracted(leftshift, rightshift, msk) {
 }
 
 // 13
-action mod_meta_extracted(leftshift, rightshift, tmeta_mask, emask) {
-  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | (((extracted.data << leftshift) >> rightshift) & emask));
+action mod_meta_extracted(leftshift, rightshift, tmask, emask) {
+  modify_field(tmeta.data, (tmeta.data & ~tmask) | (((extracted.data << leftshift) >> rightshift) & emask));
 }
 
 // 14
 action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
-  modify_field(extracted.data, (extracted.data & ~emask) | ( ((tmeta.data >> rightshift) & tmask) << leftshift));
+  modify_field(extracted.data, (extracted.data & ~emask) | ( ((tmeta.data << leftshift) >> rightshift) & tmask));
 }
 // TODO: add rest of the modify_field actions
 

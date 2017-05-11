@@ -1023,6 +1023,11 @@ class HP4C:
         aparams.append(str(leftshift))
         aparams.append(val)
     if call[0] == 'modify_field':
+      if p4_call[1][1].width > p4_call[1][0].width:
+        dst = p4_call[1][0].instance.name + '.' + p4_call[1][0].name
+        src = p4_call[1][1].instance.name + '.' + p4_call[1][1].name
+        print("WARNING: modify_field(%s, %s): %s width (%i) > %s width (%i)" /
+            % (dst, src, src, p4_call[1][1].width, dst, p4_call[1][0].width))
       if mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_ingressport':
         print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
         exit()
@@ -1044,7 +1049,11 @@ class HP4C:
       elif mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_meta':
         # aparams: rightshift, tmask
         rshift = 256 - (self.field_offsets[str(p4_call[1][1])] + p4_call[1][1].width)
-        mask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
+        mask = 0
+        if p4_call[1][1].width < p4_call[1][0].width:
+          mask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
+        else:
+          mask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
         aparams.append(str(rshift))
         aparams.append(mask)
       elif (mf_prim_subtype_action[call[1]] == 'mod_meta_const' or
@@ -1102,14 +1111,39 @@ class HP4C:
         else:
           lshift = dst_revo - src_revo
         dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
-        srcmask = self.gen_bitmask(p4_call[1][1], dstmaskwidthbits / 8)
-        code.interact(local=locals())
+        srcmask = 0
+        if p4_call[1][1].width < p4_call[1][0].width:
+          srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
+        else:
+          srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
         aparams.append(srcmask)
-      elif mr_prim_subtype_action[call[1]] == 'mod_extracted_meta':
-        
+      elif mf_prim_subtype_action[call[1]] == 'mod_extracted_meta':
+        dst_offset = self.field_offsets[str(p4_call[1][0])]
+        src_offset = self.field_offsets[str(p4_call[1][1])]
+        lshift = 0
+        rshift = 0
+        dstmaskwidthbits = 800
+        srcmaskwidthbits = 256
+        dst_revo = dstmaskwidthbits - (dst_offset + p4_call[1][0].width)
+        src_revo = srcmaskwidthbits - (src_offset + p4_call[1][1].width)
+        if src_revo > dst_revo:
+          rshift = src_revo - dst_revo
+        else:
+          lshift = dst_revo - src_revo
+        dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
+        srcmask = 0
+        if p4_call[1][1].width < p4_call[1][0].width:
+          srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
+        else:
+          srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
+        aparams.append(str(lshift))
+        aparams.append(str(rshift))
+        aparams.append(dstmask)
+        aparams.append(srcmask)
+
     return aparams
 
   def gen_thp4_egress_filter_entries(self):
