@@ -1023,11 +1023,12 @@ class HP4C:
         aparams.append(str(leftshift))
         aparams.append(val)
     if call[0] == 'modify_field':
-      if p4_call[1][1].width > p4_call[1][0].width:
-        dst = p4_call[1][0].instance.name + '.' + p4_call[1][0].name
-        src = p4_call[1][1].instance.name + '.' + p4_call[1][1].name
-        print("WARNING: modify_field(%s, %s): %s width (%i) > %s width (%i)" /
-            % (dst, src, src, p4_call[1][1].width, dst, p4_call[1][0].width))
+      if isinstance(p4_call[1][1], p4_hlir.hlir.p4_headers.p4_field):
+        if p4_call[1][1].width > p4_call[1][0].width:
+          dst = p4_call[1][0].instance.name + '.' + p4_call[1][0].name
+          src = p4_call[1][1].instance.name + '.' + p4_call[1][1].name
+          print("WARNING: modify_field(%s, %s): %s width (%i) > %s width (%i)" \
+              % (dst, src, src, p4_call[1][1].width, dst, p4_call[1][0].width))
       if mf_prim_subtype_action[call[1]] == 'mod_meta_stdmeta_ingressport':
         print("Not yet supported: %s" % mf_prim_subtype_action[call[1]])
         exit()
@@ -1111,11 +1112,15 @@ class HP4C:
         else:
           lshift = dst_revo - src_revo
         dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
+        # TODO: Fix this, it is wrong.  Need same mask as dstmask unless
+        #  src.width < dst.width, in which case we will have to mask off
+        #  leading or trailing bits (not sure which yet).
         srcmask = 0
         if p4_call[1][1].width < p4_call[1][0].width:
           srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
         else:
           srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
+
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
@@ -1134,11 +1139,15 @@ class HP4C:
         else:
           lshift = dst_revo - src_revo
         dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
+        # TODO: Fix this, it is wrong.  Need same mask as dstmask unless
+        #  src.width < dst.width, in which case we will have to mask off
+        #  leading or trailing bits (not sure which yet).
         srcmask = 0
         if p4_call[1][1].width < p4_call[1][0].width:
           srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
         else:
           srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
+
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
