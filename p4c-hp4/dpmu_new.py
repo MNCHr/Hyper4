@@ -6,8 +6,15 @@ import json
 import runtime_CLI
 import socket
 from subprocess import call
+import os
 
 import code
+
+FILENOTFOUND = 1
+USERNOTFOUND = 2
+validate_errors = {}
+validate_errors[FILENOTFOUND] = 'FILENOTFOUND'
+validate_errors[USERNOTFOUND] = 'USERNOTFOUND'
 
 class DPMU_Server():
   def __init__(self, rta, entries, phys_ports, userfile, debug):
@@ -79,13 +86,12 @@ class DPMU_Server():
     return uname, fp4, fhp4t, fhp4mt, finst_name, context
 
   def validate_load_request(self, uname, fname, context):
-    pass
-
-  def compile_load_request(self, fp4, fhp4t_name, fhp4mt_name):
-    pass
-
-  def link_load_request(self, fhp4t, context, finst_name):
-    pass
+    if uname not in self.users:
+      return USERNOTFOUND
+    if os.path.isfile(fname) == False:
+      return FILENOTFOUND
+    # TODO: validate context
+    return 0
 
   def load_load_request(self, finst):
     pass
@@ -95,12 +101,17 @@ class DPMU_Server():
     if (self.debug):
       print("handle_load_request: " + request)
 
-    uname,
-    fp4,
-    fhp4t,
-    fhp4mt,
-    finst_name,
+    uname, \
+    fp4, \
+    fhp4t, \
+    fhp4mt, \
+    finst_name, \
     context = self.parse_load_request(request)
+
+    # validate
+    validate = self.validate_load_request(uname, fp4, context)
+    if validate != 0:
+      return 'ERROR: request failed validation with error: ' + validate_errors[validate]
 
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
@@ -153,6 +164,7 @@ def server(args):
   rta = runtime_CLI.RuntimeAPI('SimplePre', hp4_client)
 
   serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
   host = socket.gethostname()
   serversocket.bind((host, args.port))
   serversocket.listen(5)
@@ -176,6 +188,9 @@ def server(args):
     except KeyboardInterrupt:
       if clientsocket:
         clientsocket.close()
+      serversocket.close()
+      if(args.debug):
+        print('Keyboard Interrupt, sockets closed')
       break
 
 def load(args):
