@@ -1,6 +1,17 @@
 [+ std_header +]
 [+ this_header +]
 
+// TODO: rename tables in conformance with paper:
+//  tset_parse_control -> parse_control
+//  tset_parse_select* -> parse_select*
+//  tset_pr* -> import_pr*
+//  tset_pipeline_config -> pipeline_config
+// Also rename actions such that if it is the sole
+// action associated with a table, and is only in
+// that table's actions list, it closely matches
+// the name of the table.  Ex:
+//  a_set_pipeline -> pipeline_config
+
 action a_pr_import_SEB() {
   modify_field(extracted.data, extracted.data + (ext[0].data << 792));
   modify_field(extracted.data, extracted.data + (ext[1].data << 784));

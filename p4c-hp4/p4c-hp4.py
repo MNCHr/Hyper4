@@ -725,11 +725,12 @@ class HP4C:
                                          ['[program ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
-  def gen_bitmask(self, field, maskwidth):
+  def gen_bitmask(self, fieldwidth, offset, maskwidth):
+    """fieldwidth: bits; offset: bits; maskwidth: bytes"""
     mask = '0x'
-    offset = self.field_offsets[str(field)]
+    # offset = self.field_offsets[str(field)]
     bytes_written = offset / 8
-    bits_left = field.width
+    bits_left = fieldwidth
     while bits_left > 0:
       byte = 0
       bit = 0b10000000 >> (offset % 8)
@@ -786,7 +787,9 @@ class HP4C:
             maskwidth = 100
             if field.instance.metadata:
               maskwidth = 32
-            mp = '[val]&&&' + self.gen_bitmask(field, maskwidth)
+            mp = '[val]&&&' + self.gen_bitmask(field.width,
+                                               self.field_offsets[str(field)],
+                                               maskwidth)
             match_params.append(mp)
         match_params_list.append(match_params)
 
@@ -1070,7 +1073,9 @@ class HP4C:
         if mf_prim_subtype_action[call[1]] == 'mod_meta_const':
           maskwidthbits = 256
         leftshift = str(maskwidthbits - (fo + fw))
-        mask = self.gen_bitmask(p4_call[1][0], maskwidthbits / 8)
+        mask = self.gen_bitmask(p4_call[1][0].width,
+                                self.field_offsets[str(p4_call[1][0])],
+                                maskwidthbits / 8)
         aparams.append(val)
         aparams.append(leftshift)
         aparams.append(mask)
@@ -1091,13 +1096,16 @@ class HP4C:
         src_offset = self.field_offsets[str(p4_call[1][1])]
         lshift = 0
         rshift = 0
-        if dst_offset > src_offset:
-          rshift = dst_offset - src_offset
+        # *_revo = revised offset; right-aligned instead of left-aligned
+        dst_revo = 800 - (dst_offset + p4_call[1][0].width)
+        src_revo = 800 - (src_offset + p4_call[1][1].width)
+        if src_revo > dst_revo:
+          rshift = src_revo - dst_revo
         else:
-          lshift = src_offset - dst_offset
+          lshift = dst_revo - src_revo
         aparams.append(str(lshift))
         aparams.append(str(rshift))
-        aparams.append(self.gen_bitmask(p4_call[1][0], 100))
+        aparams.append(self.gen_bitmask(p4_call[1][0].width, dst_offset, 100))
       elif mf_prim_subtype_action[call[1]] == 'mod_meta_extracted':
         dst_offset = self.field_offsets[str(p4_call[1][0])]
         src_offset = self.field_offsets[str(p4_call[1][1])]
@@ -1105,22 +1113,19 @@ class HP4C:
         rshift = 0
         dstmaskwidthbits = 256
         srcmaskwidthbits = 800
+        # *_revo = revised offset; right-aligned instead of left-aligned
         dst_revo = dstmaskwidthbits - (dst_offset + p4_call[1][0].width)
         src_revo = srcmaskwidthbits - (src_offset + p4_call[1][1].width)
         if src_revo > dst_revo:
           rshift = src_revo - dst_revo
         else:
           lshift = dst_revo - src_revo
-        dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
-        # TODO: Fix this, it is wrong.  Need same mask as dstmask unless
-        #  src.width < dst.width, in which case we will have to mask off
-        #  leading or trailing bits (not sure which yet).
-        srcmask = 0
+        dstmask = self.gen_bitmask(p4_call[1][0].width, dst_offset,
+                                   dstmaskwidthbits / 8)
+        srcmask = dstmask
         if p4_call[1][1].width < p4_call[1][0].width:
-          srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
-        else:
-          srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
-
+          srcmask = self.gen_bitmask(p4_call[1][1].width, dst_offset,
+                                     dstmaskwidthbits / 8)
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
@@ -1132,22 +1137,19 @@ class HP4C:
         rshift = 0
         dstmaskwidthbits = 800
         srcmaskwidthbits = 256
+        # *_revo = revised offset; right-aligned instead of left-aligned
         dst_revo = dstmaskwidthbits - (dst_offset + p4_call[1][0].width)
         src_revo = srcmaskwidthbits - (src_offset + p4_call[1][1].width)
         if src_revo > dst_revo:
           rshift = src_revo - dst_revo
         else:
           lshift = dst_revo - src_revo
-        dstmask = self.gen_bitmask(p4_call[1][0], dstmaskwidthbits / 8)
-        # TODO: Fix this, it is wrong.  Need same mask as dstmask unless
-        #  src.width < dst.width, in which case we will have to mask off
-        #  leading or trailing bits (not sure which yet).
-        srcmask = 0
+        dstmask = self.gen_bitmask(p4_call[1][0].width, dst_offset,
+                                   dstmaskwidthbits / 8)
+        srcmask = dstmask
         if p4_call[1][1].width < p4_call[1][0].width:
-          srcmask = hex(int(math.pow(2, p4_call[1][1].width)) - 1)
-        else:
-          srcmask = hex(int(math.pow(2, p4_call[1][0].width)) - 1)
-
+          srcmask = self.gen_bitmask(p4_call[1][1].width, dst_offset,
+                                     dstmaskwidthbits / 8)
         aparams.append(str(lshift))
         aparams.append(str(rshift))
         aparams.append(dstmask)
