@@ -68,7 +68,7 @@ class DPMU_Server():
 
   def handle_request(self, data):
     response = ''
-    submode = data.split()[0]
+    submode = data.split()[1]
     if submode == 'load':
       response = self.handle_load_request(data)
     elif submode == 'instance':
@@ -76,7 +76,7 @@ class DPMU_Server():
     return response
 
   def parse_load_request(self, request):
-    uname = request.split()[1]
+    uname = request.split()[0]
     fp4 = request.split()[2]
     fname = fp4.split('.')[0]
     fhp4t = fname + '.hp4t'
@@ -87,16 +87,21 @@ class DPMU_Server():
 
   def validate_load_request(self, uname, fname, context):
     if uname not in self.users:
+      print('USERNOTFOUND: ' + uname)
       return USERNOTFOUND
     if os.path.isfile(fname) == False:
       return FILENOTFOUND
     # TODO: validate context
     return 0
 
-  def load_load_request(self, finst):
-    pass
+  def load_load_request(self, finst_name):
+    with open(finst_name+'.hp4', 'r') as f:
+      for line in f:
+        if line.split()[0] == 'table_add':
+          self.rta.do_table_add(line.split('table_add ')[1])
+        elif line.split()[0] == 'table_set_default':
+          self.rta.do_table_set_default(line.split('table_set_default ')[1])
 
-  # TODO: continue splitting this function up
   def handle_load_request(self, request):
     if (self.debug):
       print("handle_load_request: " + request)
@@ -132,19 +137,44 @@ class DPMU_Server():
     self.next_PID += 1
 
     # load
-    with open(finst_name+'.hp4', 'r') as f:
-      for line in f:
-        if line.split()[0] == 'table_add':
-          self.rta.do_table_add(line.split('table_add ')[1])
-        elif line.split()[0] == 'table_set_default':
-          self.rta.do_table_set_default(line.split('table_set_default ')[1])
+    self.load_load_request(finst_name)
     
     return 'OK'
-    # code.interact(local=locals())
 
+  def parse_rule_request(self, request):
+    pass
+
+  def validate_rule_request(self, uname, finst_name, command):
+    pass
+
+  def parse_json(self, finst_name, command):
+    pass
+
+  def translate(self, templates, command):
+    pass
 
   def handle_rule_request(self, request):
-    pass
+    # parse request
+    uname, finst_name, command = self.parse_rule_request(request)
+
+    # validate
+    validate = self.validate_rule_request(uname, finst_name, command)
+    if validate != 0:
+      return 'ERROR: request failed validation with error: ' + validate_errors[validate]
+
+    # parse json
+    templates = self.parse_json(finst_name, command)
+
+    # translate
+    rules = self.translate(templates, command)
+
+    # push to hp4
+    for rule in rules:
+      if rule.split()[0] == 'table_add':
+        self.rta.do_table_add(rule.split('table_add ')[1])
+      elif rule.split()[0] == 'table_set_default':
+        self.rta.do_table_set_default(rule.split('table_set_default ')[1])
+
   def handle_composition_request(self, request):
     pass
   def handle_ralloc_request(self, request):
@@ -197,7 +227,7 @@ def load(args):
   if(args.debug):
     print("client load")
     print(args)
-  data = 'load ' + args.source
+  data = args.user + ' load ' + args.source
   data += ' ' + args.instance
   for pport in args.pports:
     data += ' ' + str(pport)
@@ -210,8 +240,22 @@ def load(args):
     print(resp)
   s.close()
 
-def rule(args):
-  pass
+def instance(args):
+  if(args.debug):
+    print("client instance")
+    print(args)
+  if args.command:
+    data = args.user + ' instance ' + args.instance_name + ' ' + args.command
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host = socket.gethostname()
+    s.connect((host, args.port))
+    s.send(data)
+    resp = s.recv(1024)
+    if(args.debug):
+      print(resp)
+    s.close()
+  elif args.file:
+    pass
 
 def parse_args(args):
   class ActionToPreType(argparse.Action):
@@ -276,7 +320,7 @@ def parse_args(args):
   group.add_argument('--file', help='file containing table commands',
                                   type=str, action="store")
 
-  parser_client_inst.set_defaults(func=rule)
+  parser_client_inst.set_defaults(func=instance)
   
   return parser.parse_args(args)
 
