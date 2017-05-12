@@ -3,25 +3,33 @@
 import argparse
 import sys
 import json
-import code
-import bmpy_utils as utils
 import runtime_CLI
 import socket
 from subprocess import call
+import os
 
-'''
-potentially useful runtime_CLI methods:
-table = runtime_CLI.TABLES['<table name>']
-rta = runtime_CLI.RuntimeAPI('SimplePre', standard_client)
-rta.do_table_dump('<table name>')
-standard_client.bm_mt_get_entries(0, '<table name>')
-entry = standard_client.bm_mt_get_entries(0, '<table name>')[<idx>]
-'''
+import code
+
+FILENOTFOUND = 1
+USERNOTFOUND = 2
+INSTANCENOTFOUND = 3
+validate_errors = {}
+validate_errors[FILENOTFOUND] = 'FILENOTFOUND'
+validate_errors[USERNOTFOUND] = 'USERNOTFOUND'
+validate_errors[INSTANCENOTFOUND] = 'INSTANCENOTFOUND'
+
+class Rule():
+  def __init__(self, rule_type, table, action, mparams, aparams):
+    self.rule_type = rule_type
+    self.table = table
+    self.action = action
+    self.mparams = mparams
+    self.aparams = aparams
 
 class DPMU_Server():
-  def __init__(self, rta, entries, phys_ports, userfile):
+  def __init__(self, rta, entries, phys_ports, userfile, debug):
     self.next_PID = 1
-    
+
     # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
     self.instances = {}
 
@@ -66,91 +74,186 @@ class DPMU_Server():
         self.entries_remaining = self.entries_remaining - uentries
         self.users[uname] = (uentries, uports, [])
 
-  def do_load(self, command):
-    srcfile = command.split()[1]
-    srcname = srcfile.split('.')[0]
-    instance = command.split()[2]
-    pports = command.split()[3:]
-    code.interact(local=locals())
+    self.debug = debug
+
+  def handle_request(self, data):
+    response = ''
+    submode = data.split()[1]
+    if submode == 'load':
+      response = self.handle_load_request(data)
+    elif submode == 'instance':
+      response = self.handle_rule_request(data)
+    return response
+
+  def parse_load_request(self, request):
+    uname = request.split()[0]
+    fp4 = request.split()[2]
+    fname = fp4.split('.')[0]
+    fhp4t = fname + '.hp4t'
+    fhp4mt = fname + '.hp4mt'
+    finst_name = request.split()[3]
+    context = request.split()[4:]
+    return uname, fp4, fhp4t, fhp4mt, finst_name, context
+
+  def validate_load_request(self, uname, fname, context):
+    if uname not in self.users:
+      print('USERNOTFOUND: ' + uname)
+      return USERNOTFOUND
+    if os.path.isfile(fname) == False:
+      return FILENOTFOUND
+    # TODO: validate context
+    return 0
+
+  def load_load_request(self, finst_name):
+    with open(finst_name+'.hp4', 'r') as f:
+      for line in f:
+        if line.split()[0] == 'table_add':
+          self.rta.do_table_add(line.split('table_add ')[1])
+        elif line.split()[0] == 'table_set_default':
+          self.rta.do_table_set_default(line.split('table_set_default ')[1])
+
+  def handle_load_request(self, request):
+    if (self.debug):
+      print("handle_load_request: " + request)
+
+    uname, \
+    fp4, \
+    fhp4t, \
+    fhp4mt, \
+    finst_name, \
+    context = self.parse_load_request(request)
+
+    # validate
+    validate = self.validate_load_request(uname, fp4, context)
+    if validate != 0:
+      return 'ERROR: request failed validation with error: ' + validate_errors[validate]
+
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
-    hp4t = srcname + '.hp4t'
-    hp4mt = srcname + '.hp4mt'
-    if call(["./p4c-hp4", "-o", hp4t, "-m", hp4mt, "-s 20", srcfile]) == 0:
-      # load
-      # hp4l --input <hp4t> --output instancename+.hp4 --progID self.next_PID
-      #      --phys_ports ... --virt_ports ...
-      if call(["../tools/hp4l", "--input", hp4t, "--output", instance+'.hp4',
-            "--progID", str(self.next_PID), "--phys_ports"] + pports) == 0:
-        self.instances[instance] = (self.next_PID, hp4t, [])
-        for i in range(4):
-          vport = self.virt_ports_remaining.pop(0)
-          self.virt_ports_instances[vport] = instance
-          self.instances[instance][2].append(vport)
-        self.next_PID += 1
-        return 'DO_LOAD'
-      else:
-        return 'FAIL_LOAD'
-    else:
-      return 'FAIL_COMPILE'
+    if call(["./p4c-hp4", "-o", fhp4t, "-m", fhp4mt, "-s 20", fp4]) != 0:
+      return 'ERROR: could not compile ' + fp4
 
-  def do_instance(self, command):
-    # rta.do_table_add(...)
-    return 'DO_INSTANCE'
+    # link... TODO: refine handling of context
+    if call(["../tools/hp4l", "--input", fhp4t, "--output", finst_name+'.hp4',
+            "--progID", str(self.next_PID), "--phys_ports"] + context) != 0:
+      return 'ERROR: could not link ' + fhp4t
+
+    # track
+    self.instances[finst_name] = (self.next_PID, fhp4t, [])
+    for i in range(4):
+      vport = self.virt_ports_remaining.pop(0)
+      self.virt_ports_instances[vport] = finst_name
+      self.instances[finst_name][2].append(vport)
+    self.next_PID += 1
+
+    # load
+    self.load_load_request(finst_name)
+    
+    return 'OK'
+
+  # TODO: implement this in an API-agnostic way (i.e., this method assumes bmv2)
+  def parse_rule_request(self, request):
+    uname = request.split()[0]
+    finst_name = request.split()[2]
+    rule_type = request.split()[3]
+    table = request.split()[4]
+    action = request.split()[5]
+    mparams = request.split(' => ')[0].split()[6:]
+    aparams = request.split(' => ')[1].split()[0:]
+    rule = Rule(rule_type, table, action, mparams, aparams)
+    return uname, finst_name, rule
+
+  def validate_rule_request(self, uname, finst_name, rule):
+    if uname not in self.users:
+      print('USERNOTFOUND: ' + uname)
+      return USERNOTFOUND
+    if finst_name not in self.instances:
+      print('INSTANCENOTFOUND: ' + finst_name)
+      return INSTANCENOTFOUND
+    # TODO: validate rule
+    return 0
+
+  def parse_json(self, finst_name, command):
+    pass
+
+  def translate(self, templates, command):
+    pass
+
+  def handle_rule_request(self, request):
+    # parse request
+    uname, finst_name, rule = self.parse_rule_request(request)
+
+    # validate
+    validate = self.validate_rule_request(uname, finst_name, rule)
+    if validate != 0:
+      return 'ERROR: request failed validation with error: ' + validate_errors[validate]
+
+    # parse json
+    templates = self.parse_json(finst_name, command)
+
+    # translate
+    rules = self.translate(templates, command)
+
+    # push to hp4
+    for rule in rules:
+      if rule.split()[0] == 'table_add':
+        self.rta.do_table_add(rule.split('table_add ')[1])
+      elif rule.split()[0] == 'table_set_default':
+        self.rta.do_table_set_default(rule.split('table_set_default ')[1])
+
+  def handle_composition_request(self, request):
+    pass
+  def handle_ralloc_request(self, request):
+    pass
+  def handle_status_request(self, request):
+    pass
 
 def server(args):
-  print("server")
-  print(args)
-
-  hp4_client, mc_client = runtime_CLI.thrift_connect(args.hp4_ip, args.hp4_port,
-                              runtime_CLI.RuntimeAPI.get_thrift_services(args.pre))
+  if(args.debug):
+    print("server")
+    print(args)
+  hp4_client, mc_client = runtime_CLI.thrift_connect(args.hp4_ip,
+                          args.hp4_port,
+                          runtime_CLI.RuntimeAPI.get_thrift_services(args.pre))
   json = '/home/ubuntu/hp4-src/hp4/hp4.json'
   runtime_CLI.load_json_config(hp4_client, json)
   rta = runtime_CLI.RuntimeAPI('SimplePre', hp4_client)
 
   serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
   host = socket.gethostname()
   serversocket.bind((host, args.port))
   serversocket.listen(5)
   # TODO: non-default parameters
   # def __init__(self, rta, entries, phys_ports, userfile):
-  dserver = DPMU_Server(rta, 100, "1 2 3 4", None)
+  dserver = DPMU_Server(rta, 100, "1 2 3 4", None, args.debug)
 
   while True:
     clientsocket = None
     try:
       clientsocket,addr = serversocket.accept()
-      print("Got a connection from %s" % str(addr))
+      if(args.debug):
+        print("Got a connection from %s" % str(addr))
       data = clientsocket.recv(1024)
-      print(data)
-      # TODO: create do_load(), do_instance()
+      if(args.debug):
+        print(data)
       # In do_instance, we'll have rta.do_table_add(...)
-      response = ''
-      submode = data.split()[0]
-      if submode == 'load':
-        response = dserver.do_load(data)
-      elif submode == 'instance':
-        response = dserver.do_instance(data)
+      response = dserver.handle_request(data)
       clientsocket.sendall(response)
       clientsocket.close()
     except KeyboardInterrupt:
       if clientsocket:
         clientsocket.close()
+      serversocket.close()
+      if(args.debug):
+        print('Keyboard Interrupt, sockets closed')
       break
 
-def client_load(args):
-  print("client_load")
-  print(args)
-  data = 'load ' + args.source
-  # At some point we may want a list of instances...
-  """
-  if args.instance_list == None:
-    data += ' ' + args.source.split('.')[0]
-  else:
-    for inst in args.instance_list:
-      data += ' ' + inst
-  """
-  # ...but for now:
+def load(args):
+  if(args.debug):
+    print("client load")
+    print(args)
+  data = args.user + ' load ' + args.source
   data += ' ' + args.instance
   for pport in args.pports:
     data += ' ' + str(pport)
@@ -159,38 +262,27 @@ def client_load(args):
   s.connect((host, args.port))
   s.send(data)
   resp = s.recv(1024)
-  print(resp)
+  if(args.debug):
+    print(resp)
   s.close()
 
-def process_command(port, iname, command):
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  host = socket.gethostname()
-  s.connect((host, port))
-  s.send('instance ' + iname + ' ' + command)
-  resp = s.recv(1024)
-  print(resp)
-  s.close()
+def instance(args):
+  if(args.debug):
+    print("client instance")
+    print(args)
+  if args.command:
+    data = args.user + ' instance ' + args.instance_name + ' ' + args.command
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host = socket.gethostname()
+    s.connect((host, args.port))
+    s.send(data)
+    resp = s.recv(1024)
+    if(args.debug):
+      print(resp)
+    s.close()
+  elif args.file:
+    pass
 
-def client_instance(args):
-  print("client_instance")
-  print(args)
-  if args.file is not None:
-    lines = [line.rstrip('\n') for line in open(args.file)]
-    for line in lines:
-      process_command(args.port, args.instance_name, line)
-  elif args.command is not None:
-    process_command(args.port, args.instance_name, args.command)
-  else:
-    print("ERROR client instance: require either --command or --file")
-    exit()
-
-'''
-  client user <username>
-  - return resource set associated w/ <username>
-  client load source.p4 --user <username> --instance <instance name> [list of phys-ports]
-  client populate <instance name> <[--command 'table_add dmac forward 00:AA:BB:00:00:01 => 1' | --file filename]>
-  server --port 33333 --hp4-port 22222 --entries 1000 --phys-ports 4 --users userfile
-'''
 def parse_args(args):
   class ActionToPreType(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
@@ -203,51 +295,59 @@ def parse_args(args):
       setattr(namespace, self.dest, PreType.from_str(values))
 
   parser = argparse.ArgumentParser(description='Data Plane Management Unit')
+  parser.add_argument('--debug', help='turn on debug mode',
+                      action='store_true')
   subparsers = parser.add_subparsers(title='modes',
                                      description='valid modes',
-                                     dest = 'mode')
-
+                                     dest='mode')
   parser_server = subparsers.add_parser('server')
+  parser_client = subparsers.add_parser('client')
+
+  # server
   parser_server.add_argument('--port', help='port for DPMU',
                       type=int, action="store", default=33333)
   parser_server.add_argument('--hp4-ip', help='IP address for HP4',
                              type=str, action="store", default='localhost')
   parser_server.add_argument('--hp4-port', help='port for HP4',
                              type=int, action="store", default=9090)
-  parser_server.add_argument('--pre', help='Packet Replication Engine used by target',
-                      type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
-                      default=runtime_CLI.PreType.SimplePre, action=ActionToPreType)
+  parser_server.add_argument('--pre', help='Packet Replication Engine used by \
+                 target',
+                 type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
+                 default=runtime_CLI.PreType.SimplePre, action=ActionToPreType)
   parser_server.set_defaults(func=server)
 
-  parser_client = subparsers.add_parser('client')
+  # client
+  parser_client.add_argument('user', help='username', type=str, action="store")
   parser_client.add_argument('--port', help='port for DPMU',
-                      type=int, action="store", default=33333)
-
+                             type=int, action="store", default=33333)
   pc_subparsers = parser_client.add_subparsers(dest = 'subcommand')
-
   parser_client_load = pc_subparsers.add_parser('load', help='load P4 program')
+  parser_client_inst = pc_subparsers.add_parser('instance',
+                                              help='interact with an instance')
+
+  ## client load
   parser_client_load.add_argument('source', help='P4 file to compile and load',
-                             type=str, action="store")
+                                  type=str, action="store")
   parser_client_load.add_argument('--instance', help='instance \
                                   name to associate with the source P4 \
                                   program', type=str, action="store")
   parser_client_load.add_argument('pports', help='Physical ports to which \
                                   the instance should be assigned', type=int,
                                   nargs='+')
-  parser_client_load.set_defaults(func=client_load)
+  parser_client_load.set_defaults(func=load)
 
-  parser_client_instance = pc_subparsers.add_parser('instance',
-                                  help='interact with an instance')
-  parser_client_instance.add_argument('instance_name', help='name of instance',
+  ## client instance
+  parser_client_inst.add_argument('instance_name', help='name of instance',
                                   type=str, action="store")
-  # file / command
-  group = parser_client_instance.add_mutually_exclusive_group()
+  ### file / command
+  group = parser_client_inst.add_mutually_exclusive_group()
   group.add_argument('--command', help='single table command',
                                   type=str, action="store")
   group.add_argument('--file', help='file containing table commands',
                                   type=str, action="store")
-  parser_client_instance.set_defaults(func=client_instance)
 
+  parser_client_inst.set_defaults(func=instance)
+  
   return parser.parse_args(args)
 
 def main():
