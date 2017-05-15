@@ -1,5 +1,51 @@
 # DPMU Implementation
 
+Checkpoint: translate method
+- I have recognized that when a source table matches on a standard_metadata
+  field, there are two HP4\_Match\_Commands: tX\_stdmeta\_exact and
+  tX\_stdmeta\_[field name].
+- Need to pause DPMU implementation to review HP4 implementation: is there
+  any benefit to separating the match into two tables?  If not, we can
+  consolidate into one table in HP4, and simplify our effort in the DPMU.
+  - IMPACT OF TWO TABLES:
+    - Shortens the control functions match\_X
+    - But incurs additional control functions switch\_stdmeta\_X
+    - X additional tables tX\_stdmeta\_exact
+    - Makes expansion of match type on standard metadata fields easier
+  - Alternatives: consider latency, memory, ease of expansion
+    - Remove intermediary tX\_stdmeta\_exact tables
+    - Could copy all standard_metadata fields into one consolidated
+      metadata field and do ternary match on that field just like we
+      currently do for extracted (parsed representation) and metadata
+
+A: Current
+B: Remove tX\_stdmeta\_exact, add conditionals to match\_X
+C: Copy stdmetadata fields into 1 metadata field, ternary match
+
+latency:
+For programs that use standard_metadata matching:
+A: ~Y conds + ~Z conds + 1 table + 1 inst-action
+B: ~Y conds + ~Z conds
+C: ~Y conds + 1 table + Z inst-action
+For programs that don't:
+A: ~Y conds
+B: ~Y conds (if all conds for non-stdmetadata match tables put first)
+C: ~Y conds + 1 table (checking whether stdmetadata matching needed)
+
+B wins
+
+memory:
+A: 1 control w/ Y conds + 1 control w/ Z conds + 1 table (1 entry / program ID) + 1 action + Z tables (1 entry / source entry)
+B: 1 control w/ (Y + Z) conds + Z tables (1 entry / source entry)
+C: 1 control w/ Y conds + 1 table (1 entry / source entry)
+
+Close between B and C because each entry in C's table represents Z fields where B has Z tables, each representing 1 field.  C would appear to have the edge because of smaller control functions, but surely control functions are cheap in terms of memory.
+
+ease of expansion:
+A and B are both fairly simple, C is not.
+
+B is best.
+
 New!  See updated design at https://docs.google.com/presentation/d/1bntdi8gA0NhIPVTYo4pToTX5qwH_-jacIJEFcstEw00/edit?usp=sharing
 
 First Iteration: Single User, no resource tracking, only instance tracking.
@@ -12,9 +58,9 @@ First Iteration: Single User, no resource tracking, only instance tracking.
   - [X] server track vport:instance map
   - [X] server track instance attributes: prog ID, source, vports
   - [ ] Enforce phys-port:instance assignment
-  - [ ] server handle loading via sswitch_CLI
-  - [ ] server return success/fail to client
-- [ ] handle client populate ... step 1: check validity of instance
+  - [X] server handle loading via sswitch_CLI
+  - [X] server return success/fail to client
+- [X] handle client populate ... step 1: check validity of instance
 - [ ] handle client populate ... step 2: translate transaction
 - [ ] handle client populate ... step 3: add table entries to running instance of HP4
 - [ ] handle client populate ... step 4: return success/fail

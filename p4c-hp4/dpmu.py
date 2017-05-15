@@ -141,11 +141,11 @@ class DPMU_Server():
       return 'ERROR: could not link ' + fhp4t
 
     # track
-    self.instances[finst_name] = (self.next_PID, fhp4t, [])
+    self.instances[finst_name] = (self.next_PID, fhp4t, fhp4mt, [])
     for i in range(4):
       vport = self.virt_ports_remaining.pop(0)
       self.virt_ports_instances[vport] = finst_name
-      self.instances[finst_name][2].append(vport)
+      self.instances[finst_name][3].append(vport)
     self.next_PID += 1
 
     # load
@@ -175,10 +175,11 @@ class DPMU_Server():
     # TODO: validate rule
     return 0
 
-  def parse_json(self, finst_name, command):
+  def parse_json(self, finst_name, rule):
     templates_match = {}
     templates_prims = {}
-    with open(finst_name+'.hp4mt') as json_data:
+    hp4mt = self.instances[finst_name][2]
+    with open(hp4mt) as json_data:
       d = json.load(json_data)
       for hp4_command in d:
         src_table = hp4_command['source_table']
@@ -206,13 +207,26 @@ class DPMU_Server():
           print("ERROR: Unrecognized class: %s" % hp4_command['__class__'])
     templates = {}
     for key in templates_match:
-      templates[key] = (templates_match[key], [])
+      templates[key] = {'match': templates_match[key], 'primitives': []}
       if templates_prims.has_key(key):
-        templates[key][1] = templates_prims[key]
-    return templates
+        templates[key]['primitives'] = templates_prims[key]
+    return templates[(rule.table, rule.action)]
 
-  def translate(self, templates, command):
-    pass
+  def translate(self, finst_name, templates, rule):
+    rules = []
+    # handle the match rule
+    ## program ID
+    mrule = templates['match']
+    for i in range(len(mrule.match_params):
+      if mrule.match_params[i] == '[program ID]':
+        mrule.match_params[i] = self.instances[finst_name][0]
+      elif mrule.match_params[i] == '[val]':
+        # TODO
+    
+
+    # handle the primitives rules
+
+    return rules
 
   def handle_rule_request(self, request):
     # parse request
@@ -221,15 +235,16 @@ class DPMU_Server():
     # validate
     validate = self.validate_rule_request(uname, finst_name, rule)
     if validate != 0:
-      code.interact(local=locals())
       return 'ERROR: request failed validation with error: ' + validate_errors[validate]
 
-    # parse json
+    # parse json: return dict w/ keys 'match' and 'primitives'
+    # value for 'match': an HP4_Match_Command
+    # value for 'primitives': a list of HP4_Primitive_Commands
     templates = self.parse_json(finst_name, rule)
-    code.interact(local=locals())
 
     # translate
-    rules = self.translate(templates, command)
+    code.interact(local=locals())
+    rules = self.translate(finst_name, templates, rule)
 
     # push to hp4
     """
