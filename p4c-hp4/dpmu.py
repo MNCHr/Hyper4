@@ -7,6 +7,7 @@ import runtime_CLI
 import socket
 from subprocess import call
 import os
+import copy
 from hp4command import HP4_Match_Command
 from hp4command import HP4_Primitive_Command
 
@@ -19,6 +20,37 @@ validate_errors = {}
 validate_errors[FILENOTFOUND] = 'FILENOTFOUND'
 validate_errors[USERNOTFOUND] = 'USERNOTFOUND'
 validate_errors[INSTANCENOTFOUND] = 'INSTANCENOTFOUND'
+
+match_types = {'[EXTRACTED_EXACT]':'1',
+               '[METADATA_EXACT]':'2',
+               '[STDMETA_EXACT]':'3',
+               '[EXTRACTED_VALID]':'4',
+               '[STDMETA_INGRESS_PORT_EXACT]':'5',
+               '[STDMETA_PACKET_LENGTH_EXACT]':'6',
+               '[STDMETA_INSTANCE_TYPE_EXACT]':'7',
+               '[STDMETA_EGRESS_SPEC_EXACT]':'8'}
+
+primitive_types = {'[MODIFY_FIELD]':'0',
+									 '[ADD_HEADER]':'1',
+									 '[COPY_HEADER]':'2',
+									 '[REMOVE_HEADER]':'3',
+									 '[MODIFY_FIELD_WITH_HBO]':'4',
+									 '[TRUNCATE]':'5',
+									 '[DROP]':'6',
+									 '[NO_OP]':'7',
+									 '[PUSH]':'8',
+									 '[POP]':'9',
+									 '[COUNT]':'10',
+									 '[METER]':'11',
+									 '[GENERATE_DIGEST]':'12',
+									 '[RECIRCULATE]':'13',
+									 '[RESUBMIT]':'14',
+									 '[CLONE_INGRESS_INGRESS]':'15',
+									 '[CLONE_EGRESS_INGRESS]':'16',
+									 '[CLONE_INGRESS_EGRESS]':'17',
+									 '[CLONE_EGRESS_EGRESS]':'18',
+									 '[MULTICAST]':'19',
+									 '[MATH_ON_FIELD]':'20'}
 
 class Rule():
   def __init__(self, rule_type, table, action, mparams, aparams):
@@ -34,6 +66,9 @@ class DPMU_Server():
 
     # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
     self.instances = {}
+
+    # map (instances, source tables) to ints (counter for match_ID)
+    self.match_counters = {}
 
     self.rta = rta
     self.total_entries = entries
@@ -215,15 +250,27 @@ class DPMU_Server():
   def translate(self, finst_name, templates, rule):
     rules = []
     # handle the match rule
-    ## program ID
-    mrule = templates['match']
-    for i in range(len(mrule.match_params):
+    ## match parameters
+    mrule = copy.copy(templates['match'])
+    for i in range(len(mrule.match_params)):
       if mrule.match_params[i] == '[program ID]':
-        mrule.match_params[i] = self.instances[finst_name][0]
-      elif mrule.match_params[i] == '[val]':
-        # TODO
-    
-
+        mrule.match_params[i] = str(self.instances[finst_name][0])
+      elif '[val]' in mrule.match_params[i]:
+        mrule.match_params[i] = mrule.match_params[i].replace('[val]',
+                                                          str(rule.mparams[0]))
+    ## action parameters
+    for i in range(len(mrule.action_params)):
+      if mrule.action_params[i] == '[match ID]':
+        key = (finst_name, mrule.source_table)
+        if self.match_counters.has_key(key) == False:
+          self.match_counters[key] = 1
+        mrule.action_params[i] = str(self.match_counters[key])
+        self.match_counters[key] += 1
+      elif mrule.action_params[i] in match_types:
+        mrule.action_params[i] = match_types[mrule.action_params[i]]
+      elif mrule.action_params[i] in primitive_types:
+        mrule.action_params[i] = primitive_types[mrule.action_params[i]]
+    code.interact(local=locals())
     # handle the primitives rules
 
     return rules
@@ -243,7 +290,6 @@ class DPMU_Server():
     templates = self.parse_json(finst_name, rule)
 
     # translate
-    code.interact(local=locals())
     rules = self.translate(finst_name, templates, rule)
 
     # push to hp4
