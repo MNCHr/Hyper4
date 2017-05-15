@@ -7,6 +7,8 @@ import runtime_CLI
 import socket
 from subprocess import call
 import os
+from hp4command import HP4_Match_Command
+from hp4command import HP4_Primitive_Command
 
 import code
 
@@ -174,7 +176,40 @@ class DPMU_Server():
     return 0
 
   def parse_json(self, finst_name, command):
-    pass
+    templates_match = {}
+    templates_prims = {}
+    with open(finst_name+'.hp4mt') as json_data:
+      d = json.load(json_data)
+      for hp4_command in d:
+        src_table = hp4_command['source_table']
+        src_action = hp4_command['source_action']
+        key = (src_table, src_action)
+        command = hp4_command['command']
+        table = hp4_command['table']
+        action = hp4_command['action']
+        match_params = hp4_command['match_params']
+        action_params = hp4_command['action_params']
+        if hp4_command['__class__'] == 'HP4_Match_Command':
+          templates_match[key] = HP4_Match_Command(src_table, src_action,
+                                                   command, table, action,
+                                                   match_params, action_params)
+        elif hp4_command['__class__'] == 'HP4_Primitive_Command':
+          src_aparam_id = hp4_command['src_aparam_id']
+          if templates_prims.has_key(key) == False:
+            templates_prims[key] = []
+          templates_prims[key].append(HP4_Primitive_Command(src_table,
+                                                    src_action, command, table,
+                                                    action, match_params,
+                                                    action_params, 
+                                                    src_aparam_id))
+        else:
+          print("ERROR: Unrecognized class: %s" % hp4_command['__class__'])
+    templates = {}
+    for key in templates_match:
+      templates[key] = (templates_match[key], [])
+      if templates_prims.has_key(key):
+        templates[key][1] = templates_prims[key]
+    return templates
 
   def translate(self, templates, command):
     pass
@@ -186,20 +221,25 @@ class DPMU_Server():
     # validate
     validate = self.validate_rule_request(uname, finst_name, rule)
     if validate != 0:
+      code.interact(local=locals())
       return 'ERROR: request failed validation with error: ' + validate_errors[validate]
 
     # parse json
-    templates = self.parse_json(finst_name, command)
+    templates = self.parse_json(finst_name, rule)
+    code.interact(local=locals())
 
     # translate
     rules = self.translate(templates, command)
 
     # push to hp4
+    """
     for rule in rules:
       if rule.split()[0] == 'table_add':
         self.rta.do_table_add(rule.split('table_add ')[1])
       elif rule.split()[0] == 'table_set_default':
         self.rta.do_table_set_default(rule.split('table_set_default ')[1])
+    """
+    return 'OK'
 
   def handle_composition_request(self, request):
     pass
