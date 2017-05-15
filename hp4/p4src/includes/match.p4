@@ -9,8 +9,6 @@ HyPer4: A P4 Program to Run Other P4 Programs
 match.p4: Support various types of matching used by the target P4 program.
 */
 
-#include "switch_stdmeta.p4"
-
 action init_program_state(action_ID, match_ID, next_table, primitive, primitive_subtype) {
   modify_field(meta_primitive_state.action_ID, action_ID);
   modify_field(meta_primitive_state.match_ID, match_ID);
@@ -19,10 +17,6 @@ action init_program_state(action_ID, match_ID, next_table, primitive, primitive_
   modify_field(meta_primitive_state.primitive, primitive);
   modify_field(meta_primitive_state.subtype, primitive_subtype);
   modify_field(meta_ctrl.stage_state, CONTINUE);
-}
-
-action set_meta_stdmeta(stdmeta_ID) {
-  modify_field(meta_ctrl.stdmeta_ID, stdmeta_ID);
 }
 
 table t1_matchless {
@@ -54,19 +48,50 @@ table t1_metadata_exact {
   }
 }
 
-table t1_stdmeta_exact {
-  reads {
-    meta_ctrl.program : exact;
-  }
-  actions {
-    set_meta_stdmeta;
-  }
-}
-
 table t1_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t1_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t1_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t1_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t1_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
   }
   actions {
     init_program_state;
@@ -102,19 +127,50 @@ table t2_metadata_exact {
   }
 }
 
-table t2_stdmeta_exact {
-  reads {
-    meta_ctrl.program : exact;
-  }
-  actions {
-    set_meta_stdmeta;
-  }
-}
-
 table t2_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
   }
   actions {
     init_program_state;
@@ -150,19 +206,50 @@ table t3_metadata_exact {
   }
 }
 
-table t3_stdmeta_exact {
-  reads {
-    meta_ctrl.program : exact;
-  }
-  actions {
-    set_meta_stdmeta;
-  }
-}
-
 table t3_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t3_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t3_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t3_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t3_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
   }
   actions {
     init_program_state;
@@ -198,19 +285,50 @@ table t4_metadata_exact {
   }
 }
 
-table t4_stdmeta_exact {
-  reads {
-    meta_ctrl.program : exact;
-  }
-  actions {
-    set_meta_stdmeta;
-  }
-}
-
 table t4_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
   }
   actions {
     init_program_state;
@@ -224,15 +342,23 @@ control match_1 {
   else if(meta_ctrl.next_table == METADATA_EXACT) {
     apply(t1_metadata_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EXACT) {
-    apply(t1_stdmeta_exact);
-    switch_stdmeta_1();
-  }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t1_extracted_valid);
   }
   else if(meta_ctrl.next_table == MATCHLESS) {
     apply(t1_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t1_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t1_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t1_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t1_stdmeta_egress_spec_exact);
   }
 }
 
@@ -243,15 +369,23 @@ control match_2 {
   else if(meta_ctrl.next_table == METADATA_EXACT) {
     apply(t2_metadata_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EXACT) {
-    apply(t2_stdmeta_exact);
-    switch_stdmeta_2();
-  }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t2_extracted_valid);
   }
   else if(meta_ctrl.next_table == MATCHLESS) {
     apply(t2_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t2_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t2_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t2_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t2_stdmeta_egress_spec_exact);
   }
 }
 
@@ -262,15 +396,23 @@ control match_3 {
   else if(meta_ctrl.next_table == METADATA_EXACT) {
     apply(t3_metadata_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EXACT) {
-    apply(t3_stdmeta_exact);
-    switch_stdmeta_3();
-  }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t3_extracted_valid);
   }
   else if(meta_ctrl.next_table == MATCHLESS) {
     apply(t3_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t3_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t3_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t3_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t3_stdmeta_egress_spec_exact);
   }
 }
 
@@ -281,14 +423,22 @@ control match_4 {
   else if(meta_ctrl.next_table == METADATA_EXACT) {
     apply(t4_metadata_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EXACT) {
-    apply(t4_stdmeta_exact);
-    switch_stdmeta_4();
-  }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t4_extracted_valid);
   }
   else if(meta_ctrl.next_table == MATCHLESS) {
     apply(t4_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t4_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t4_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t4_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t4_stdmeta_egress_spec_exact);
   }
 }

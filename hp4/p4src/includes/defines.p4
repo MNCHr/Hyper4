@@ -36,8 +36,12 @@ defines.p4: Define constants
 #define DONE            0
 #define EXTRACTED_EXACT	1
 #define METADATA_EXACT	2
-#define STDMETA_EXACT	  3
+#define STDMETA_EXACT	  3 // deprecated
 #define EXTRACTED_VALID 4
+#define STDMETA_INGRESS_PORT_EXACT 	5
+#define STDMETA_PACKET_LENGTH_EXACT 6
+#define STDMETA_INSTANCE_TYPE_EXACT 7
+#define STDMETA_EGRESS_SPEC_EXACT		8
 #define MATCHLESS				99
 
 // meta_ctrl.stage_state

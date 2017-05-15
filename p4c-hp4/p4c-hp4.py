@@ -115,14 +115,6 @@ gen_prim_subtype_action = {'add_header': 'a_addh',
                            'clone_egress_pkt_to_egress': '',
                            'multicast': 'a_multicast'}
 
-stdmeta_ID = {'ingress_port': '[STDMETA_INGRESS_PORT]',
-              'packet_length': '[STDMETA_PACKET_LENGTH]',
-              'egress_spec': '[STDMETA_EGRESS_SPEC]',
-              'egress_port': '[STDMETA_EGRESS_PORT]',
-              'egress_instance': '[STDMETA_EGRESS_INSTANCE]',
-              'instance_type': '[STDMETA_INSTANCE_TYPE]',
-              'clone_spec': '[STDMETA_CLONE_SPEC]'}
-
 def parse_args(args):
   parser = argparse.ArgumentParser(description='P4->HP4 Compiler')
   parser.add_argument('input', help='path for input .p4',
@@ -148,13 +140,14 @@ class MatchParam():
     return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
 
 class Table_Rep():
-  def __init__(self, stage, match_type, source_type):
+  def __init__(self, stage, match_type, source_type, field_name):
     self.stage = stage
     self.match_type = match_type
     self.source_type = source_type
+    self.field_name = field_name
     self.name = 't' + str(self.stage) + '_'
     if source_type == 'standard_metadata':
-      self.name += 'stdmeta_'
+      self.name += 'stdmeta_' + field_name + '_'
     elif source_type == 'metadata':
       self.name += 'metadata_'
     elif source_type == 'extracted':
@@ -170,7 +163,17 @@ class Table_Rep():
   def table_type(self):
     if self.source_type == 'standard_metadata':
       if self.match_type == 'P4_MATCH_EXACT':
-        return '[STDMETA_EXACT]'
+        if self.field_name == 'ingress_port':
+          return '[STDMETA_INGRESS_PORT_EXACT]'
+        elif self.field_name == 'packet_length':
+          return '[STDMETA_PACKET_LENGTH_EXACT]'
+        elif self.field_name == 'instance_type':
+          return '[STDMETA_INSTANCE_TYPE_EXACT]'
+        elif self.field_name == 'egress_spec':
+          return '[STDMETA_EGRESS_SPEC_EXACT]'
+        else:
+          print("Not supported: standard_metadata field %s" % self.field_name)
+          exit()
       else:
         print("Not supported: standard_metadata with %s match type" % self.match_type)
         exit()
@@ -430,8 +433,10 @@ class HP4C:
     #code.interact(local=locals())
     source_type = ''
     match_type = 'MATCHLESS'
+    field_name = ''
     if len(curr_table.match_fields) > 0:
       match_type = curr_table.match_fields[0][1].value
+      field_name = curr_table.match_fields[0][0].name
       if (match_type == 'P4_MATCH_EXACT' or
           match_type == 'P4_MATCH_TERNARY'):
         source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
@@ -439,7 +444,8 @@ class HP4C:
         source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
     self.table_to_trep[curr_table] = Table_Rep(self.stage,
                                                match_type,
-                                               source_type)
+                                               source_type,
+                                               field_name)
     for action in curr_table.actions:
       if self.action_to_arep.has_key(action) is False:
         self.action_to_arep[action] = Action_Rep()
@@ -669,7 +675,17 @@ class HP4C:
       print("Not yet supported: match type %s" % match_type.value)
       exit()
     if self.headers_hp4_type[field.instance.name] == 'standard_metadata':
-      aparam_table_ID = '[STDMETA_EXACT]'
+      if field.name == 'ingress_port':
+        aparam_table_ID = '[STDMETA_INGRESS_PORT_EXACT]'
+      elif field.name == 'packet_length':
+        aparam_table_ID = '[STDMETA_PACKET_LENGTH_EXACT]'
+      elif field.name == 'instance_type':
+        aparam_table_ID = '[STDMETA_INSTANCE_TYPE_EXACT]'
+      elif field.name == 'egress_spec':
+        aparam_table_ID = '[STDMETA_EGRESS_SPEC_EXACT]'
+      else:
+        print("ERROR: Unsupported: match on stdmetadata field %s" % field.name)
+        exit()
     elif self.headers_hp4_type[field.instance.name] == 'metadata':
       aparam_table_ID = '[METADATA_EXACT]'
     elif self.headers_hp4_type[field.instance.name] == 'extracted':
@@ -724,8 +740,6 @@ class HP4C:
     for table in self.table_to_trep:
       tname = str(self.table_to_trep[table])
       aname = 'init_program_state'
-      if self.table_to_trep[table].source_type == 'standard_metadata':
-        aname = 'set_meta_stdmeta'
       match_params = ['[program ID]']
       if len(table.match_fields) > 1:
         print("Not yet supported: more than 1 match field (table: %s)" % table.name)
@@ -744,16 +758,15 @@ class HP4C:
               match_params_list.append(temp_match_params)
         elif table.match_fields[0][1].value == 'P4_MATCH_EXACT':
           field = table.match_fields[0][0]
-          if field.instance.name == 'standard_metadata':
-            aparams = [stdmeta_ID[field.name]]
-          else:
+          mp = '[val]'
+          if field.instance.name != 'standard_metadata':
             maskwidth = 100
             if field.instance.metadata:
               maskwidth = 32
-            mp = '[val]&&&' + self.gen_bitmask(field.width,
+            mp += '&&&' + self.gen_bitmask(field.width,
                                                self.field_offsets[str(field)],
                                                maskwidth)
-            match_params.append(mp)
+          match_params.append(mp)
         match_params_list.append(match_params)
 
       # need a distinct template entry for every possible action
@@ -779,6 +792,9 @@ class HP4C:
               aparams.append(self.get_prim_subtype(action.call_sequence[0]))
             else:
               aparams.append('0')
+          else:
+            print("ERROR: unexpected action: %s" % aname)
+            exit()
 
           self.command_templates.append(HP4_Match_Command(table.name,
                                             action.name,
@@ -787,42 +803,6 @@ class HP4C:
                                             aname,
                                             mparams,
                                             aparams))
-          if aname == 'set_meta_stdmeta':
-            # Need an entirely new command template since stdmeta matching is
-            #  handled in two steps, vs other types of matching in one step.
-            stdm_tname = ('t' + str(self.table_to_trep[table].stage) +
-                         '_stdmeta_' + table.match_fields[0][0].name)
-            stdm_aname = 'init_program_state'
-            # MATCH PARAMS:
-            stdm_mparams = ['[program ID]', '[val]']
-            # ACTION PARAMS:
-            #   action_ID
-            stdm_aparams = [str(self.action_ID[action])]
-            #   match_ID
-            stdm_aparams.append('[match ID]')
-            #   next_table
-            if table.next_[action] == None:
-              stdm_aparams.append('[DONE]')
-            else:
-              stdm_aparams.append(self.table_to_trep[table.next_[action]].table_type())
-            #   primitive
-            if len(action.call_sequence) == 0:
-              stdm_aparams.append(primitive_ID['no_op'])
-            else:
-              stdm_aparams.append(primitive_ID[action.call_sequence[0][0].name])
-            #   primitive_subtype
-            if len(action.call_sequence) > 0:
-              stdm_aparams.append(self.get_prim_subtype(action.call_sequence[0]))
-            else:
-              stdm_aparams.append('0')
-
-            self.command_templates.append(HP4_Match_Command(table.name,
-                                              action.name,
-                                              "table_add",
-                                              stdm_tname,
-                                              stdm_aname,
-                                              stdm_mparams,
-                                              stdm_aparams))
 
   # primitive_call: (p4_action, [list of parameters])
   def get_prim_subtype(self, call):

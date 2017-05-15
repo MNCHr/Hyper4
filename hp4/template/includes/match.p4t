@@ -1,8 +1,6 @@
 [+ std_header +]
 [+ this_header +]
 
-#include "switch_stdmeta.p4"
-
 action init_program_state(action_ID, match_ID, next_table, primitive, primitive_subtype) {
   modify_field(meta_primitive_state.action_ID, action_ID);
   modify_field(meta_primitive_state.match_ID, match_ID);
@@ -11,10 +9,6 @@ action init_program_state(action_ID, match_ID, next_table, primitive, primitive_
   modify_field(meta_primitive_state.primitive, primitive);
   modify_field(meta_primitive_state.subtype, primitive_subtype);
   modify_field(meta_ctrl.stage_state, CONTINUE);
-}
-
-action set_meta_stdmeta(stdmeta_ID) {
-  modify_field(meta_ctrl.stdmeta_ID, stdmeta_ID);
 }
 
 [+ sloop +]
@@ -47,19 +41,50 @@ table t[+X+]_metadata_exact {
   }
 }
 
-table t[+X+]_stdmeta_exact {
-  reads {
-    meta_ctrl.program : exact;
-  }
-  actions {
-    set_meta_stdmeta;
-  }
-}
-
 table t[+X+]_extracted_valid {
   reads {
     meta_ctrl.program : exact;
     extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t[+X+]_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t[+X+]_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t[+X+]_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t[+X+]_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
   }
   actions {
     init_program_state;
@@ -75,15 +100,23 @@ control match_[+X+] {
   else if(meta_ctrl.next_table == METADATA_EXACT) {
     apply(t[+X+]_metadata_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EXACT) {
-    apply(t[+X+]_stdmeta_exact);
-    switch_stdmeta_[+X+]();
-  }
   else if(meta_ctrl.next_table == EXTRACTED_VALID) {
     apply(t[+X+]_extracted_valid);
   }
   else if(meta_ctrl.next_table == MATCHLESS) {
     apply(t[+X+]_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t[+X+]_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t[+X+]_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t[+X+]_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t[+X+]_stdmeta_egress_spec_exact);
   }
 }
 [+ endsloop +]
