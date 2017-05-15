@@ -8,6 +8,7 @@ import socket
 from subprocess import call
 import os
 import copy
+import re
 from hp4command import HP4_Match_Command
 from hp4command import HP4_Primitive_Command
 
@@ -249,6 +250,12 @@ class DPMU_Server():
 
   def translate(self, finst_name, templates, rule):
     rules = []
+    key = (finst_name, templates['match'].source_table)
+    if self.match_counters.has_key(key) == False:
+      self.match_counters[key] = 1
+    match_ID = self.match_counters[key]
+    self.match_counters[key] += 1
+
     # handle the match rule
     ## match parameters
     mrule = copy.copy(templates['match'])
@@ -258,20 +265,51 @@ class DPMU_Server():
       elif '[val]' in mrule.match_params[i]:
         mrule.match_params[i] = mrule.match_params[i].replace('[val]',
                                                           str(rule.mparams[0]))
+        if re.search("\[[0-9]*x00s\]", mrule.match_params[i]):
+          to_replace = re.search("\[[0-9]*x00s\]", mrule.match_params[i]).group()
+          numzeros = int(re.search("[0-9]+", to_replace).group())
+          replace = ""
+          for i in range(numzeros):
+            replace += "00"   
+          mrule.match_params[i] = \
+                  mrule.match_params[i].replace(to_replace, replace)
+
     ## action parameters
     for i in range(len(mrule.action_params)):
       if mrule.action_params[i] == '[match ID]':
-        key = (finst_name, mrule.source_table)
-        if self.match_counters.has_key(key) == False:
-          self.match_counters[key] = 1
-        mrule.action_params[i] = str(self.match_counters[key])
-        self.match_counters[key] += 1
+        mrule.action_params[i] = str(match_ID)
       elif mrule.action_params[i] in match_types:
         mrule.action_params[i] = match_types[mrule.action_params[i]]
       elif mrule.action_params[i] in primitive_types:
         mrule.action_params[i] = primitive_types[mrule.action_params[i]]
-    code.interact(local=locals())
+
+    rules.append(mrule)
+
     # handle the primitives rules
+    for entry in templates['primitives']:
+      arule = copy.copy(entry)
+      ## match parameters
+      for i in range(len(arule.match_params)):
+        if arule.match_params[i] == '[program ID]':
+          arule.match_params[i] = str(self.instances[finst_name][0])
+        elif '[match ID]' in arule.match_params[i]:
+          arule.match_params[i] = arule.match_params[i].replace('[match ID]',
+                                                                 str(match_ID))
+      ## action parameters
+      for i in range(len(arule.action_params)):
+        if arule.action_params[i] == '[val]':
+          a_idx = int(arule.src_aparam_id)
+          arule.action_params[i] = str(rule.aparams[a_idx])
+        if re.search("\[[0-9]*x00s\]", arule.action_params[i]):
+          to_replace = re.search("\[[0-9]*x00s\]", arule.action_params[i]).group()
+          numzeros = int(re.search("[0-9]+", to_replace).group())
+          replace = ""
+          for j in range(numzeros):
+            replace += "00"   
+          arule.action_params[i] = \
+                            arule.action_params[i].replace(to_replace, replace)
+      
+      rules.append(arule)
 
     return rules
 
@@ -291,6 +329,7 @@ class DPMU_Server():
 
     # translate
     rules = self.translate(finst_name, templates, rule)
+    code.interact(local=locals())
 
     # push to hp4
     """
