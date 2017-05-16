@@ -9,6 +9,7 @@ from subprocess import call
 import os
 import copy
 import re
+from cStringIO import StringIO
 from hp4command import HP4_Match_Command
 from hp4command import HP4_Primitive_Command
 
@@ -52,6 +53,21 @@ primitive_types = {'[MODIFY_FIELD]':'0',
 									 '[CLONE_EGRESS_EGRESS]':'18',
 									 '[MULTICAST]':'19',
 									 '[MATH_ON_FIELD]':'20'}
+
+"""
+Credit for Capturing class:
+  username 'kindall' response to:
+  http://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
+"""
+class Capturing(list):
+  def __enter__(self):
+    self._stdout = sys.stdout
+    sys.stdout = self._stringio = StringIO()
+    return self
+  def __exit__(self, *args):
+    self.extend(self._stringio.getvalue().splitlines())
+    del self._stringio
+    sys.stdout = self._stdout
 
 class Rule():
   def __init__(self, rule_type, table, action, mparams, aparams):
@@ -196,8 +212,14 @@ class DPMU_Server():
     rule_type = request.split()[3]
     table = request.split()[4]
     action = request.split()[5]
-    mparams = request.split(' => ')[0].split()[6:]
-    aparams = request.split(' => ')[1].split()[0:]
+    code.interact(local=locals())
+    args = re.split('\s*=>\s*', request)
+    mparams = args[0].split()[6:]
+    aparams = []
+    if len(args) > 1:
+      aparams = args[1].split()[0:] 
+    #mparams = request.split(' => ')[0].split()[6:]
+    #aparams = request.split(' => ')[1].split()[0:]
     rule = Rule(rule_type, table, action, mparams, aparams)
     return uname, finst_name, rule
 
@@ -329,16 +351,19 @@ class DPMU_Server():
 
     # translate
     rules = self.translate(finst_name, templates, rule)
-    code.interact(local=locals())
 
     # push to hp4
-    """
     for rule in rules:
-      if rule.split()[0] == 'table_add':
-        self.rta.do_table_add(rule.split('table_add ')[1])
-      elif rule.split()[0] == 'table_set_default':
-        self.rta.do_table_set_default(rule.split('table_set_default ')[1])
-    """
+      if rule.command == 'table_add':
+        with Capturing() as output:
+          self.rta.do_table_add(str(rule).split('table_add ')[1])
+        for line in output:
+          print(line)
+          if 'Entry has been added' in line:
+            handle = int(line.split('handle ')[1])
+        # TODO: figure out how to track entry handles properly per instance
+      elif rule.command == 'table_set_default':
+        self.rta.do_table_set_default(str(rule).split('table_set_default ')[1])
     return 'OK'
 
   def handle_composition_request(self, request):
@@ -410,8 +435,8 @@ def instance(args):
   if(args.debug):
     print("client instance")
     print(args)
-  if args.command:
-    data = args.user + ' instance ' + args.instance_name + ' ' + args.command
+  def handle_command(command):
+    data = args.user + ' instance ' + args.instance_name + ' ' + command
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = socket.gethostname()
     s.connect((host, args.port))
@@ -420,8 +445,12 @@ def instance(args):
     if(args.debug):
       print(resp)
     s.close()
+  if args.command:
+    handle_command(args.command)
   elif args.file:
-    pass
+    with open(args.file) as cmd_file:
+      for line in cmd_file:
+        handle_command(line)
 
 def parse_args(args):
   class ActionToPreType(argparse.Action):
