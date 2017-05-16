@@ -795,6 +795,7 @@ class HP4C:
         else:
           print("ERROR: unexpected action: %s" % aname)
           exit()
+        # TODO: add match priority if ternary match is involved
         self.command_templates.append(HP4_Match_Command(table.name,
                                           action.name,
                                           "table_add",

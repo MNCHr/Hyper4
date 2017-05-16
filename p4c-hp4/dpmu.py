@@ -30,7 +30,8 @@ match_types = {'[EXTRACTED_EXACT]':'1',
                '[STDMETA_INGRESS_PORT_EXACT]':'5',
                '[STDMETA_PACKET_LENGTH_EXACT]':'6',
                '[STDMETA_INSTANCE_TYPE_EXACT]':'7',
-               '[STDMETA_EGRESS_SPEC_EXACT]':'8'}
+               '[STDMETA_EGRESS_SPEC_EXACT]':'8',
+               '[MATCHLESS]':'99'}
 
 primitive_types = {'[MODIFY_FIELD]':'0',
 									 '[ADD_HEADER]':'1',
@@ -212,7 +213,6 @@ class DPMU_Server():
     rule_type = request.split()[3]
     table = request.split()[4]
     action = request.split()[5]
-    code.interact(local=locals())
     args = re.split('\s*=>\s*', request)
     mparams = args[0].split()[6:]
     aparams = []
@@ -359,6 +359,7 @@ class DPMU_Server():
           self.rta.do_table_add(str(rule).split('table_add ')[1])
         for line in output:
           print(line)
+          # TODO: detect error and return error message
           if 'Entry has been added' in line:
             handle = int(line.split('handle ')[1])
         # TODO: figure out how to track entry handles properly per instance
