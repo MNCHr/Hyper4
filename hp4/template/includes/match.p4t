@@ -51,6 +51,9 @@ table t[+X+]_extracted_valid {
   }
 }
 
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
 table t[+X+]_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.program : exact;

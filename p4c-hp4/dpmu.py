@@ -78,6 +78,19 @@ class Rule():
     self.mparams = mparams
     self.aparams = aparams
 
+  def __str__(self):
+    ret = self.rule_type + ' ' + self.table + ' ' + self.action
+    for param in self.mparams:
+      ret += ' ' + param
+    if self.rule_type == 'table_add':
+      ret += ' =>'
+    elif self.rule_type != 'table_set_default':
+      print("ERROR: incorrect table command %s, table %s" % (self.command, self.table))
+      exit()
+    for param in self.aparams:
+      ret += ' ' + param
+    return ret
+
 class DPMU_Server():
   def __init__(self, rta, entries, phys_ports, userfile, debug):
     self.next_PID = 1
@@ -213,14 +226,20 @@ class DPMU_Server():
     rule_type = request.split()[3]
     table = request.split()[4]
     action = request.split()[5]
-    args = re.split('\s*=>\s*', request)
-    mparams = args[0].split()[6:]
+    mparams = []
     aparams = []
-    if len(args) > 1:
-      aparams = args[1].split()[0:] 
+    if rule_type == 'table_set_default':
+      aparams = request.split()[6:]
+    elif rule_type == 'table_add':
+      args = re.split('\s*=>\s*', request)
+      mparams = args[0].split()[6:]
+      if len(args) > 1:
+        aparams = args[1].split()[0:]
     #mparams = request.split(' => ')[0].split()[6:]
     #aparams = request.split(' => ')[1].split()[0:]
     rule = Rule(rule_type, table, action, mparams, aparams)
+    if self.debug:
+      print('rule parsed: %s' % str(rule))
     return uname, finst_name, rule
 
   def validate_rule_request(self, uname, finst_name, rule):
@@ -284,17 +303,36 @@ class DPMU_Server():
     for i in range(len(mrule.match_params)):
       if mrule.match_params[i] == '[program ID]':
         mrule.match_params[i] = str(self.instances[finst_name][0])
-      elif '[val]' in mrule.match_params[i]:
-        mrule.match_params[i] = mrule.match_params[i].replace('[val]',
-                                                          str(rule.mparams[0]))
-        if re.search("\[[0-9]*x00s\]", mrule.match_params[i]):
-          to_replace = re.search("\[[0-9]*x00s\]", mrule.match_params[i]).group()
-          numzeros = int(re.search("[0-9]+", to_replace).group())
-          replace = ""
-          for i in range(numzeros):
-            replace += "00"   
+      if rule.rule_type == 'table_add':
+        if '[val]' in mrule.match_params[i]:
+          leftside = rule.mparams[0]
+          if re.search("\[[0-9]*x00s\]", mrule.match_params[i]):
+            to_replace = re.search("\[[0-9]*x00s\]", mrule.match_params[i]).group()
+            numzeros = int(re.search("[0-9]+", to_replace).group())
+            replace = ""
+            for j in range(numzeros):
+              replace += "00"   
+            mrule.match_params[i] = \
+                    mrule.match_params[i].replace(to_replace, replace)
+            leftside += replace
           mrule.match_params[i] = \
-                  mrule.match_params[i].replace(to_replace, replace)
+                  mrule.match_params[i].replace('[val]', leftside)
+        elif '[valid]' in mrule.match_params[i]:
+          # handle valid matching; 0 = 0, 1 = everything right of &&&
+          if rule.mparams[0] == '1':
+            mrule.match_params[i] = \
+                    mrule.match_params[i].replace('[valid]',
+                                         mrule.match_params[i].split('&&&')[1])
+          elif rule.mparams[0] == '0':
+            mrule.match_params[i] = \
+                    mrule.match_params[i].replace('[valid]', '0x0')
+          else:
+            print("ERROR: Unexpected value in rule.mparams[0]: %s" % rule.mparams[0])
+            exit()
+      elif rule.rule_type == 'table_set_default':
+        if ('[val]' in mrule.match_params[i] or
+            '[valid]' in mrule.match_params[i]):
+          mrule.match_params[i] = '0&&&0' # don't care
 
     ## action parameters
     for i in range(len(mrule.action_params)):
@@ -304,7 +342,12 @@ class DPMU_Server():
         mrule.action_params[i] = match_types[mrule.action_params[i]]
       elif mrule.action_params[i] in primitive_types:
         mrule.action_params[i] = primitive_types[mrule.action_params[i]]
-
+    # TODO: resolve issue where tern match priority should be MAX if
+    #  the rule.rule_type == 'table_set_default'... should probably
+    #  fix in p4c-hp4 such that it doesn't automatically append '0'
+    #  to the action parameters list but rather [PRIORITY] and here
+    #  we interpret that according to the value of rule.rule_type
+    #  i.e., 0 or MAX
     rules.append(mrule)
 
     # handle the primitives rules
@@ -351,9 +394,11 @@ class DPMU_Server():
 
     # translate
     rules = self.translate(finst_name, templates, rule)
-
+    #code.interact(local=locals())
     # push to hp4
     for rule in rules:
+      if(self.debug):
+        print(rule)
       if rule.command == 'table_add':
         with Capturing() as output:
           self.rta.do_table_add(str(rule).split('table_add ')[1])

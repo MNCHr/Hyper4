@@ -738,6 +738,7 @@ class HP4C:
   def gen_tX_templates(self):
     self.walk_ingress_pipeline(self.h.p4_ingress_ptr.keys()[0])
     for table in self.table_to_trep:
+      isternary = False
       tname = str(self.table_to_trep[table])
       aname = 'init_program_state'
       match_params = ['[program ID]']
@@ -747,7 +748,8 @@ class HP4C:
       # match_params_list = []
       if len(table.match_fields) == 1:      
         if table.match_fields[0][1].value == 'P4_MATCH_VALID':
-          mp = '[val]&&&'
+          mp = '[valid]&&&'
+          isternary = True
           # self.vbits[(level, header_instance)]
           hinst = table.match_fields[0][0]
           for key in self.vbits.keys():
@@ -767,6 +769,7 @@ class HP4C:
             mp += '&&&' + self.gen_bitmask(field.width,
                                                self.field_offsets[str(field)],
                                                maskwidth)
+            isternary = True
           match_params.append(mp)
           # match_params_list.append(match_params)
 
@@ -795,7 +798,9 @@ class HP4C:
         else:
           print("ERROR: unexpected action: %s" % aname)
           exit()
-        # TODO: add match priority if ternary match is involved
+        # add match priority if ternary match is involved
+        if isternary:
+          aparams.append('0')
         self.command_templates.append(HP4_Match_Command(table.name,
                                           action.name,
                                           "table_add",
