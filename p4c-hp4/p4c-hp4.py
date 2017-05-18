@@ -139,6 +139,34 @@ class MatchParam():
   def __str__(self):
     return format(self.value, '#04x') + '&&&' + format(self.mask, '#04x')
 
+class DAG_Topo_Sorter():
+  def __init__(self, p4_tables):
+    self.unmarked = []
+    self.tempmarked = []
+    self.permmarked = []
+    self.L = []
+    for key in p4_tables:
+      self.unmarked.append(p4_tables[key])
+
+  def visit(self, n):
+    if n in self.tempmarked:
+      print("ERROR: not a DAG")
+      exit()
+    if n in self.unmarked:
+      self.unmarked.remove(n)
+      self.tempmarked.append(n)
+      for m in n.next_.values():
+        self.visit(m)
+      self.permmarked.append(n)
+      self.tempmarked.remove(n)
+      self.L.insert(0, n)
+
+  def sort(self):      
+    while len(self.unmarked) > 0: # while there are unmarked nodes do
+      n = self.unmarked[0]
+      self.visit(n)
+    return self.L
+
 class Table_Rep():
   def __init__(self, stage, match_type, source_type, field_name):
     self.stage = stage
@@ -428,33 +456,45 @@ class HP4C:
     return ret
 
   def walk_ingress_pipeline(self, curr_table):
-    # headers_hp4_type[<str>]: 'standard_metadata' | 'metadata' | 'extracted'
-    source_type = ''
-    match_type = 'MATCHLESS'
-    field_name = ''
-    if len(curr_table.match_fields) > 0:
-      match_type = curr_table.match_fields[0][1].value
-      field_name = curr_table.match_fields[0][0].name
-      if (match_type == 'P4_MATCH_EXACT' or
-          match_type == 'P4_MATCH_TERNARY'):
-        source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
-      elif match_type == 'P4_MATCH_VALID':
-        source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
-    self.table_to_trep[curr_table] = Table_Rep(self.stage,
-                                               match_type,
-                                               source_type,
-                                               field_name)
-    for action in curr_table.actions:
-      if self.action_to_arep.has_key(action) is False:
-        self.action_to_arep[action] = Action_Rep()
-        for call in action.call_sequence:
-          prim_type = call[0].name
-          prim_subtype = self.get_prim_subtype(call)
-          self.action_to_arep[action].call_sequence.append((prim_type, prim_subtype))
-      stage = self.table_to_trep[curr_table].stage
-      self.action_to_arep[action].stages.add(stage)
-      self.action_to_arep[action].tables[stage] = curr_table.name
+    """ populate table_to_trep and action_to_arep data structures
+    """
+    # 1) Do topological sort of tables
+    tsorter = DAG_Topo_Sorter(self.h.p4_tables)
+    tsort = tsorter.sort()
+    # 2) assign each one to a unique stage
+    for i in range(len(tsort)):
+      curr_table = tsort[i]
+      source_type = ''
+      match_type = 'MATCHLESS'
+      field_name = ''
+      if len(curr_table.match_fields) > 0:
+        match_type = curr_table.match_fields[0][1].value
+        field_name = curr_table.match_fields[0][0].name
+        if (match_type == 'P4_MATCH_EXACT' or
+            match_type == 'P4_MATCH_TERNARY'):
+          # headers_hp4_type[<str>]: 'standard_metadata' | 'metadata' | 'extracted'
+          source_type = self.headers_hp4_type[curr_table.match_fields[0][0].instance.name]
+        elif match_type == 'P4_MATCH_VALID':
+          source_type = self.headers_hp4_type[curr_table.match_fields[0][0].name]
+      self.table_to_trep[curr_table] = Table_Rep(self.stage,
+                                                 match_type,
+                                                 source_type,
+                                                 field_name)
 
+      for action in curr_table.actions:
+        if self.action_to_arep.has_key(action) is False:
+          self.action_to_arep[action] = Action_Rep()
+          for call in action.call_sequence:
+            prim_type = call[0].name
+            prim_subtype = self.get_prim_subtype(call)
+            self.action_to_arep[action].call_sequence.append((prim_type, prim_subtype))
+        self.action_to_arep[action].stages.add(self.stage)
+        self.action_to_arep[action].tables[self.stage] = curr_table.name
+
+      self.stage += 1
+
+    # CODE BELOW IS PARTLY BOGUS
+    """
     for action in curr_table.next_:
       if curr_table.next_[action] == None:
         continue
@@ -473,6 +513,7 @@ class HP4C:
         # Then fix the forward linkages via finish_action
         self.stage += 1
         self.walk_ingress_pipeline(curr_table.next_[action])
+    """
 
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -883,11 +924,26 @@ class HP4C:
       print("  call_sequence: " + str(self.action_to_arep[action].call_sequence))
 
   def gen_action_entries(self):
-    code.interact(local=locals())
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
         table_name = self.action_to_arep[action].tables[stage]
         # TODO: fix a bug here - what about no_ops?  Still need update state entry
+        if len(action.call_sequence) == 0:
+          us_tname = 'tstg' + str(stage) + '1' + '_update_state'
+          us_aname = 'finish_action'
+          us_aparams = []
+          next_table = self.h.p4_tables[table_name].next_[action]
+          if next_table == None:
+            us_aparams.append('0')
+          else:
+            us_aparams.append(str(self.table_to_trep[next_table].stage))
+          us_mparams = ['[program ID]']
+          us_mparams.append(str(self.action_ID[action]))
+          self.commands.append(HP4_Command("table_add",
+                                            us_tname,
+                                            us_aname,
+                                            us_mparams,
+                                            us_aparams))
         for p4_call in action.call_sequence:
           istemplate = False
           idx = action.call_sequence.index(p4_call)
