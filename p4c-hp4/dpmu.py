@@ -55,6 +55,8 @@ primitive_types = {'[MODIFY_FIELD]':'0',
 									 '[MULTICAST]':'19',
 									 '[MATH_ON_FIELD]':'20'}
 
+MAX_PRIORITY = 2147483647
+
 """
 Credit for Capturing class:
   username 'kindall' response to:
@@ -338,16 +340,16 @@ class DPMU_Server():
     for i in range(len(mrule.action_params)):
       if mrule.action_params[i] == '[match ID]':
         mrule.action_params[i] = str(match_ID)
+      elif mrule.action_params[i] == '[PRIORITY]':
+        if rule.rule_type == 'table_set_default':
+          mrule.action_params[i] = str(MAX_PRIORITY)
+        else:
+          mrule.action_params[i] = '0'
       elif mrule.action_params[i] in match_types:
         mrule.action_params[i] = match_types[mrule.action_params[i]]
       elif mrule.action_params[i] in primitive_types:
         mrule.action_params[i] = primitive_types[mrule.action_params[i]]
-    # TODO: resolve issue where tern match priority should be MAX if
-    #  the rule.rule_type == 'table_set_default'... should probably
-    #  fix in p4c-hp4 such that it doesn't automatically append '0'
-    #  to the action parameters list but rather [PRIORITY] and here
-    #  we interpret that according to the value of rule.rule_type
-    #  i.e., 0 or MAX
+
     rules.append(mrule)
 
     # handle the primitives rules

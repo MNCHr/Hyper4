@@ -800,7 +800,7 @@ class HP4C:
           exit()
         # add match priority if ternary match is involved
         if isternary:
-          aparams.append('0')
+          aparams.append('[PRIORITY]')
         self.command_templates.append(HP4_Match_Command(table.name,
                                           action.name,
                                           "table_add",
