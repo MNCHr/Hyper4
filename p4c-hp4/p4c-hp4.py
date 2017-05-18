@@ -371,7 +371,6 @@ class HP4C:
         exit()
 
   def fill_tics_match_params(self, criteria_fields, values, pc_state):
-    #code.interact(local=locals())
     if len(criteria_fields) != len(values):
       print("ERROR: criteria_fields(%i) not same length as values(%i)" % (len(criteria_fields),len(values)))
       exit()
@@ -430,7 +429,6 @@ class HP4C:
 
   def walk_ingress_pipeline(self, curr_table):
     # headers_hp4_type[<str>]: 'standard_metadata' | 'metadata' | 'extracted'
-    #code.interact(local=locals())
     source_type = ''
     match_type = 'MATCHLESS'
     field_name = ''
@@ -461,6 +459,18 @@ class HP4C:
       if curr_table.next_[action] == None:
         continue
       else:
+        # TODO: Fix this... this is too naive
+        # Issue is that multiple nodes may link to the same next node
+        # Need to:
+        # 1) build DAG
+        # 2) for each node, count edges required to backtrace to root;
+        #    this identifies the node's level in the DAG.
+        # self.stage = 1
+        # 3) for each level (starting from level nearest root):
+        #      for each node within the level:
+        #        node.stage = self.stage
+        #        self.stage += 1
+        # Then fix the forward linkages via finish_action
         self.stage += 1
         self.walk_ingress_pipeline(curr_table.next_[action])
 
@@ -493,7 +503,6 @@ class HP4C:
         t.match_params = self.fill_tics_match_params(parse_state.return_statement[CRITERIA], case_entry[0], t.curr_pc_state)
         if case_entry[0][0][0] == 'default':
           t.priority = MAX_PRIORITY
-        # code.interact(local=locals())
         # case_entry: (list of values, next parse_state)
         if case_entry[1] != 'ingress':
           next_state = self.h.p4_parse_states[case_entry[1]]
@@ -874,15 +883,18 @@ class HP4C:
       print("  call_sequence: " + str(self.action_to_arep[action].call_sequence))
 
   def gen_action_entries(self):
+    code.interact(local=locals())
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
         table_name = self.action_to_arep[action].tables[stage]
+        # TODO: fix a bug here - what about no_ops?  Still need update state entry
         for p4_call in action.call_sequence:
           istemplate = False
           idx = action.call_sequence.index(p4_call)
           call = self.action_to_arep[action].call_sequence[idx]
           rank = idx + 1
           tname = 't_' + primitive_tnames[call[0]] + '_' + str(stage) + str(rank)
+          # us: update state
           us_tname = 'tstg' + str(stage) + str(rank) + '_update_state'
           us_aname = 'update_state'
           us_aparams = []
@@ -1244,7 +1256,6 @@ def main():
   hp4c = HP4C(HLIR(args.input), args)
   hp4c.build()
   hp4c.write_output()
-  #code.interact(local=locals())
 
 if __name__ == '__main__':
   main()
