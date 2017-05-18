@@ -424,6 +424,105 @@ table tstg49_update_state {
   }
 }
 
+table tstg51_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg52_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg53_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg54_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg55_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg56_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg57_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg58_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg59_update_state {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
 control stage1 {
   match_1(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
@@ -573,6 +672,46 @@ control stage4 {
                   if(meta_ctrl.stage_state != COMPLETE) {
                     switch_primitivetype_49(); // switch_primitivetype.p4
                     apply(tstg49_update_state);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+control stage5 {
+  match_5(); // match.p4
+  if(meta_ctrl.stage_state != COMPLETE) {
+    switch_primitivetype_51(); // switch_primitivetype.p4
+    apply(tstg51_update_state);
+    if(meta_ctrl.stage_state != COMPLETE) {
+      switch_primitivetype_52(); // switch_primitivetype.p4
+      apply(tstg52_update_state);
+      if(meta_ctrl.stage_state != COMPLETE) {
+        switch_primitivetype_53(); // switch_primitivetype.p4
+        apply(tstg53_update_state);
+        if(meta_ctrl.stage_state != COMPLETE) {
+          switch_primitivetype_54(); // switch_primitivetype.p4
+          apply(tstg54_update_state);
+          if(meta_ctrl.stage_state != COMPLETE) {
+            switch_primitivetype_55(); // switch_primitivetype.p4
+            apply(tstg55_update_state);
+            if(meta_ctrl.stage_state != COMPLETE) {
+              switch_primitivetype_56(); // switch_primitivetype.p4
+              apply(tstg56_update_state);
+              if(meta_ctrl.stage_state != COMPLETE) {
+                switch_primitivetype_57(); // switch_primitivetype.p4
+                apply(tstg57_update_state);
+                if(meta_ctrl.stage_state != COMPLETE) {
+                  switch_primitivetype_58(); // switch_primitivetype.p4
+                  apply(tstg58_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_59(); // switch_primitivetype.p4
+                    apply(tstg59_update_state);
                   }
                 }
               }

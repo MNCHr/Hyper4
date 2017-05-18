@@ -23,7 +23,8 @@ validate_errors[FILENOTFOUND] = 'FILENOTFOUND'
 validate_errors[USERNOTFOUND] = 'USERNOTFOUND'
 validate_errors[INSTANCENOTFOUND] = 'INSTANCENOTFOUND'
 
-match_types = {'[EXTRACTED_EXACT]':'1',
+match_types = {'[DONE]':'0',
+               '[EXTRACTED_EXACT]':'1',
                '[METADATA_EXACT]':'2',
                '[STDMETA_EXACT]':'3',
                '[EXTRACTED_VALID]':'4',
@@ -307,7 +308,16 @@ class DPMU_Server():
         mrule.match_params[i] = str(self.instances[finst_name][0])
       if rule.rule_type == 'table_add':
         if '[val]' in mrule.match_params[i]:
-          leftside = rule.mparams[0]
+          # ERROR! Need to detect hex, convert to hex if not
+          if '0x' in rule.mparams[0]:
+            leftside = rule.mparams[0]
+          elif ':' in rule.mparams[0]:
+            print("Not yet supported: %s" % rule.mparams[0])
+            exit()
+          else:
+            leftside = format(int(rule.mparams[0]), '#x')
+          code.interact(local=locals())
+          # leftside = rule.mparams[0]
           if re.search("\[[0-9]*x00s\]", mrule.match_params[i]):
             to_replace = re.search("\[[0-9]*x00s\]", mrule.match_params[i]).group()
             numzeros = int(re.search("[0-9]+", to_replace).group())

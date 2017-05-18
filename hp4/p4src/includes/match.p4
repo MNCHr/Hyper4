@@ -58,6 +58,9 @@ table t1_extracted_valid {
   }
 }
 
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
 table t1_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.program : exact;
@@ -137,6 +140,9 @@ table t2_extracted_valid {
   }
 }
 
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
 table t2_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.program : exact;
@@ -216,6 +222,9 @@ table t3_extracted_valid {
   }
 }
 
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
 table t3_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.program : exact;
@@ -295,6 +304,9 @@ table t4_extracted_valid {
   }
 }
 
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
 table t4_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.program : exact;
@@ -326,6 +338,88 @@ table t4_stdmeta_instance_type_exact {
 }
 
 table t4_stdmeta_egress_spec_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.egress_spec : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_matchless {
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_extracted_exact {
+  reads {
+    meta_ctrl.program : exact;
+    extracted.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_metadata_exact {
+  reads {
+    meta_ctrl.program : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_extracted_valid {
+  reads {
+    meta_ctrl.program : exact;
+    extracted.validbits : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+// TODO: change match type for stdmetadata field to ternary, all tables
+// Reason: supports table_set_default by allowing 0&&&0 while we still do exact
+// matching on the program ID
+table t5_stdmeta_ingress_port_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.ingress_port : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_stdmeta_packet_length_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.packet_length : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_stdmeta_instance_type_exact {
+  reads {
+    meta_ctrl.program : exact;
+    standard_metadata.instance_type : exact;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t5_stdmeta_egress_spec_exact {
   reads {
     meta_ctrl.program : exact;
     standard_metadata.egress_spec : exact;
@@ -440,5 +534,32 @@ control match_4 {
   }
   else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
     apply(t4_stdmeta_egress_spec_exact);
+  }
+}
+
+control match_5 {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+    apply(t5_extracted_exact);
+  }
+  else if(meta_ctrl.next_table == METADATA_EXACT) {
+    apply(t5_metadata_exact);
+  }
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+    apply(t5_extracted_valid);
+  }
+  else if(meta_ctrl.next_table == MATCHLESS) {
+    apply(t5_matchless);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+    apply(t5_stdmeta_ingress_port_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+    apply(t5_stdmeta_packet_length_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+    apply(t5_stdmeta_instance_type_exact);
+  }
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+    apply(t5_stdmeta_egress_spec_exact);
   }
 }

@@ -229,6 +229,60 @@ table t_drop_49 {
   }
 }
 
+table t_drop_51 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_52 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_53 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_54 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_55 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_56 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_57 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_58 {
+  actions {
+    a_drop;
+  }
+}
+
+table t_drop_59 {
+  actions {
+    a_drop;
+  }
+}
+
 control do_drop_11 {
   apply(t_drop_11);
 }
@@ -371,4 +425,40 @@ control do_drop_48 {
 
 control do_drop_49 {
   apply(t_drop_49);
+}
+
+control do_drop_51 {
+  apply(t_drop_51);
+}
+
+control do_drop_52 {
+  apply(t_drop_52);
+}
+
+control do_drop_53 {
+  apply(t_drop_53);
+}
+
+control do_drop_54 {
+  apply(t_drop_54);
+}
+
+control do_drop_55 {
+  apply(t_drop_55);
+}
+
+control do_drop_56 {
+  apply(t_drop_56);
+}
+
+control do_drop_57 {
+  apply(t_drop_57);
+}
+
+control do_drop_58 {
+  apply(t_drop_58);
+}
+
+control do_drop_59 {
+  apply(t_drop_59);
 }

@@ -409,6 +409,105 @@ table t_truncate_49 {
   }
 }
 
+table t_truncate_51 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_52 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_53 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_54 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_55 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_56 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_57 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_58 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
+table t_truncate_59 {
+  reads {
+    meta_ctrl.program : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_truncate;
+  }
+}
+
 control do_truncate_11 {
   apply(t_truncate_11);
 }
@@ -551,4 +650,40 @@ control do_truncate_48 {
 
 control do_truncate_49 {
   apply(t_truncate_49);
+}
+
+control do_truncate_51 {
+  apply(t_truncate_51);
+}
+
+control do_truncate_52 {
+  apply(t_truncate_52);
+}
+
+control do_truncate_53 {
+  apply(t_truncate_53);
+}
+
+control do_truncate_54 {
+  apply(t_truncate_54);
+}
+
+control do_truncate_55 {
+  apply(t_truncate_55);
+}
+
+control do_truncate_56 {
+  apply(t_truncate_56);
+}
+
+control do_truncate_57 {
+  apply(t_truncate_57);
+}
+
+control do_truncate_58 {
+  apply(t_truncate_58);
+}
+
+control do_truncate_59 {
+  apply(t_truncate_59);
 }
