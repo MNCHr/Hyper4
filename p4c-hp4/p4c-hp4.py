@@ -19,7 +19,7 @@ CRITERIA = 1
 NEXT_PARSE_STATE = 1
 CASE_ENTRIES = 2
 
-MAX_PRIORITY = 2147483647
+MAX_PRIORITY = 2147483646
 
 primitive_ID = {'modify_field': '[MODIFY_FIELD]',
                 'add_header': '[ADD_HEADER]',
@@ -492,28 +492,6 @@ class HP4C:
         self.action_to_arep[action].tables[self.stage] = curr_table.name
 
       self.stage += 1
-
-    # CODE BELOW IS PARTLY BOGUS
-    """
-    for action in curr_table.next_:
-      if curr_table.next_[action] == None:
-        continue
-      else:
-        # TODO: Fix this... this is too naive
-        # Issue is that multiple nodes may link to the same next node
-        # Need to:
-        # 1) build DAG
-        # 2) for each node, count edges required to backtrace to root;
-        #    this identifies the node's level in the DAG.
-        # self.stage = 1
-        # 3) for each level (starting from level nearest root):
-        #      for each node within the level:
-        #        node.stage = self.stage
-        #        self.stage += 1
-        # Then fix the forward linkages via finish_action
-        self.stage += 1
-        self.walk_ingress_pipeline(curr_table.next_[action])
-    """
 
   # TODO: resolve concern that direct jumps not merged properly  
   def walk_parse_tree(self, parse_state, pc_state):
@@ -1173,15 +1151,17 @@ class HP4C:
 
     return aparams
 
+  # TODO: either 1) detect egress filtering in source, or 2) add args option
+  #       indicating desire to do / not do egress filtering
   def gen_thp4_egress_filter_entries(self):
     self.commands.append(HP4_Command("table_set_default",
                                       "thp4_egress_filter_case1",
-                                      "a_drop",
+                                      "_no_op",
                                       [],
                                       []))
     self.commands.append(HP4_Command("table_set_default",
                                       "thp4_egress_filter_case2",
-                                      "a_drop",
+                                      "_no_op",
                                       [],
                                       []))
 

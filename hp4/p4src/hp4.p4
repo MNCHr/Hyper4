@@ -75,8 +75,25 @@ control ingress {
   }
 }
 
-table thp4_egress_filter_case1 { actions { a_drop; }}
-table thp4_egress_filter_case2 { actions { a_drop; }}
+table thp4_egress_filter_case1 { 
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    a_drop;
+    _no_op;
+  }
+}
+
+table thp4_egress_filter_case2 {
+  reads {
+    meta_ctrl.program : exact;
+  }
+  actions {
+    a_drop;
+    _no_op;
+  }
+}
 
 field_list fl_virtnet {
   meta_ctrl.program;

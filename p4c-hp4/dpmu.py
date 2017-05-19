@@ -56,7 +56,7 @@ primitive_types = {'[MODIFY_FIELD]':'0',
 									 '[MULTICAST]':'19',
 									 '[MATH_ON_FIELD]':'20'}
 
-MAX_PRIORITY = 2147483647
+MAX_PRIORITY = 2147483646
 
 """
 Credit for Capturing class:
