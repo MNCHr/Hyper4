@@ -104,6 +104,10 @@ class DPMU_Server():
     # map (instances, source tables) to ints (counter for match_ID)
     self.match_counters = {}
 
+    # map instance (str) to list of (table name, handle)s ([(str, int), ...])
+    self.func_handles = {} # for the function itself
+    self.rule_handles = {} # for the function's rules added any time after loading
+
     self.rta = rta
     self.total_entries = entries
     self.entries_remaining = entries
@@ -177,11 +181,28 @@ class DPMU_Server():
 
   def load_load_request(self, finst_name):
     with open(finst_name+'.hp4', 'r') as f:
+      if self.func_handles.has_key(finst_name) == False:
+        self.func_handles[finst_name] = []
       for line in f:
         if line.split()[0] == 'table_add':
-          self.rta.do_table_add(line.split('table_add ')[1])
+          with Capturing() as output:
+            self.rta.do_table_add(str(line).split('table_add ')[1])
+          for out in output:
+            print(out)
+            if 'Error' in out:
+              # remove all table entries
+              for val in self.func_handles[finst_name]:
+                self.rta.do_table_delete(val[0] + ' ' + str(val[1]))
+              self.func_handles[finst_name] = []
+              return 'ERROR: Could not load: ' + out
+            if 'Entry has been added' in out:
+              table = line.split()[1]
+              handle = int(out.split('handle ')[1])
+              self.func_handles[finst_name].append((table, handle))
+
         elif line.split()[0] == 'table_set_default':
           self.rta.do_table_set_default(line.split('table_set_default ')[1])
+    return 'OK'
 
   def handle_load_request(self, request):
     if (self.debug):
@@ -218,9 +239,7 @@ class DPMU_Server():
     self.next_PID += 1
 
     # load
-    self.load_load_request(finst_name)
-    
-    return 'OK'
+    return self.load_load_request(finst_name)
 
   # TODO: implement this in an API-agnostic way (i.e., this method assumes bmv2)
   def parse_rule_request(self, request):
@@ -316,7 +335,6 @@ class DPMU_Server():
             exit()
           else:
             leftside = format(int(rule.mparams[0]), '#x')
-          code.interact(local=locals())
           # leftside = rule.mparams[0]
           if re.search("\[[0-9]*x00s\]", mrule.match_params[i]):
             to_replace = re.search("\[[0-9]*x00s\]", mrule.match_params[i]).group()
@@ -460,7 +478,6 @@ def server(args):
       data = clientsocket.recv(1024)
       if(args.debug):
         print(data)
-      # In do_instance, we'll have rta.do_table_add(...)
       response = dserver.handle_request(data)
       clientsocket.sendall(response)
       clientsocket.close()

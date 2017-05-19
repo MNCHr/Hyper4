@@ -496,31 +496,31 @@ control setup {
     }
   }
   apply(tset_parse_control);
-  if(parse_ctrl.next_action == INSPECT_SEB) {
+  if(parse_ctrl.next_action == PARSE_SELECT_SEB) {
     apply(tset_parse_select_SEB);
   }
-  if(parse_ctrl.next_action == INSPECT_20_29) {
+  if(parse_ctrl.next_action == PARSE_SELECT_20_29) {
     apply(tset_parse_select_20_29);
   }
-  if(parse_ctrl.next_action == INSPECT_30_39) {
+  if(parse_ctrl.next_action == PARSE_SELECT_30_39) {
     apply(tset_parse_select_30_39);
   }
-  if(parse_ctrl.next_action == INSPECT_40_49) {
+  if(parse_ctrl.next_action == PARSE_SELECT_40_49) {
     apply(tset_parse_select_40_49);
   }
-  if(parse_ctrl.next_action == INSPECT_50_59) {
+  if(parse_ctrl.next_action == PARSE_SELECT_50_59) {
     apply(tset_parse_select_50_59);
   }
-  if(parse_ctrl.next_action == INSPECT_60_69) {
+  if(parse_ctrl.next_action == PARSE_SELECT_60_69) {
     apply(tset_parse_select_60_69);
   }
-  if(parse_ctrl.next_action == INSPECT_70_79) {
+  if(parse_ctrl.next_action == PARSE_SELECT_70_79) {
     apply(tset_parse_select_70_79);
   }
-  if(parse_ctrl.next_action == INSPECT_80_89) {
+  if(parse_ctrl.next_action == PARSE_SELECT_80_89) {
     apply(tset_parse_select_80_89);
   }
-  if(parse_ctrl.next_action == INSPECT_90_99) {
+  if(parse_ctrl.next_action == PARSE_SELECT_90_99) {
     apply(tset_parse_select_90_99);
   }
   if(parse_ctrl.next_action == PROCEED) {

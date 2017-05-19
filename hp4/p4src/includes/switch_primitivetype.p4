@@ -67,167 +67,6 @@ control switch_primitivetype_12 {
   }
 }
 
-control switch_primitivetype_13 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_13();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_13();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_13();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_13();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_13();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_13();
-  }
-}
-
-control switch_primitivetype_14 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_14();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_14();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_14();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_14();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_14();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_14();
-  }
-}
-
-control switch_primitivetype_15 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_15();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_15();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_15();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_15();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_15();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_15();
-  }
-}
-
-control switch_primitivetype_16 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_16();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_16();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_16();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_16();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_16();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_16();
-  }
-}
-
-control switch_primitivetype_17 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_17();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_17();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_17();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_17();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_17();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_17();
-  }
-}
-
-control switch_primitivetype_18 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_18();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_18();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_18();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_18();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_18();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_18();
-  }
-}
-
-control switch_primitivetype_19 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_19();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_19();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_19();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_19();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_19();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_19();
-  }
-}
-
 control switch_primitivetype_21 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
     do_modify_field_21();
@@ -271,167 +110,6 @@ control switch_primitivetype_22 {
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
     do_math_on_field_22();
-  }
-}
-
-control switch_primitivetype_23 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_23();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_23();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_23();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_23();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_23();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_23();
-  }
-}
-
-control switch_primitivetype_24 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_24();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_24();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_24();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_24();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_24();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_24();
-  }
-}
-
-control switch_primitivetype_25 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_25();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_25();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_25();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_25();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_25();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_25();
-  }
-}
-
-control switch_primitivetype_26 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_26();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_26();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_26();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_26();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_26();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_26();
-  }
-}
-
-control switch_primitivetype_27 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_27();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_27();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_27();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_27();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_27();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_27();
-  }
-}
-
-control switch_primitivetype_28 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_28();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_28();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_28();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_28();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_28();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_28();
-  }
-}
-
-control switch_primitivetype_29 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_29();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_29();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_29();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_29();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_29();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_29();
   }
 }
 
@@ -481,167 +159,6 @@ control switch_primitivetype_32 {
   }
 }
 
-control switch_primitivetype_33 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_33();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_33();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_33();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_33();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_33();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_33();
-  }
-}
-
-control switch_primitivetype_34 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_34();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_34();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_34();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_34();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_34();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_34();
-  }
-}
-
-control switch_primitivetype_35 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_35();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_35();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_35();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_35();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_35();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_35();
-  }
-}
-
-control switch_primitivetype_36 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_36();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_36();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_36();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_36();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_36();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_36();
-  }
-}
-
-control switch_primitivetype_37 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_37();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_37();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_37();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_37();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_37();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_37();
-  }
-}
-
-control switch_primitivetype_38 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_38();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_38();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_38();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_38();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_38();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_38();
-  }
-}
-
-control switch_primitivetype_39 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_39();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_39();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_39();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_39();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_39();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_39();
-  }
-}
-
 control switch_primitivetype_41 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
     do_modify_field_41();
@@ -685,167 +202,6 @@ control switch_primitivetype_42 {
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
     do_math_on_field_42();
-  }
-}
-
-control switch_primitivetype_43 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_43();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_43();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_43();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_43();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_43();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_43();
-  }
-}
-
-control switch_primitivetype_44 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_44();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_44();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_44();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_44();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_44();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_44();
-  }
-}
-
-control switch_primitivetype_45 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_45();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_45();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_45();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_45();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_45();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_45();
-  }
-}
-
-control switch_primitivetype_46 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_46();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_46();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_46();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_46();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_46();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_46();
-  }
-}
-
-control switch_primitivetype_47 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_47();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_47();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_47();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_47();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_47();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_47();
-  }
-}
-
-control switch_primitivetype_48 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_48();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_48();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_48();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_48();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_48();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_48();
-  }
-}
-
-control switch_primitivetype_49 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_49();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_49();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_49();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_49();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_49();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_49();
   }
 }
 
@@ -895,163 +251,94 @@ control switch_primitivetype_52 {
   }
 }
 
-control switch_primitivetype_53 {
+control switch_primitivetype_61 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_53();
+    do_modify_field_61();
   }
   else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_53();
+    do_add_header_61();
   }
   else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_53();
+    do_truncate_61();
   }
   else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_53();
+    do_drop_61();
   }
   else if(meta_primitive_state.primitive == A_NO_OP) {
   }
   else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_53();
+    do_multicast_61();
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_53();
+    do_math_on_field_61();
   }
 }
 
-control switch_primitivetype_54 {
+control switch_primitivetype_62 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_54();
+    do_modify_field_62();
   }
   else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_54();
+    do_add_header_62();
   }
   else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_54();
+    do_truncate_62();
   }
   else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_54();
+    do_drop_62();
   }
   else if(meta_primitive_state.primitive == A_NO_OP) {
   }
   else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_54();
+    do_multicast_62();
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_54();
+    do_math_on_field_62();
   }
 }
 
-control switch_primitivetype_55 {
+control switch_primitivetype_71 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_55();
+    do_modify_field_71();
   }
   else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_55();
+    do_add_header_71();
   }
   else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_55();
+    do_truncate_71();
   }
   else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_55();
+    do_drop_71();
   }
   else if(meta_primitive_state.primitive == A_NO_OP) {
   }
   else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_55();
+    do_multicast_71();
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_55();
+    do_math_on_field_71();
   }
 }
 
-control switch_primitivetype_56 {
+control switch_primitivetype_72 {
   if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_56();
+    do_modify_field_72();
   }
   else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_56();
+    do_add_header_72();
   }
   else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_56();
+    do_truncate_72();
   }
   else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_56();
+    do_drop_72();
   }
   else if(meta_primitive_state.primitive == A_NO_OP) {
   }
   else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_56();
+    do_multicast_72();
   }
   else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_56();
-  }
-}
-
-control switch_primitivetype_57 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_57();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_57();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_57();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_57();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_57();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_57();
-  }
-}
-
-control switch_primitivetype_58 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_58();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_58();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_58();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_58();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_58();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_58();
-  }
-}
-
-control switch_primitivetype_59 {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
-    do_modify_field_59();
-  }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
-    do_add_header_59();
-  }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
-    do_truncate_59();
-  }
-  else if(meta_primitive_state.primitive == A_DROP) {
-    do_drop_59();
-  }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
-  }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
-    do_multicast_59();
-  }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
-    do_math_on_field_59();
+    do_math_on_field_72();
   }
 }

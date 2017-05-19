@@ -71,17 +71,25 @@ control ingress {
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) {
       stage5(); // stages.p4
     }
+
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) {
+      stage6(); // stages.p4
+    }
+
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) {
+      stage7(); // stages.p4
+    }
     apply(thp4_handle_egress);
   }
 }
 
-table thp4_egress_filter_case1 { 
+table thp4_egress_filter_case1 {
   reads {
     meta_ctrl.program : exact;
   }
   actions {
-    a_drop;
     _no_op;
+    a_drop;
   }
 }
 
@@ -90,8 +98,8 @@ table thp4_egress_filter_case2 {
     meta_ctrl.program : exact;
   }
   actions {
-    a_drop;
     _no_op;
+    a_drop;
   }
 }
 

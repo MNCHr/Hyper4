@@ -380,7 +380,7 @@ class HP4C:
         if endbytes >= self.args.seb:
           unsupported(startbytes, endbytes)
         else:
-          self.pc_action[pc_state] = '[INSPECT_SEB]'
+          self.pc_action[pc_state] = '[PARSE_SELECT_SEB]'
           self.tics_table_names[tics_pc_state] = 'tset_parse_select_SEB'
       else:
         bound = self.args.seb + 10
@@ -905,7 +905,6 @@ class HP4C:
     for action in self.action_to_arep:
       for stage in self.action_to_arep[action].stages:
         table_name = self.action_to_arep[action].tables[stage]
-        # TODO: fix a bug here - what about no_ops?  Still need update state entry
         if len(action.call_sequence) == 0:
           us_tname = 'tstg' + str(stage) + '1' + '_update_state'
           us_aname = 'finish_action'
@@ -990,7 +989,13 @@ class HP4C:
                                             str(idx)))
           else:
             # meta_primitive_state.match_ID mparam does not matter
-            aparams.append(str(MAX_PRIORITY))
+            # only append priority if the table involves ternary matching
+            #  e.g., drop tables do not
+            if len(mparams) > 0:
+              for param in mparams:
+                if '&&&' in param:
+                  aparams.append(str(MAX_PRIORITY))
+                  break
             self.commands.append(HP4_Command("table_add",
                                          tname,
                                          aname,
