@@ -1056,7 +1056,7 @@ class HP4C:
         aparams.append(mask)
       elif (mf_prim_subtype_action[call[1]] == 'mod_meta_const' or
             mf_prim_subtype_action[call[1]] == 'mod_extracted_const'):
-        # aparams: val, leftshift, mask
+        # aparams: leftshift, mask, val
         if type(p4_call[1][1]) == int:
           val = str(p4_call[1][1])
         else:
@@ -1070,9 +1070,9 @@ class HP4C:
         mask = self.gen_bitmask(p4_call[1][0].width,
                                 self.field_offsets[str(p4_call[1][0])],
                                 maskwidthbits / 8)
-        aparams.append(val)
         aparams.append(leftshift)
         aparams.append(mask)
+        aparams.append(val)
       elif (mf_prim_subtype_action[call[1]] == 'mod_stdmeta_egressspec_const' or
             mf_prim_subtype_action[call[1]] == 'mod_intmeta_mcast_grp_const'):
         if type(p4_call[1][1]) == int:
