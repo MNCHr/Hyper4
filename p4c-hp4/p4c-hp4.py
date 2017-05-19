@@ -125,6 +125,8 @@ def parse_args(args):
                     type=str, action="store", default='output.hp4mt')
   parser.add_argument('-s', '--seb', help='set standard extracted bytes',
                     type=int, action="store", default=20)
+  parser.add_argument('--egress_filter', help='enable egress filtering',
+                      action='store_true')
   return parser.parse_args(args)
 
 def convert_to_builtin_type(obj):
@@ -608,6 +610,9 @@ class HP4C:
           exit()
       self.commands.append(t)
 
+  # this activity now handled by dpmu, and anyway there was little point to
+  #  calculating which default table entries to generate
+  """
   def gen_tset_pr_entries(self):
     # table_set_default <table name> <action name> <action parameters>
     self.commands.append(HP4_Command("table_set_default",
@@ -633,6 +638,7 @@ class HP4C:
                                        [],
                                        []))
       bound += 20
+  """
 
   def gen_tset_pipeline_config_entries(self):
     # USEFUL DATA STRUCTURES:
@@ -1156,9 +1162,16 @@ class HP4C:
 
     return aparams
 
-  # TODO: either 1) detect egress filtering in source, or 2) add args option
-  #       indicating desire to do / not do egress filtering
   def gen_thp4_egress_filter_entries(self):
+    if self.args.egress_filter:
+      self.commands.append(HP4_Command("table_add",
+                                       "thp4_egress_filter_case1",
+                                       "a_drop",
+                                       ['[program ID]'],
+                                       []))
+
+    # these should be added by the dpmu server at startup
+    """
     self.commands.append(HP4_Command("table_set_default",
                                       "thp4_egress_filter_case1",
                                       "_no_op",
@@ -1169,13 +1182,17 @@ class HP4C:
                                       "_no_op",
                                       [],
                                       []))
+    """
 
   def gen_t_checksum_entries(self):
+    # default entry handled by dpmu
+    """
     self.commands.append(HP4_Command("table_set_default",
                                         "t_checksum",
                                         "_no_op",
                                         [],
                                         []))
+    """
     # detect presence of ipv4 checksum & handle
     cf_none_types = 0
     cf_valid_types = 0
@@ -1247,12 +1264,18 @@ class HP4C:
     # - add_header | remove_header | truncate | push | pop | copy_header*
     # * maybe (due to possibility of making previously invalid header
     #   valid)
+
+    # default entry handled by dpmu
+    """
     self.commands.append(HP4_Command("table_set_default",
                                        "t_resize_pr",
                                        "_no_op",
                                        [],
                                        []))
+    """
+    pass
 
+  """
   def gen_t_prep_deparse_entries(self):
     suffixes = ['SEB', '20_39', '40_59', '60_79', '80_99']
     for suffix in suffixes:
@@ -1263,6 +1286,7 @@ class HP4C:
                                         aname,
                                         [],
                                         []))
+  """
 
   def build(self):
     self.collect_headers()
@@ -1271,7 +1295,7 @@ class HP4C:
     self.gen_tset_virtnet_entry()
     self.gen_tset_parse_control_entries()
     self.gen_tset_parse_select_entries()
-    self.gen_tset_pr_entries()
+    # self.gen_tset_pr_entries()
     self.gen_tset_pipeline_config_entries()
     self.gen_tX_templates()
     self.gen_action_entries()
@@ -1279,7 +1303,7 @@ class HP4C:
     self.gen_thp4_egress_filter_entries()
     self.gen_t_checksum_entries()
     self.gen_t_resize_pr_entries()
-    self.gen_t_prep_deparse_entries()
+    # self.gen_t_prep_deparse_entries()
 
   def write_output(self):
     out = open(self.args.output, 'w')

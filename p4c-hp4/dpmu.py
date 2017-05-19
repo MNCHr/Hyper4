@@ -95,7 +95,7 @@ class Rule():
     return ret
 
 class DPMU_Server():
-  def __init__(self, rta, entries, phys_ports, userfile, debug):
+  def __init__(self, rta, entries, phys_ports, userfile, args):
     self.next_PID = 1
 
     # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
@@ -149,7 +149,7 @@ class DPMU_Server():
         self.entries_remaining = self.entries_remaining - uentries
         self.users[uname] = (uentries, uports, [])
 
-    self.debug = debug
+    self.debug = args.debug
 
   def handle_request(self, data):
     response = ''
@@ -158,9 +158,14 @@ class DPMU_Server():
       response = self.handle_load_request(data)
     elif submode == 'instance':
       response = self.handle_rule_request(data)
+    elif submode == 'close':
+      response = self.handle_close_request(data)
     return response
 
   def parse_load_request(self, request):
+    if '--egress_filter' in request:
+      request = request.replace('--egress_filter', '')
+      egress_filter = True
     uname = request.split()[0]
     fp4 = request.split()[2]
     fname = fp4.split('.')[0]
@@ -168,7 +173,7 @@ class DPMU_Server():
     fhp4mt = fname + '.hp4mt'
     finst_name = request.split()[3]
     context = request.split()[4:]
-    return uname, fp4, fhp4t, fhp4mt, finst_name, context
+    return uname, fp4, fhp4t, fhp4mt, finst_name, context, egress_filter
 
   def validate_load_request(self, uname, fname, context):
     if uname not in self.users:
@@ -183,6 +188,7 @@ class DPMU_Server():
     with open(finst_name+'.hp4', 'r') as f:
       if self.func_handles.has_key(finst_name) == False:
         self.func_handles[finst_name] = []
+        self.rule_handles[finst_name] = []
       for line in f:
         if line.split()[0] == 'table_add':
           with Capturing() as output:
@@ -213,7 +219,8 @@ class DPMU_Server():
     fhp4t, \
     fhp4mt, \
     finst_name, \
-    context = self.parse_load_request(request)
+    context, \
+    egress_filter = self.parse_load_request(request)
 
     # validate
     validate = self.validate_load_request(uname, fp4, context)
@@ -222,8 +229,12 @@ class DPMU_Server():
 
     # compile
     # p4c-hp4 -o name.hp4t -m name.hp4mt -s 20 <srcfile>
-    if call(["./p4c-hp4", "-o", fhp4t, "-m", fhp4mt, "-s 20", fp4]) != 0:
-      return 'ERROR: could not compile ' + fp4
+    if egress_filter:
+      if call(["./p4c-hp4", "-o", fhp4t, "-m", fhp4mt, "-s 20", fp4, '--egress_filter']) != 0:
+        return 'ERROR: could not compile ' + fp4
+    else:
+      if call(["./p4c-hp4", "-o", fhp4t, "-m", fhp4mt, "-s 20", fp4]) != 0:
+        return 'ERROR: could not compile ' + fp4
 
     # link... TODO: refine handling of context
     if call(["../tools/hp4l", "--input", fhp4t, "--output", finst_name+'.hp4',
@@ -240,6 +251,21 @@ class DPMU_Server():
 
     # load
     return self.load_load_request(finst_name)
+
+  def handle_close_request(self, request):
+    if (self.debug):
+      print("handle_close_request: " + request)
+
+    finst_name = request.split()[2]
+    if self.func_handles.has_key(finst_name) == False:
+      return 'Instance not found: ' + finst_name
+    for val in self.func_handles[finst_name]:
+      self.rta.do_table_delete(val[0] + ' ' + str(val[1]))
+    self.func_handles[finst_name] = []
+    for val in self.rule_handles[finst_name]:
+      self.rta.do_table_delete(val[0] + ' ' + str(val[1]))
+    self.rule_handes[finst_name] = []
+    return 'OK'
 
   # TODO: implement this in an API-agnostic way (i.e., this method assumes bmv2)
   def parse_rule_request(self, request):
@@ -424,8 +450,9 @@ class DPMU_Server():
 
     # translate
     rules = self.translate(finst_name, templates, rule)
-    #code.interact(local=locals())
+
     # push to hp4
+    retval = 'OK'
     for rule in rules:
       if(self.debug):
         print(rule)
@@ -434,13 +461,36 @@ class DPMU_Server():
           self.rta.do_table_add(str(rule).split('table_add ')[1])
         for line in output:
           print(line)
-          # TODO: detect error and return error message
+          if 'Error' in line:
+            if retval == 'OK':
+              retval = 'ERROR: push to HP4 failed on one or more rules with the following error(s):\n' + line
+            else:
+              retval += line
           if 'Entry has been added' in line:
+            table = line.split()[1]
             handle = int(line.split('handle ')[1])
-        # TODO: figure out how to track entry handles properly per instance
+            self.rule_handles[finst_name].append((table, handle))
+            
       elif rule.command == 'table_set_default':
         self.rta.do_table_set_default(str(rule).split('table_set_default ')[1])
-    return 'OK'
+
+    return retval
+
+  def set_defaults(self):
+    self.rta.do_table_set_default('tset_pr_SEB a_pr_import_SEB')
+    self.rta.do_table_set_default('tset_pr_20_39 a_pr_import_20_39')
+    self.rta.do_table_set_default('tset_pr_40_59 a_pr_import_40_59')
+    self.rta.do_table_set_default('tset_pr_60_79 a_pr_import_60_79')
+    self.rta.do_table_set_default('tset_pr_80_99 a_pr_import_80_99')
+    self.rta.do_table_set_default('thp4_egress_filter_case1 _no_op')
+    self.rta.do_table_set_default('thp4_egress_filter_case2 _no_op')
+    self.rta.do_table_set_default('t_checksum _no_op')
+    self.rta.do_table_set_default('t_resize_pr _no_op')
+    self.rta.do_table_set_default('t_prep_deparse_SEB a_prep_deparse_SEB')
+    self.rta.do_table_set_default('t_prep_deparse_20_39 a_prep_deparse_20_39')
+    self.rta.do_table_set_default('t_prep_deparse_40_59 a_prep_deparse_40_59')
+    self.rta.do_table_set_default('t_prep_deparse_60_79 a_prep_deparse_60_79')
+    self.rta.do_table_set_default('t_prep_deparse_80_99 a_prep_deparse_80_99')
 
   def handle_composition_request(self, request):
     pass
@@ -467,7 +517,9 @@ def server(args):
   serversocket.listen(5)
   # TODO: non-default parameters
   # def __init__(self, rta, entries, phys_ports, userfile):
-  dserver = DPMU_Server(rta, 100, "1 2 3 4", None, args.debug)
+  dserver = DPMU_Server(rta, 100, "1 2 3 4", None, args)
+
+  dserver.set_defaults()
 
   while True:
     clientsocket = None
@@ -489,6 +541,15 @@ def server(args):
         print('Keyboard Interrupt, sockets closed')
       break
 
+def send_request(data, port):
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  host = socket.gethostname()
+  s.connect((host, port))
+  s.send(data)
+  resp = s.recv(1024)
+  s.close()
+  return resp
+
 def load(args):
   if(args.debug):
     print("client load")
@@ -497,29 +558,32 @@ def load(args):
   data += ' ' + args.instance
   for pport in args.pports:
     data += ' ' + str(pport)
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  host = socket.gethostname()
-  s.connect((host, args.port))
-  s.send(data)
-  resp = s.recv(1024)
+  if args.egress_filter:
+    data += ' --egress_filter'
+  resp = send_request(data, args.port)
   if(args.debug):
     print(resp)
-  s.close()
+
+def close(args):
+  if(args.debug):
+    print("client close")
+    print(args)
+  data = args.user + ' close ' + args.instance
+  resp = send_request(data, args.port)
+  if(args.debug):
+    print(resp)
 
 def instance(args):
   if(args.debug):
     print("client instance")
     print(args)
+
   def handle_command(command):
     data = args.user + ' instance ' + args.instance_name + ' ' + command
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
-    s.connect((host, args.port))
-    s.send(data)
-    resp = s.recv(1024)
+    resp = send_request(data, args.port)
     if(args.debug):
       print(resp)
-    s.close()
+
   if args.command:
     handle_command(args.command)
   elif args.file:
@@ -566,6 +630,7 @@ def parse_args(args):
                              type=int, action="store", default=33333)
   pc_subparsers = parser_client.add_subparsers(dest = 'subcommand')
   parser_client_load = pc_subparsers.add_parser('load', help='load P4 program')
+  parser_client_close = pc_subparsers.add_parser('close', help='close instance')
   parser_client_inst = pc_subparsers.add_parser('instance',
                                               help='interact with an instance')
 
@@ -578,7 +643,14 @@ def parse_args(args):
   parser_client_load.add_argument('pports', help='Physical ports to which \
                                   the instance should be assigned', type=int,
                                   nargs='+')
+  parser_client_load.add_argument('--egress_filter', help='enable egress filtering',
+                                  action='store_true')
   parser_client_load.set_defaults(func=load)
+
+  ## client close
+  parser_client_close.add_argument('instance', help='instance to close',
+                                   type=str, action="store")
+  parser_client_close.set_defaults(func=close)
 
   ## client instance
   parser_client_inst.add_argument('instance_name', help='name of instance',
