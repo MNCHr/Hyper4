@@ -94,6 +94,33 @@ class Rule():
       ret += ' ' + param
     return ret
 
+class Instance():
+  def __init__(self, name, user, pports, vnf_ports, program_ID, p4f, hp4tf, hp4mtf):
+    self.name = name
+    self.user = user
+    self.pports = pports
+    self.vnf_ports = vnf_ports
+    self.vmcast_grps = {} # vmcast_grp_ID (int) : Virtual_Mcast_Group
+    self.vmcast_nodes = {} # vmcast_node_handle (int) : Virtual_Mcast_Node
+    self.program_ID = program_ID
+    self.p4f = p4f
+    self.hp4tf = hp4tf
+    self.hp4mtf = hp4mtf
+
+class Virtual_Mcast_Node():
+  def __init__(self, vhandle, rhandle, vrid, rrid, vports):
+    self.vhandle = vhandle
+    self.rhandle = rhandle
+    self.vrid = vrid
+    self.rrid = rrid
+    self.vports = vports
+
+class Virtual_Mcast_Group():
+  def __init__(self, vgrp_ID, rgrp_ID, vmcast_nodes):
+    self.vgrp_ID = vgrp_ID
+    self.rgrp_ID = rgrp_ID
+    self.vmcast_nodes = vmcast_nodes
+
 class DPMU_Server():
   def __init__(self, rta, entries, phys_ports, userfile, args):
     self.next_PID = 1
@@ -115,7 +142,7 @@ class DPMU_Server():
     self.phys_ports_remaining = phys_ports.split()
 
     # 64 vports w/ 4 vports / vfunc = 16 vfuncs supported
-    self.virt_ports_remaining = range(65, 129)
+    self.virt_ports_remaining = range(64, 128)
 
     # map vports (ints) to instances (strs)
     self.virt_ports_instances = {}

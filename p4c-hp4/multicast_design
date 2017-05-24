@@ -1,0 +1,47 @@
+* Did we ever finish client close?
+
+Design Objectives:
+- Support bmv2-style multicast group creation, in the DPMU, where mcast groups are virtual
+- Support P4 multicasting
+  - bmv2: set intrinsic metadata field
+  - agilio: use the standard metadata egress spec field
+
+DPMU data structures:
+- Global resource pool class
+  - physical ports
+  - VNF ports
+  - real mcast node handles
+  - real mcast group IDs
+  - real RIDs
+- Map of user -> physical and virtual ports and current instances
+- Map of instance name -> user, physical and virtual ports, virtual mcast groups, virtual mcast nodes, {virtual mcast node handle : real mcast node handle} dictionary, {virtual rid : real rid} bidict, program ID, .p4 / .hp4t / .hp4mt references
+- Each virtual mcast node consists of a virtual node handle, a real node handle, a virtual RID, a real RID, and a list of virtual ports.
+- Each virtual mcast group consists of a virtual group ID, a real group ID, and a list of virtual mcast node handles.
+
+DPMU client interface:
+- mcast_create_node <virtual rid> [virtual port list]
+- mcast_associate_node <virtual mcast_grp ID> <virtual node ID>
+
+Virtual ports:
+- previously, a virtual port exclusively referred to the entity enabling connections between virtual functions hosted by HP4.  Let us now call this thing a VNF port instead.
+- now, virtual port should refer to the designator that could refer either to a physical port or to that VNF port.
+- each instance sees virtual ports 1-8.  These numbers represent indirection, and each is mapped to either a physical port (numbered 1-N where N is the number of physical ports provided by the P4 device) or a VNF port.
+
+Sending to a VNF port should incur the recirculate primitive.
+
+Multicasting to VNF ports should incur the clone_egress_pkt_to_egress primitive and then, for the clone, the recirculate primitive.
+
+Cases: Multicasting to physical ports only
+- The source .p4 program includes an action in which the intrinsic metadata field mcast_grp is set to something beween 1-15 (either a constant, or an action parameter).
+- The user of the source program:
+  1) (skippable) creates a multicast group via the bmv2 CLI
+  2) creates multicast nodes via the bmv2 CLI
+  3) assigns multicast nodes to the multicast group; if 1) was skipped, the multicast group is created at this time.
+- if mcast_grp-setting primitive in source .p4 uses an action parameter, p4c-hp4 creates a rule template with [MCAST_GROUP] in the action parameter set
+- elif mcast_grp-setting primitive in source .p4 uses a constant, p4c-hp4 produces a rule in the .hp4t for the t_mod_XY table: mod_intmeta_mcast_grp_const is the action; [MCAST_GROUP] is the action parameter.  When the DPMU receives a request to load the instance, real and virtual mcast groups are created, and [MCAST_GROUP] is replaced appropriately.
+- when DPMU receives a corresponding rule request, the value is translated: instances[request: instance name].vmcast_grps[request: mcast_grp_ID].real_grp_ID.  If there is no such key for the vmcast_grp dictionary, we create one on the spot and take from the pool of real group IDs available (returning ERROR if there are none available).
+- when DPMU receives a mcast_create_node request, it creates a virtual mcast node: instances[request: instance name].vmcast_nodes[request: mcast_node] = new virtual mcast node, initialized with the next real mcast_node ID from pool of available node IDs, and the list of virtual ports specified in the request.  The real mcast_node is also then created (and the node ID is removed from the pool of available node IDs), using lookups on the virtual port numbers to retrieve the physical port numbers for each virtual port that represents a physical port.
+- when DPMU receives a mcast_associate_node request, it translates this to the mcast_associate_node request for HP4 via lookup:
+  -- instances[request: instance name].vmcast_groups[request: mcast_grp ID].real_group_ID
+  -- instances[request: instance name].vmcast_nodes[request: mcast_node].real_node_handle
+  Also we have to add the virtual mcast node to the vmcast_groups[request: mcast_grp ID].virt_to_real_handles dictionary.
