@@ -95,17 +95,26 @@ class Rule():
     return ret
 
 class Instance():
-  def __init__(self, name, user, pports, vnf_ports, program_ID, p4f, hp4tf, hp4mtf):
+  def __init__(self, name, user, vports, program_ID, p4f, hp4tf, hp4mtf):
     self.name = name
     self.user = user
-    self.pports = pports
-    self.vnf_ports = vnf_ports
+    self.vports = vports # {vportnum (int) : Virtual_Port}
     self.vmcast_grps = {} # vmcast_grp_ID (int) : Virtual_Mcast_Group
     self.vmcast_nodes = {} # vmcast_node_handle (int) : Virtual_Mcast_Node
     self.program_ID = program_ID
+    # need this in order to properly fill in match ID parameters
+    self.match_counters = {} # source table name (str) : match counter (int)
+    self.func_handles = {} # hp4 table name (str) : rule handle (int)
+    self.rule_handles = {} # hp4 table name (str) : rule handle (int)
     self.p4f = p4f
     self.hp4tf = hp4tf
     self.hp4mtf = hp4mtf
+
+class Virtual_Port():
+  def __init__(self, vportnum, rportnum, vporttype):
+    self.vportnum = vportnum
+    self.rportnum = rportnum
+    self.vporttype = vporttype # 'physical' or 'vnf'
 
 class Virtual_Mcast_Node():
   def __init__(self, vhandle, rhandle, vrid, rrid, vports):
@@ -125,15 +134,15 @@ class DPMU_Server():
   def __init__(self, rta, entries, phys_ports, userfile, args):
     self.next_PID = 1
 
-    # map instances (strs) to tuples (e.g., (prog ID, source, [vports]))
+    # TODO map instance names (strs) to Instances (previously, tuples (e.g., (prog ID, source, [vports])))
     self.instances = {}
 
     # map (instances, source tables) to ints (counter for match_ID)
-    self.match_counters = {}
+    # TODO self.match_counters = {}
 
     # map instance (str) to list of (table name, handle)s ([(str, int), ...])
-    self.func_handles = {} # for the function itself
-    self.rule_handles = {} # for the function's rules added any time after loading
+    # TODO self.func_handles = {} # for the function itself
+    # TODO self.rule_handles = {} # for the function's rules added any time after loading
 
     self.rta = rta
     self.total_entries = entries
@@ -142,10 +151,10 @@ class DPMU_Server():
     self.phys_ports_remaining = phys_ports.split()
 
     # 64 vports w/ 4 vports / vfunc = 16 vfuncs supported
-    self.virt_ports_remaining = range(64, 128)
+    self.vnf_ports_remaining = range(64, 128)
 
     # map vports (ints) to instances (strs)
-    self.virt_ports_instances = {}
+    self.vnf_ports_instances = {}
 
     # key: username
     # value: (entries, [phys_ports], [instances])
@@ -269,11 +278,14 @@ class DPMU_Server():
       return 'ERROR: could not link ' + fhp4t
 
     # track
-    self.instances[finst_name] = (self.next_PID, fhp4t, fhp4mt, [])
+    # self.instances[finst_name] = (self.next_PID, fhp4t, fhp4mt, [])
+    vports = {}
     for i in range(4):
-      vport = self.virt_ports_remaining.pop(0)
-      self.virt_ports_instances[vport] = finst_name
-      self.instances[finst_name][3].append(vport)
+      vnf_port = self.vnf_ports_remaining.pop(0)
+      self.vnf_ports_instances[vnf_port] = finst_name
+      # TODO: use of vports goes here... prev: self.instances[finst_name][3].append(vnf_port)
+    # def __init__(self, name, user, vports, program_ID, p4f, hp4tf, hp4mtf):
+    self.instances[finst_name] = Instance(finst_name, uname, 
     self.next_PID += 1
 
     # load

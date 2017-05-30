@@ -45,3 +45,5 @@ Cases: Multicasting to physical ports only
   -- instances[request: instance name].vmcast_groups[request: mcast_grp ID].real_group_ID
   -- instances[request: instance name].vmcast_nodes[request: mcast_node].real_node_handle
   Also we have to add the virtual mcast node to the vmcast_groups[request: mcast_grp ID].virt_to_real_handles dictionary.
+
+
