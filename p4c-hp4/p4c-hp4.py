@@ -312,7 +312,18 @@ class HP4C:
                                       "a_virt_ports_cleanup",
                                       [],
                                       []))
-
+  """ Analyze a parse control state
+      - Examine associated parse state's calls
+        - extract calls affect field offsets
+        - extract calls and 'current' statements affect the
+          number of bytes that should be extracted prior to entering
+          the parse control state
+          - but 'current' statements do not advance the pointer; this
+            must be taken into account when looking at next parse control
+            states
+        - Identify byte range XX-YY in return statements of type 'select',
+          requiring tset_parse_select_XX_YY entries
+  """
   def process_parse_state(self, parse_state, pc_state):
     # track pc - ps membership
     if self.ps_to_pc.has_key(parse_state) is False:
@@ -330,6 +341,8 @@ class HP4C:
         print("ERROR: unsupported call %s" % call[0].value)
         exit()
       # update field_offsets, numbits
+      # TODO: this code problematic; need to ensure we step through the
+      #       fields in order; use for i in range(len(call[1].fields))?
       for field in call[1].fields:
         self.field_offsets[call[1].name + '.' + field.name] = self.offset
         self.offset += field.width # advance current offset
@@ -495,7 +508,17 @@ class HP4C:
 
       self.stage += 1
 
-  # TODO: resolve concern that direct jumps not merged properly  
+  # TODO: resolve concern that direct jumps not merged properly
+  """ parse_state: the HLIR object representing a parse node
+      pc_state: A parse_control state representing a (possibly partial) path
+                through the parse tree
+      - Collect parse control states, each uniquely numbered and associated
+        with a list of parse states representing a (possibly partial) path
+        through the parse tree.
+      - Analyze each parse control state to identify its byte extraction
+        requirements (to know when/how we should invoke the extract_more
+        action)
+  """  
   def walk_parse_tree(self, parse_state, pc_state):
     self.process_parse_state(parse_state, pc_state)
 
@@ -1289,11 +1312,33 @@ class HP4C:
   """
 
   def build(self):
+
+    """ - Classify headers (metadata | parsed representation)
+        - For metadata: assign each field an offset into meta.data
+        - NOTE: the same cannot be done for parsed representation headers
+          until we traverse the parse tree, because each path through the
+          parse tree potentially yields a distinct set of field offsets
+          into pr.data.
+    """
     self.collect_headers()
+
+    """ Uniquely number each action
+    """
     self.collect_actions()
+
+    """ Provide a hook for the linker to fill in with context criteria
+    """
     self.gen_tset_context_entry()
+
+    """ TODO: Move to controller
+        Creates default rule resetting virtual networking metadata
+    """
     self.gen_tset_virtnet_entry()
+
+    """ 
+    """
     self.gen_tset_parse_control_entries()
+
     self.gen_tset_parse_select_entries()
     # self.gen_tset_pr_entries()
     self.gen_tset_pipeline_config_entries()
