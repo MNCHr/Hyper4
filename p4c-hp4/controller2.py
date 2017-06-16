@@ -116,10 +116,28 @@ class UDev():
       self.vegress_pports[counter] = pport
       counter += 1
 
-  # TODO: post insert, controller will push rules, generating rule handles for
-  #       any table_add commands; we need to capture these handles, for
-  #       tset_context (stored: Device.assignment_handles)
-  #       and t_virtnet (stored: Instance.t_virtnet_rule_handles)
+  def pushcommand(self, command):
+    if command.split()[0] == 'table_add':
+      try:
+        handle = self.device.do_table_add(command.split('table_add ')[1])
+        if command.split()[1] == 'tset_context':
+          pport = command.split()[3]
+          self.device.assignment_handles[pport] = handle
+        elif command.split()[1] == 't_virtnet':
+          self.user.instances[instance].t_virtnet_rule_handles.append(handle)
+      except AddRuleError as e:
+        print('AddRuleError exception: ' + e.value)
+
+    elif command.split()[0] == 'table_modify':
+      try:
+        self.device.do_table_modify(command.split('table_modify ')[1])
+      except ModRuleError as e:
+        print('ModRuleError exception: ' + e.value)
+
+    else:
+      print("ERROR: pushcommand: " + command + ")")
+      exit()
+
   def insert(self, position, instance):
     commands = [] # strs
     instance_ID = self.user.instances[instance].instance_ID
@@ -140,12 +158,12 @@ class UDev():
           command = ("table_add tset_context a_set_context "
                      + str(port)
                      + " => "
-                     str(instance_ID))
+                     + str(instance_ID))
           commands.append(command)
 
     elif len(self.instance_chain) > 0:
       # link left instance to new instance
-      leftinst = self.user.instances[instance_chain[position - 1]
+      leftinst = self.user.instances[instance_chain[position - 1]]
       for handle in leftinst.t_virtnet_rule_handles:
         command = ("table_modify t_virtnet v_fwd "
                    + str(handle)
@@ -168,42 +186,27 @@ class UDev():
       # link new instance to physical ports
       for vegress_val in self.vegress_pports:
         command = ("table_add t_virtnet phys_fwd "
-                   + str(instance_ID
+                   + str(instance_ID)
                    + str(vegress_val)
                    + " => "
-                   + str(vegress_pports[vegress_val]))
+                   + str(self.vegress_pports[vegress_val]))
         commands.append(command)
 
     self.instance_chain.insert(position, instance)
+
+    # push to HyPer4 one at a time
+    for command in commands:
+      self.pushcommand(command)
+
+  def remove(self, instance):
+    commands = [] # strs
+    instance_ID = self.user.instances[instance].instance_ID
+
+    self.instance_chain.remove(instance)
     # push to HyPer4 one at a time; for any table_add commands, capture
     # the handle so we can store it
     for command in commands:
-
-      if command.split()[0] == 'table_add':
-        try:
-          handle = self.device.do_table_add(command.split('table_add ')[1])
-          if command.split()[1] == 'tset_context':
-            pport = command.split()[3]
-            self.device.assignment_handles[pport] = handle
-          elif command.split()[1] == 't_virtnet':
-            self.user.instances[instance].t_virtnet_rule_handles.append(handle)
-        except AddRuleError as e:
-          print('AddRuleError exception: ' + e.value)
-
-      elif command.split()[0] == 'table_modify':
-        try:
-          self.device_do_table_modify(command.split('table_modify ')[1])
-
-        except ModRuleError as e:
-          print('ModRuleError exception: ' + e.value)
-
-      else:
-        print("ERROR: insert (command: " + command + ")")
-        exit()
-
-  def remove(self, instance):
-
-    self.instance_chain.remove(instance)
+      self.pushcommand(command)
 
 class User():
   def __init__(self, name):
@@ -229,6 +232,13 @@ class ModRuleError(Exception):
   def __str__(self):
     return repr(self.value)
 
+class DeleteRuleError(Exception):
+  def __init__(self, value):
+    self.value = value
+
+  def __str__(self):
+    return repr(self.value)
+
 class Device():
   def __init__(self, rta):
     self.rta = rta
@@ -248,15 +258,29 @@ class Device():
 
   def do_table_modify(rule):
     "In: rule (no \'table_modify\'); Out: None (but failure raises Exception)"
-    with Capturing() as output:
-      try:
+    try:
+      with Capturing() as output:
         self.rta.do_table_modify(rule)
-      except:
-        raise ModRuleError("table_modify raised an exception (rule: " + rule + ")")
+    except:
+      print("table_modify raised an exception (rule: " + rule + ")")
+      raise
+    else:
       for out in output:
         dbugprint(out)
         if ('Invalid' in out) or ('Error' in out):
           raise ModRuleError(out)
+
+  def do_table_delete(rule):
+    "In: <table name> <entry handle>"
+    with Capturing() as output:
+      try:
+        self.rta.do_table_delete(rule)
+      except:
+        raise DeleteRuleError("table_delete raised an exception (rule: " + rule + ")")
+    for out in output:
+      dbugprint(out)
+      if ('Invalid' in out) or ('Error' in out):
+        raise DeleteRuleError(out)
 
 class Controller():
   def __init__(self):
@@ -268,4 +292,4 @@ class Controller():
 
 class Client():
   def __init__(self):
-
+    pass
