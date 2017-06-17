@@ -119,7 +119,7 @@ class UDev():
   def pushcommand(self, command):
     if command.split()[0] == 'table_add':
       try:
-        handle = self.device.do_table_add(command.split('table_add ')[1])
+        handle = int(self.device.do_table_add(command.split('table_add ')[1]))
         if command.split()[1] == 'tset_context':
           pport = command.split()[3]
           self.device.assignment_handles[pport] = handle
@@ -133,6 +133,16 @@ class UDev():
         self.device.do_table_modify(command.split('table_modify ')[1])
       except ModRuleError as e:
         print('ModRuleError exception: ' + e.value)
+
+    elif command.split()[0] == 'table_delete':
+      try:
+        handle = int(command.split()[3])
+        if command.split()[1] == 'tset_context':
+          self.device.assignment_handles = {k: v for k, v \
+                      in self.device.assignment_handles.items() if v != handle}
+        self.device.do_table_delete(command.split('table_delete ' )[1])
+      except DeleteRuleError as e:
+        print('DeleteRuleError exception: ' + e.value)
 
     else:
       print("ERROR: pushcommand: " + command + ")")
@@ -177,6 +187,7 @@ class UDev():
         for vegress_val in self.vegress_pports:
           command = ("table_add t_virtnet virt_fwd "
                      + str(instance_ID)
+                     + " "
                      + str(vegress_val)
                      + " => "
                      + str(rightinst_ID))
@@ -187,6 +198,7 @@ class UDev():
       for vegress_val in self.vegress_pports:
         command = ("table_add t_virtnet phys_fwd "
                    + str(instance_ID)
+                   + " "
                    + str(vegress_val)
                    + " => "
                    + str(self.vegress_pports[vegress_val]))
@@ -201,6 +213,31 @@ class UDev():
   def remove(self, instance):
     commands = [] # strs
     instance_ID = self.user.instances[instance].instance_ID
+
+    # delete t_virtnet rules for the instance
+    for handle in self.t_virtnet_rule_handles:
+      commands.append("table_delete t_virtnet " + str(handle)
+    self.t_virtnet_rule_handles = []
+
+    position = self.instance_chain.index(instance)
+    if position == 0:
+      if len(self.instance_chain) > 1:
+        # rewire tset_context to rightinst
+        rightinst_ID = self.user.instances[instance_chain[position + 1]].instance_ID
+        for pport in self.assignment_handles:
+          handle = self.assignment_handles[pport]
+          command = ("table_modify tset_context a_set_context "
+                     + str(handle)
+                     + " "
+                     + str(rightinst_ID))
+          commands.append(command)
+
+      else:
+        pass
+    elif position == (len(self.instance_chain) - 1) # tail
+      pass
+    else: # in between
+      pass
 
     self.instance_chain.remove(instance)
     # push to HyPer4 one at a time; for any table_add commands, capture
