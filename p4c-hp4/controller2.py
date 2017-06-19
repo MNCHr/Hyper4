@@ -97,7 +97,7 @@ class Instance():
     self.instance_ID = instance_ID
     # need this in order to properly fill in match ID parameters
     self.match_counters = {} # source table name (str) : match counter (int)
-    self.t_virtnet_rule_handles = []
+    self.t_virtnet_rule_handles = [] # [handles (ints)]
     self.func_rule_handles = {} # hp4 table name (str) : rule handle (int)
     self.match_rule_handles = {} # hp4 table name (str) : rule handle (int)
     self.p4f = p4f
@@ -136,10 +136,11 @@ class UDev():
 
     elif command.split()[0] == 'table_delete':
       try:
-        handle = int(command.split()[3])
-        if command.split()[1] == 'tset_context':
-          self.device.assignment_handles = {k: v for k, v \
-                      in self.device.assignment_handles.items() if v != handle}
+        # should be faster to let caller handle assignment_handles etc.
+        #handle = int(command.split()[3])
+        #if command.split()[1] == 'tset_context':
+        #  self.device.assignment_handles = {k: v for k, v \
+        #              in self.device.assignment_handles.items() if v != handle}
         self.device.do_table_delete(command.split('table_delete ' )[1])
       except DeleteRuleError as e:
         print('DeleteRuleError exception: ' + e.value)
@@ -215,8 +216,8 @@ class UDev():
     instance_ID = self.user.instances[instance].instance_ID
 
     # delete t_virtnet rules for the instance
-    for handle in self.t_virtnet_rule_handles:
-      commands.append("table_delete t_virtnet " + str(handle)
+    for handle in self.user.instances[instance].t_virtnet_rule_handles:
+      commands.append("table_delete t_virtnet " + str(handle))
     self.t_virtnet_rule_handles = []
 
     position = self.instance_chain.index(instance)
@@ -224,8 +225,8 @@ class UDev():
       if len(self.instance_chain) > 1:
         # rewire tset_context to rightinst
         rightinst_ID = self.user.instances[instance_chain[position + 1]].instance_ID
-        for pport in self.assignment_handles:
-          handle = self.assignment_handles[pport]
+        for pport in self.device.assignment_handles:
+          handle = self.device.assignment_handles[pport]
           command = ("table_modify tset_context a_set_context "
                      + str(handle)
                      + " "
@@ -233,15 +234,19 @@ class UDev():
           commands.append(command)
 
       else:
-        pass
+        # delete tset_context rules
+        for pport in self.device.assignment_handles:
+          handle = self.device.assignment_handles[pport]
+          commands.append("table_delete tset_context " + str(handle))
+        self.device.assignment_handles = []
+
     elif position == (len(self.instance_chain) - 1) # tail
       pass
     else: # in between
       pass
 
     self.instance_chain.remove(instance)
-    # push to HyPer4 one at a time; for any table_add commands, capture
-    # the handle so we can store it
+    # push to HyPer4 one at a time
     for command in commands:
       self.pushcommand(command)
 
