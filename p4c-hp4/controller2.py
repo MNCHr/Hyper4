@@ -49,11 +49,6 @@ primitive_types = {'[MODIFY_FIELD]':'0',
 									 '[MATH_ON_FIELD]':'20'}
 
 MAX_PRIORITY = 2147483646
-DEBUG = 0
-
-def dbugprint(msg):
-  if DEBUG:
-    print(msg)
 
 # http://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
 class Capturing(list):
@@ -103,6 +98,14 @@ class Instance():
     self.p4f = p4f
     self.hp4tf = hp4tf
     self.hp4mtf = hp4mtf
+
+  # TODO: parse the .hp4mt
+  def parse_json(self):
+    pass
+
+  # TODO: from the templates created by parse_json, filter per rule request
+  def get_templates(self):
+    pass
 
 class UDev():
   def __init__(self, user, device, pports):
@@ -179,7 +182,7 @@ class UDev():
         command = ("table_modify t_virtnet v_fwd "
                    + str(handle)
                    + " "
-                   + str(leftinst.instance_ID))
+                   + str(instance_ID))
         commands.append(command)
 
       if position < len(self.instance_chain):
@@ -218,7 +221,7 @@ class UDev():
     # delete t_virtnet rules for the instance
     for handle in self.user.instances[instance].t_virtnet_rule_handles:
       commands.append("table_delete t_virtnet " + str(handle))
-    self.t_virtnet_rule_handles = []
+    self.user.instances[instance].t_virtnet_rule_handles = []
 
     position = self.instance_chain.index(instance)
     if position == 0:
@@ -240,12 +243,34 @@ class UDev():
           commands.append("table_delete tset_context " + str(handle))
         self.device.assignment_handles = []
 
-    elif position == (len(self.instance_chain) - 1) # tail
-      pass
-    else: # in between
-      pass
+    elif position > 0 and position < (len(self.instance_chain) - 1): # middle
+      # rewire leftinst t_virtnet to rightinst
+      leftinst = self.user.instances[instance_chain[position - 1]]
+      rightinst = self.user.instances[instance_chain[postion + 1]]
+      for handle in leftinst.t_virtnet_rule_handles:
+        command = ("table_modify t_virtnet v_fwd "
+                   + str(handle)
+                   + " "
+                   + str(rightinst.instance_ID))
+        commands.append(command)
+
+    elif position > 0 and position == (len(self.instance_chain) - 1): # tail
+      # rewire leftinst t_virtnet to phys
+      leftinst = self.user.instances[instance_chain[position - 1]]
+      for handle in leftinst.t_virtnet_rule_handles:
+        commands.append("table_delete t_virtnet v_fwd " + str(handle))
+      self.user.instances[leftinst].t_virtnet_rule_handles = []
+      for vegress_val in self.vegress_pports:
+        command = ("table_add t_virtnet phys_fwd "
+                   + str(self.user.instances[leftinst].instance_ID)
+                   + " "
+                   + str(vegress_val)
+                   + " => "
+                   + str(self.vegress_pports[vegress_val]))
+        commands.append(command)
 
     self.instance_chain.remove(instance)
+
     # push to HyPer4 one at a time
     for command in commands:
       self.pushcommand(command)
@@ -324,14 +349,94 @@ class Device():
       if ('Invalid' in out) or ('Error' in out):
         raise DeleteRuleError(out)
 
+def server(args):
+  ctrl = Controller(args.debug)
+  ctrl.dbugprint(args)
+
 class Controller():
-  def __init__(self):
+  def __init__(self, debug):
     self.users = {} # user name (str) : User
     self.devices = {} # device name (str) : Device
+    self.debug = debug
 
-  def handle_insert(self, user, device, position, instance):
+  def parse_request(self, request):
+    "Parse a request"
+    pass
+
+  def insert(self, user, device, position, instance):
     self.users[user].devices[device].insert(position, instance)
 
-class Client():
-  def __init__(self):
+  def remove(self, user, device, instance):
+    self.users[user].devices[device].remove(instance)
+
+  def add_device(self, ip, port, name):
+    "Add a device"
     pass
+
+  def add_user(self, user, devices):
+    "Add a user"
+    pass
+
+  def grant_device(self, user, device, pports):
+    "Grant a user access to a device's physical ports"
+    pass
+
+  def compile_p4(self, user, p4f):
+    "Compile a P4 program"
+    pass
+
+  def load(self, user, hp4, instance, device):
+    "Link an hp4->instance and load the instance onto a device"
+    pass
+
+  def interpret(self, user, instance, rule):
+    "Interpret a rule"
+    pass
+
+  def migrate(self, user, instance, newdevice):
+    "Migrate an instance to a new device"
+    pass
+
+  def wipe(self, device):
+    "Wipe a device clean of all rules"
+    pass
+
+  def set_defaults(self, device):
+    "Push default rules to a device"
+    pass
+
+  def dbugprint(self, msg):
+    if self.debug:
+      print(msg)
+
+def parse_args(args):
+  class ActionToPreType(argparse.Action):
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+      if nargs is not None:
+        raise ValueError("nargs not allowed")
+      super(ActionToPreType, self).__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+      assert(type(values) is str)
+      setattr(namespace, self.dest, PreType.from_str(values))
+
+  parser = argparse.ArgumentParser(description='HyPer4 Control')
+  parser.add_argument('--debug', help='turn on debug mode',
+                      action='store_true')
+
+  parser.add_argument('--port', help='port for Controller',
+                      type=int, action="store", default=33333)
+  parser.add_argument('--pre', help='Packet Replication Engine used by target',
+                      type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
+                      default=runtime_CLI.PreType.SimplePre,
+                      action=ActionToPreType)
+  parser.set_defaults(func=server)
+
+  return parser.parse_args(args)
+
+def main():
+  args = parse_args(sys.argv[1:])
+  args.func(args)
+
+if __name__ == '__main__':
+  main()
