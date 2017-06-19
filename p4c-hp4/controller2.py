@@ -350,18 +350,20 @@ class Device():
         raise DeleteRuleError(out)
 
 def server(args):
-  ctrl = Controller(args.debug)
+  ctrl = Controller(args)
   ctrl.dbugprint(args)
+  ctrl.serverloop(args.port)
 
 class Controller():
-  def __init__(self, debug):
+  def __init__(self, args):
     self.users = {} # user name (str) : User
     self.devices = {} # device name (str) : Device
-    self.debug = debug
+    self.args = args
+    self.debug = args.debug
 
-  def parse_request(self, request):
-    "Parse a request"
-    pass
+  def handle_request(self, request):
+    "Handle a request"
+    return "not implemented yet"
 
   def insert(self, user, device, position, instance):
     self.users[user].devices[device].insert(position, instance)
@@ -404,6 +406,31 @@ class Controller():
   def set_defaults(self, device):
     "Push default rules to a device"
     pass
+
+  def serverloop(self, port):
+    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    host = socket.gethostname()
+    serversocket.bind((host, port))
+    serversocket.listen(5)
+
+    while True:
+      clientsocket = None
+      try:
+        clientsocket, addr = serversocket.accept()
+        self.dbugprint("Got a connection from %s" % str(addr))
+        data = clientsocket.recv(1024)
+        self.dbugprint(data)
+        response = self.handle_request(data)
+        clientsocket.sendall(response)
+        clientsocket.close()
+      except KeyboardInterrupt:
+        if clientsocket:
+          clientsocket.close()
+        serversocket.close()
+        self.dbugprint("Keyboard Interrupt, sockets closed")
+        break
+    
 
   def dbugprint(self, msg):
     if self.debug:
