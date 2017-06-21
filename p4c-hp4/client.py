@@ -16,7 +16,7 @@ def generic_send_request(host, port, data):
   return resp
 
 class Client(cmd.Cmd):
-  prompt = 'HP4: '
+  prompt = 'HP4$ '
   intro = "Control utility for runtime HP4 management"
 
   def __init__(self, args):
@@ -33,22 +33,34 @@ class Client(cmd.Cmd):
   def send_request(self, data):
     return generic_send_request(self.host, self.port, data)
 
-  def do_add_user(self, line):
-    "Add a user"
-    resp = self.send_request(self.user + ' ' + 'add_user ' + line)
-    print(resp)
-
-  def do_list_users(self, line):
-    "List users"
-    resp = self.send_request(self.user + ' ' + 'list_users')
-    print(resp)
-
   def dbugprint(self, msg):
     if self.debug:
       print(msg)
 
+class AdminClient(Client):
+  prompt = 'HP4# '
+
+  def do_add_user(self, line):
+    "Add a user"
+    resp = self.send_request(self.user + ' add_user ' + line)
+    print(resp)
+
+  def do_list_users(self, line):
+    "List users"
+    resp = self.send_request(self.user + ' list_users')
+    print(resp)
+
+  def do_add_device(self, line):
+    "Add a device: add_device <ip> <port> " \
+     + "<pre: \'SimplePre\'|\'SimplePreLAG\'|\'None\'> <name> <# entries> <ports>"
+    resp = self.send_request(self.user + ' add_device ' + line)
+    print(resp)
+
 def client(args):
-  c = Client(args)
+  if args.user == 'admin':
+    c = AdminClient(args)
+  else:
+    c = Client(args)
   if args.startup:
     with open(args.startup) as commands:
       for command in commands:

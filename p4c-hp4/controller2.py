@@ -315,7 +315,7 @@ class Device():
     self.next_PID = 1
     self.total_entries = entries
     self.phys_ports = phys_ports
-    self.phys_ports_remaining = phys_ports.split()
+    self.phys_ports_remaining = list(phys_ports)
 
   def do_table_add(rule):
     with Capturing() as output:
@@ -361,7 +361,7 @@ class Device():
 
 def server(args):
   ctrl = Controller(args)
-  ctrl.add_user(['admin', 'admin'])
+  ctrl.add_user(['system', 'admin', 'admin'])
   ctrl.dbugprint(args)
   ctrl.serverloop(args.host, args.port)
 
@@ -385,7 +385,7 @@ class Controller():
       return "Request format: <requester uname> <command> [parameter list]"
     requester = request.split()[0]
     command = request.split()[1]
-    parameters = request.split()[2:]
+    parameters = [requester] + request.split()[2:]
     if requester not in self.users:
       return "Denied; no user " + requester
     elif (self.users[requester].privilege == 'user'
@@ -398,7 +398,7 @@ class Controller():
     except AttributeError:
       return "Command not found: " + command
     except:
-      return "Unexpected error: " + sys.exc_info()[0]
+      return "Unexpected error: " + str(sys.exc_info()[0])
 
     return resp
 
@@ -408,8 +408,15 @@ class Controller():
   def remove(self, user, device, instance):
     self.users[user].devices[device].remove(instance)
 
-  def add_device(self, ip, port, pre, name, entries, ports):
+  #def add_device(self, ip, port, pre, name, entries, ports):
+  def add_device(self, parameters):
     "Add a device"
+    ip = parameters[1]
+    port = parameters[2]
+    pre = parameters[3]
+    name = parameters[4]
+    entries = parameters[5]
+    ports = parameters[6:]
     prelookup = {'None': 0, 'SimplePre': 1, 'SimplePreLAG': 2}
     hp4_client, mc_client = runtime_CLI.thrift_connect(ip, port,
                     runtime_CLI.RuntimeAPI.get_thrift_services(prelookup[pre]))
@@ -417,18 +424,19 @@ class Controller():
     runtime_CLI.load_json_config(hp4_client, json)
     rta = runtime_CLI.RuntimeAPI(pre, hp4_client)
     self.devices[name] = Device(rta, entries, ports)
+    return "Added device: " + name
 
-  def list_devices(self, user):
+  def list_devices(self, parameters):
     "List devices"
-    user = paramters[0]
+    user = parameters[0]
     pass
 
   def add_user(self, parameters):
     "Add a user"
-    user = parameters[0]
+    user = parameters[1]
     privilege = 'user'
-    if len(parameters) > 1:
-      privilege = parameters[1]
+    if len(parameters) > 2:
+      privilege = parameters[2]
     self.users[user] = User(user, privilege)
     return "Added user: " + user
 
@@ -470,7 +478,6 @@ class Controller():
   def serverloop(self, host, port):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    #host = socket.gethostname()
     serversocket.bind((host, port))
     serversocket.listen(5)
 
