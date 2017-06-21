@@ -444,6 +444,7 @@ class Controller():
                           'load',
                           'interpret',
                           'migrate']
+    self.compiledp4s = {} # p4 filename (str) : (hp4t filename (str), hp4mt filename(str))
 
   def handle_request(self, request):
     "Handle a request"
@@ -546,9 +547,26 @@ class Controller():
     del self.users[user].devices[device]
     return "User " + user + " access to " + device + " revoked"
 
-  def compile_p4(self, user, p4f):
+  # user p4f hp4tf hp4mtf ['egress_filter']
+  def compile_p4(self, parameters):
     "Compile a P4 program"
-    pass
+    egress_filter = False
+    p4f = parameters[1]
+    hp4tf = parameters[2]
+    hp4mtf = parameters[3]
+    if len(parameters) > 4:
+      if parameters[4] == 'egress_filter':
+        egress_filter = True
+
+    if egress_filter:
+      if call(["./p4c-hp4", "-o", hp4tf, "-m", hp4mtf, "-s 20", p4f, '--egress_filter']) != 0:
+        return 'ERROR: could not compile ' + p4f
+    else:
+      if call(["./p4c-hp4", "-o", hp4tf, "-m", hp4mtf, "-s 20", p4f]) != 0:
+        return 'ERROR: could not compile ' + p4f
+
+    self.compiledp4s[p4f] = (hp4tf, hp4mtf)
+    return "Program " + p4f + " compiled as " + hp4f
 
   def load(self, user, hp4, instance, device):
     "Link an hp4->instance and load the instance onto a device"
@@ -621,13 +639,6 @@ def parse_args(args):
                       type=str, action="store", default='localhost')
   parser.add_argument('--port', help='port for Controller',
                       type=int, action="store", default=33333)
-  """
-  this should be in the client
-  parser.add_argument('--pre', help='Packet Replication Engine used by target',
-                      type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
-                      default=runtime_CLI.PreType.SimplePre,
-                      action=ActionToPreType)
-  """
   parser.set_defaults(func=server)
 
   return parser.parse_args(args)
