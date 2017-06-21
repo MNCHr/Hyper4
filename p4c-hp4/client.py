@@ -26,6 +26,11 @@ class Client(cmd.Cmd):
     self.port = args.port
     self.debug = args.debug
 
+  def do_list_devices(self, line):
+    "List devices"
+    resp = self.send_request(self.user + ' list_devices')
+    print(resp)
+
   def do_EOF(self, line):
     print
     return True
@@ -54,6 +59,11 @@ class AdminClient(Client):
     "Add a device: add_device <ip> <port> " \
      + "<pre: \'SimplePre\'|\'SimplePreLAG\'|\'None\'> <name> <# entries> <ports>"
     resp = self.send_request(self.user + ' add_device ' + line)
+    print(resp)
+
+  def do_grant_device(self, line):
+    "Grant a device to a user: grant_device <user> <device> <ports>"
+    resp = self.send_request(self.user + ' grant_device ' + line)
     print(resp)
 
 def client(args):

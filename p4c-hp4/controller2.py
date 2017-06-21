@@ -418,8 +418,13 @@ class Controller():
     entries = parameters[5]
     ports = parameters[6:]
     prelookup = {'None': 0, 'SimplePre': 1, 'SimplePreLAG': 2}
-    hp4_client, mc_client = runtime_CLI.thrift_connect(ip, port,
-                    runtime_CLI.RuntimeAPI.get_thrift_services(prelookup[pre]))
+
+    try:
+      hp4_client, mc_client = runtime_CLI.thrift_connect(ip, port,
+                  runtime_CLI.RuntimeAPI.get_thrift_services(prelookup[pre]))
+    except:
+        return "Error - add_device(" + name + "): " + str(sys.exc_info()[0])
+      
     json = '/home/ubuntu/hp4-src/hp4/hp4.json'
     runtime_CLI.load_json_config(hp4_client, json)
     rta = runtime_CLI.RuntimeAPI(pre, hp4_client)
@@ -428,8 +433,15 @@ class Controller():
 
   def list_devices(self, parameters):
     "List devices"
-    user = parameters[0]
-    pass
+    requester = parameters[0]
+    resp = ""
+    if requester == 'admin':
+      for device in self.devices:
+        resp += device + '\n'
+    else:
+      for device in self.users[requester].devices:
+         resp += device + '\n'
+    return resp.strip()
 
   def add_user(self, parameters):
     "Add a user"
@@ -447,9 +459,15 @@ class Controller():
       resp += user + '\n'
     return resp.strip()
 
-  def grant_device(self, user, device, pports):
+  def grant_device(self, parameters):
     "Grant a user access to a device's physical ports"
+    requester = parameters[0]
+    user = parameters[1]
+    device = parameters[2]
+    pports = parameters[3:]
+    # TODO: manage pports so no oversubscribed
     self.users[user].devices[device] = UDev(user, self.devices[device], pports)
+    return "User " + user + " granted access to " + device
 
   def compile_p4(self, user, p4f):
     "Compile a P4 program"
