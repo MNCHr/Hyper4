@@ -285,7 +285,7 @@ class DPMU_Server():
       self.vnf_ports_instances[vnf_port] = finst_name
       # TODO: use of vports goes here... prev: self.instances[finst_name][3].append(vnf_port)
     # def __init__(self, name, user, vports, program_ID, p4f, hp4tf, hp4mtf):
-    self.instances[finst_name] = Instance(finst_name, uname, 
+    #self.instances[finst_name] = Instance(finst_name, uname, 
     self.next_PID += 1
 
     # load
@@ -545,6 +545,7 @@ def server(args):
   hp4_client, mc_client = runtime_CLI.thrift_connect(args.hp4_ip,
                           args.hp4_port,
                           runtime_CLI.RuntimeAPI.get_thrift_services(args.pre))
+  code.interact(local=locals())
   json = '/home/ubuntu/hp4-src/hp4/hp4.json'
   runtime_CLI.load_json_config(hp4_client, json)
   rta = runtime_CLI.RuntimeAPI('SimplePre', hp4_client)

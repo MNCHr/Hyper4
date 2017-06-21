@@ -3,14 +3,24 @@
 import argparse
 import sys
 import socket
+import cmd
 
 import code
 
-class Client():
+class Client(cmd.Cmd):
+  prompt = 'HP4: '
+  intro = "Control utility for runtime HP4 management"
+
+
   def __init__(self, args):
-    self.args = args
+    cmd.Cmd.__init__(self)
+    self.user = args.user
     self.port = args.port
     self.debug = args.debug
+
+  def do_EOF(self, line):
+    print
+    return True
 
   def send_request(self, data):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,18 +31,25 @@ class Client():
     s.close()
     return resp
 
-  def beep(self):
+  def do_beep(self, line):
+    "Simple test"
     data = 'beep'
-    self.send_request(data)
-    
+    resp = self.send_request(data)
+    self.dbugprint(resp)
 
-  def dbugprint(msg):
+  def do_add_user(self, line):
+    "Add a user"
+    resp = self.send_request(self.user + ' ' + 'add_user ' + line)
+    print(resp)
+
+  def dbugprint(self, msg):
     if self.debug:
       print(msg)
 
 def client(args):
-  c = Client(args)
-  c.beep()
+  #c = Client(args)
+  #c.beep()
+  Client(args).cmdloop()
 
 def parse_args(args):
   parser = argparse.ArgumentParser(description='HyPer4 Client')
@@ -40,6 +57,7 @@ def parse_args(args):
                       action='store_true')
   parser.add_argument('--port', help='port for Controller',
                       type=int, action="store", default=33333)
+  parser.add_argument('user', help='username', type=str, action="store")
   parser.set_defaults(func=client)
 
   return parser.parse_args(args)

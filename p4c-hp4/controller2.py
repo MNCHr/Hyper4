@@ -307,35 +307,42 @@ class DeleteRuleError(Exception):
     return repr(self.value)
 
 class Device():
-  def __init__(self, rta):
+  def __init__(self, rta, entries, phys_ports):
     self.rta = rta
     self.assignments = {} # {pport : instance_ID}
     self.assignment_handles = {} # {pport : tset_context rule handle}
+    self.next_PID = 1
+    self.total_entries = entries
+    self.phys_ports = phys_ports
+    self.phys_ports_remaining = phys_ports.split()
 
   def do_table_add(rule):
     with Capturing() as output:
-      self.rta.do_table_add(rule)
+      try:
+        self.rta.do_table_add(rule)
+      except:
+        raise AddRuleError("table_add raised an exception (rule: " + rule + ")")
+      else:
+        self.total_entries -= 1
     for out in output:
       dbugprint(out)
       if 'Entry has been added' in out:
         handle = int(out.split('handle ')[1])
         return handle
-      else:
-        raise AddRuleError(out)
+    raise AddRuleError(out)
 
   def do_table_modify(rule):
     "In: rule (no \'table_modify\'); Out: None (but failure raises Exception)"
-    try:
-      with Capturing() as output:
+    with Capturing() as output:
+      try:
         self.rta.do_table_modify(rule)
-    except:
-      print("table_modify raised an exception (rule: " + rule + ")")
-      raise
-    else:
-      for out in output:
-        dbugprint(out)
-        if ('Invalid' in out) or ('Error' in out):
-          raise ModRuleError(out)
+      except:
+        raise ModRuleError("table_modify: unhandled server exception (rule: " + rule + ")")
+    for out in output:
+      dbugprint(out)
+      if ('Invalid' in out) or ('Error' in out):
+        raise ModRuleError("table_modify: handled server exception (rule: "
+                           + rule + "\nout: " + out)
 
   def do_table_delete(rule):
     "In: <table name> <entry handle>"
@@ -344,6 +351,8 @@ class Device():
         self.rta.do_table_delete(rule)
       except:
         raise DeleteRuleError("table_delete raised an exception (rule: " + rule + ")")
+      else:
+        self.total_entries += 1
     for out in output:
       dbugprint(out)
       if ('Invalid' in out) or ('Error' in out):
@@ -363,7 +372,14 @@ class Controller():
 
   def handle_request(self, request):
     "Handle a request"
-    return "not implemented yet"
+    # request format: <requester uname> <command> <parameter|[parameters]>
+    requester = request.split()[0]
+    command = request.split()[1]
+    parameters = request.split()[2:]
+    resp = ('requester: ' + requester + '\n'
+            +'command: ' + command + '\n'
+            +'parameters: ' + str(parameters) + '\n')
+    return resp
 
   def insert(self, user, device, position, instance):
     self.users[user].devices[device].insert(position, instance)
@@ -371,17 +387,31 @@ class Controller():
   def remove(self, user, device, instance):
     self.users[user].devices[device].remove(instance)
 
-  def add_device(self, ip, port, name):
+  def add_device(self, ip, port, pre, name, entries, ports):
     "Add a device"
+    prelookup = {'None': 0, 'SimplePre': 1, 'SimplePreLAG': 2}
+    hp4_client, mc_client = runtime_CLI.thrift_connect(ip, port,
+                    runtime_CLI.RuntimeAPI.get_thrift_services(prelookup[pre]))
+    json = '/home/ubuntu/hp4-src/hp4/hp4.json'
+    runtime_CLI.load_json_config(hp4_client, json)
+    rta = runtime_CLI.RuntimeAPI(pre, hp4_client)
+    self.devices[name] = Device(rta, entries, ports)
+
+  def list_devices(self, user):
+    "List devices"
     pass
 
-  def add_user(self, user, devices):
+  def add_user(self, user):
     "Add a user"
+    self.users[user] = User(user)
+
+  def list_users(self):
+    "List users"
     pass
 
   def grant_device(self, user, device, pports):
     "Grant a user access to a device's physical ports"
-    pass
+    self.users[user].devices[device] = UDev(user, self.devices[device], pports)
 
   def compile_p4(self, user, p4f):
     "Compile a P4 program"
@@ -453,10 +483,13 @@ def parse_args(args):
 
   parser.add_argument('--port', help='port for Controller',
                       type=int, action="store", default=33333)
+  """
+  this should be in the client
   parser.add_argument('--pre', help='Packet Replication Engine used by target',
                       type=str, choices=['None', 'SimplePre', 'SimplePreLAG'],
                       default=runtime_CLI.PreType.SimplePre,
                       action=ActionToPreType)
+  """
   parser.set_defaults(func=server)
 
   return parser.parse_args(args)
