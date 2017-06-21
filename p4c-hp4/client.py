@@ -66,6 +66,11 @@ class AdminClient(Client):
     resp = self.send_request(self.user + ' grant_device ' + line)
     print(resp)
 
+  def do_revoke_device(self, line):
+    "Revoke a user's access to a device: revoke_device <user> <device>"
+    resp = self.send_request(self.user + ' revoke_device ' + line)
+    print(resp)
+
 def client(args):
   if args.user == 'admin':
     c = AdminClient(args)

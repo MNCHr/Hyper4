@@ -83,7 +83,7 @@ class Rule():
     return ret
 
 class Instance():
-  def __init__(self, name, user, vports, program_ID, p4f, hp4tf, hp4mtf):
+  def __init__(self, name, user, vports, instance_ID, p4f, hp4tf, hp4mtf):
     self.name = name
     self.user = user
     self.vports = vports # {vportnum (int) : Virtual_Port}
@@ -93,8 +93,8 @@ class Instance():
     # need this in order to properly fill in match ID parameters
     self.match_counters = {} # source table name (str) : match counter (int)
     self.t_virtnet_rule_handles = [] # [handles (ints)]
-    self.func_rule_handles = {} # hp4 table name (str) : rule handle (int)
-    self.match_rule_handles = {} # hp4 table name (str) : rule handle (int)
+    self.func_rule_handles = [] # hp4 table name (str) : [list of rule handles (ints)]
+    self.match_rule_handles = {} # hp4 table name (str) : [list of rule handles (ints)]
     self.p4f = p4f
     self.hp4tf = hp4tf
     self.hp4mtf = hp4mtf
@@ -228,7 +228,7 @@ class UDev():
       if len(self.instance_chain) > 1:
         # rewire tset_context to rightinst
         rightinst_ID = self.user.instances[instance_chain[position + 1]].instance_ID
-        for pport in self.device.assignment_handles:
+        for pport in self.pports:
           handle = self.device.assignment_handles[pport]
           command = ("table_modify tset_context a_set_context "
                      + str(handle)
@@ -237,11 +237,7 @@ class UDev():
           commands.append(command)
 
       else:
-        # delete tset_context rules
-        for pport in self.device.assignment_handles:
-          handle = self.device.assignment_handles[pport]
-          commands.append("table_delete tset_context " + str(handle))
-        self.device.assignment_handles = []
+        self.delete_tset_context_rules()
 
     elif position > 0 and position < (len(self.instance_chain) - 1): # middle
       # rewire leftinst t_virtnet to rightinst
@@ -258,7 +254,7 @@ class UDev():
       # rewire leftinst t_virtnet to phys
       leftinst = self.user.instances[instance_chain[position - 1]]
       for handle in leftinst.t_virtnet_rule_handles:
-        commands.append("table_delete t_virtnet v_fwd " + str(handle))
+        commands.append("table_delete t_virtnet " + str(handle))
       self.user.instances[leftinst].t_virtnet_rule_handles = []
       for vegress_val in self.vegress_pports:
         command = ("table_add t_virtnet phys_fwd "
@@ -272,6 +268,39 @@ class UDev():
     self.instance_chain.remove(instance)
 
     # push to HyPer4 one at a time
+    for command in commands:
+      self.pushcommand(command)
+
+  def delete_tset_context_rules(self):
+    "Delete tset_context rules"
+    commands = []
+    for pport in self.pports:
+      handle = self.devices.assignment_handles[pport]
+      commands.append("table_delete tset_context " + str(handle))
+      del self.device.assignment_handles[pport]
+    for command in commands:
+      self.pushcommand(command)
+
+  def revoke(self):
+    self.device.release_ports(self.pports)
+    commands = []
+
+    self.delete_tset_context_rules()
+
+    for instance in self.instance_chain:
+      # delete t_virtnet rules
+      for rh in self.user.instances[instance].t_virtnet_rule_handles:
+        commands.append("table_delete t_virtnet " + str(rh))
+      # delete all of the instances rules: func & match
+      for table in self.user.instances[instance].func_rule_handles:
+        for handle in self.user.instances[instance].func_rule_handles[table]:
+          commands.append("table_delete " + table + " " + str(handle))
+      self.user.instances[instance].func_rule_handles = {}
+      for table in self.user.instances[instance].match_rule_handles:
+        for handle in self.user.instances[instance].match_rule_handles[table]:
+          commands.append("table_delete " + table + " " + str(handle))
+      self.user.instances[instance].match_rule_handles = {}
+
     for command in commands:
       self.pushcommand(command)
 
@@ -317,7 +346,23 @@ class Device():
     self.phys_ports = phys_ports
     self.phys_ports_remaining = list(phys_ports)
 
-  def do_table_add(rule):
+  def request_ports(self, ports_requested):
+    ports_granted = []
+    for port in ports_requested:
+      if port in self.phys_ports_remaining:
+        self.phys_ports_remaining.remove(port)
+        ports_granted.append(port)
+    return ports_granted
+
+  def release_ports(self, ports_releasable):
+    ports_released = []
+    for port in ports_releasable:
+      if port in self.phys_ports:
+        self.phys_ports_remaining.append(port)
+        ports_released.append(port)
+    return ports_released
+
+  def do_table_add(self, rule):
     with Capturing() as output:
       try:
         self.rta.do_table_add(rule)
@@ -332,7 +377,7 @@ class Device():
         return handle
     raise AddRuleError(out)
 
-  def do_table_modify(rule):
+  def do_table_modify(self, rule):
     "In: rule (no \'table_modify\'); Out: None (but failure raises Exception)"
     with Capturing() as output:
       try:
@@ -345,7 +390,7 @@ class Device():
         raise ModRuleError("table_modify: handled server exception (rule: "
                            + rule + "\nout: " + out)
 
-  def do_table_delete(rule):
+  def do_table_delete(self, rule):
     "In: <table name> <entry handle>"
     with Capturing() as output:
       try:
@@ -466,8 +511,17 @@ class Controller():
     device = parameters[2]
     pports = parameters[3:]
     # TODO: manage pports so no oversubscribed
-    self.users[user].devices[device] = UDev(user, self.devices[device], pports)
+    pports_granted = self.devices[device].request_ports(pports)
+    self.users[user].devices[device] = UDev(user, self.devices[device], pports_granted)
     return "User " + user + " granted access to " + device
+
+  def revoke_device(self, parameters):
+    "Revoke a user's access to a device"
+    user = parameters[1]
+    device = parameters[2]
+    self.users[user].devices[device].revoke
+    del self.users[user].devices[device]
+    return "User " + user + " access to " + device + " revoked"
 
   def compile_p4(self, user, p4f):
     "Compile a P4 program"
