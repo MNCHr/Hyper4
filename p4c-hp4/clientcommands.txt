@@ -1,0 +1,3 @@
+add_user fred
+add_user george
+add_user bob

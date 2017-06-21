@@ -276,8 +276,9 @@ class UDev():
       self.pushcommand(command)
 
 class User():
-  def __init__(self, name):
+  def __init__(self, name, privilege='user'):
     self.name = name
+    self.privilege = privilege # 'user' | 'admin'
 
     # { device name : UDev }
     self.devices = {}
@@ -360,8 +361,9 @@ class Device():
 
 def server(args):
   ctrl = Controller(args)
+  ctrl.add_user(['admin', 'admin'])
   ctrl.dbugprint(args)
-  ctrl.serverloop(args.port)
+  ctrl.serverloop(args.host, args.port)
 
 class Controller():
   def __init__(self, args):
@@ -369,16 +371,35 @@ class Controller():
     self.devices = {} # device name (str) : Device
     self.args = args
     self.debug = args.debug
+    self.usercommands = ['insert',
+                          'remove',
+                          'list_devices',
+                          'compile_p4',
+                          'load',
+                          'interpret',
+                          'migrate']
 
   def handle_request(self, request):
     "Handle a request"
-    # request format: <requester uname> <command> <parameter|[parameters]>
+    if len(request) < 2:
+      return "Request format: <requester uname> <command> [parameter list]"
     requester = request.split()[0]
     command = request.split()[1]
     parameters = request.split()[2:]
-    resp = ('requester: ' + requester + '\n'
-            +'command: ' + command + '\n'
-            +'parameters: ' + str(parameters) + '\n')
+    if requester not in self.users:
+      return "Denied; no user " + requester
+    elif (self.users[requester].privilege == 'user'
+          and command not in self.usercommands):
+      return "Denied; command not available to " + requester
+
+    resp = ""
+    try:
+      resp = getattr(self, command)(parameters)
+    except AttributeError:
+      return "Command not found: " + command
+    except:
+      return "Unexpected error: " + sys.exc_info()[0]
+
     return resp
 
   def insert(self, user, device, position, instance):
@@ -399,15 +420,24 @@ class Controller():
 
   def list_devices(self, user):
     "List devices"
+    user = paramters[0]
     pass
 
-  def add_user(self, user):
+  def add_user(self, parameters):
     "Add a user"
-    self.users[user] = User(user)
+    user = parameters[0]
+    privilege = 'user'
+    if len(parameters) > 1:
+      privilege = parameters[1]
+    self.users[user] = User(user, privilege)
+    return "Added user: " + user
 
-  def list_users(self):
+  def list_users(self, parameters):
     "List users"
-    pass
+    resp = ""
+    for user in self.users:
+      resp += user + '\n'
+    return resp.strip()
 
   def grant_device(self, user, device, pports):
     "Grant a user access to a device's physical ports"
@@ -437,10 +467,10 @@ class Controller():
     "Push default rules to a device"
     pass
 
-  def serverloop(self, port):
+  def serverloop(self, host, port):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    host = socket.gethostname()
+    #host = socket.gethostname()
     serversocket.bind((host, port))
     serversocket.listen(5)
 
@@ -481,6 +511,8 @@ def parse_args(args):
   parser.add_argument('--debug', help='turn on debug mode',
                       action='store_true')
 
+  parser.add_argument('--host', help='host/ip for Controller',
+                      type=str, action="store", default='localhost')
   parser.add_argument('--port', help='port for Controller',
                       type=int, action="store", default=33333)
   """
