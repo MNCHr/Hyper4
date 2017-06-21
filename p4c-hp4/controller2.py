@@ -404,6 +404,27 @@ class Device():
       if ('Invalid' in out) or ('Error' in out):
         raise DeleteRuleError(out)
 
+  def do_reset_device(self):
+    "Reset all device state (table entries, registers, etc.)"
+    self.rta.do_reset_state('')
+
+  def do_set_defaults(self):
+    "Set HP4 instance-independent defaults"
+    self.rta.do_table_set_default('tset_pr_SEB a_pr_import_SEB')
+    self.rta.do_table_set_default('tset_pr_20_39 a_pr_import_20_39')
+    self.rta.do_table_set_default('tset_pr_40_59 a_pr_import_40_59')
+    self.rta.do_table_set_default('tset_pr_60_79 a_pr_import_60_79')
+    self.rta.do_table_set_default('tset_pr_80_99 a_pr_import_80_99')
+    self.rta.do_table_set_default('thp4_egress_filter_case1 _no_op')
+    self.rta.do_table_set_default('thp4_egress_filter_case2 _no_op')
+    self.rta.do_table_set_default('t_checksum _no_op')
+    self.rta.do_table_set_default('t_resize_pr _no_op')
+    self.rta.do_table_set_default('t_prep_deparse_SEB a_prep_deparse_SEB')
+    self.rta.do_table_set_default('t_prep_deparse_20_39 a_prep_deparse_20_39')
+    self.rta.do_table_set_default('t_prep_deparse_40_59 a_prep_deparse_40_59')
+    self.rta.do_table_set_default('t_prep_deparse_60_79 a_prep_deparse_60_79')
+    self.rta.do_table_set_default('t_prep_deparse_80_99 a_prep_deparse_80_99')
+
 def server(args):
   ctrl = Controller(args)
   ctrl.add_user(['system', 'admin', 'admin'])
@@ -510,10 +531,12 @@ class Controller():
     user = parameters[1]
     device = parameters[2]
     pports = parameters[3:]
-    # TODO: manage pports so no oversubscribed
     pports_granted = self.devices[device].request_ports(pports)
+    if len(pports_granted) == 0:
+      return "Error - grant_device: none of the requested ports available for " + device
     self.users[user].devices[device] = UDev(user, self.devices[device], pports_granted)
-    return "User " + user + " granted access to " + device
+    return "User " + user + " granted access to " + device + ": " \
+           + str(pports_granted)
 
   def revoke_device(self, parameters):
     "Revoke a user's access to a device"
@@ -539,13 +562,17 @@ class Controller():
     "Migrate an instance to a new device"
     pass
 
-  def wipe(self, device):
-    "Wipe a device clean of all rules"
-    pass
+  def reset_device(self, parameters):
+    device = parameters[1]
+    "Reset a device: reset all state, inc. table entries, registers, etc."
+    self.devices[device].do_reset_device()
+    return "Device " + device + " has been reset"
 
-  def set_defaults(self, device):
+  def set_defaults(self, parameters):
     "Push default rules to a device"
-    pass
+    device = parameters[1]
+    self.devices[device].do_set_defaults()
+    return "Defaults added to " + device
 
   def serverloop(self, host, port):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

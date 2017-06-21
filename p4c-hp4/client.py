@@ -71,6 +71,16 @@ class AdminClient(Client):
     resp = self.send_request(self.user + ' revoke_device ' + line)
     print(resp)
 
+  def do_reset_device(self, line):
+    "Reset a device: reset_device <device>"
+    resp = self.send_request(self.user + ' reset_device ' + line)
+    print(resp)
+
+  def do_set_defaults(self, line):
+    "Set device defaults: set_defaults <device>"
+    resp = self.send_request(self.user + ' set_defaults ' + line)
+    print(resp)
+
 def client(args):
   if args.user == 'admin':
     c = AdminClient(args)
