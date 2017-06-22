@@ -31,6 +31,22 @@ class Client(cmd.Cmd):
     resp = self.send_request(self.user + ' list_devices')
     print(resp)
 
+"""
+  def do_compile(self, line):
+    "Set compile P4 program: compile <p4 path> [no_egress_filter]"
+    resp = self.send_request(self.user + ' compile_p4 ' + line)
+    print(resp)
+"""
+  def do_load(self, line):
+    "Load a program: load <program name> <device> <instance>"
+    resp = self.send_request(self.user + ' load ' + line)
+    print(resp)
+
+  def do_list_programs(self, line):
+    "List available programs"
+    resp = self.send_request(self.user + ' list_programs ' + line)
+    print(resp)
+
   def do_EOF(self, line):
     print
     return True

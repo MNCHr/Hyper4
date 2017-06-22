@@ -440,11 +440,10 @@ class Controller():
     self.usercommands = ['insert',
                           'remove',
                           'list_devices',
-                          'compile_p4',
                           'load',
                           'interpret',
                           'migrate']
-    self.compiledp4s = {} # p4 filename (str) : (hp4t filename (str), hp4mt filename(str))
+    self.compiledp4s = {} # program name (str) : (hp4t filename (str), hp4mt filename(str))
 
   def handle_request(self, request):
     "Handle a request"
@@ -547,16 +546,24 @@ class Controller():
     del self.users[user].devices[device]
     return "User " + user + " access to " + device + " revoked"
 
-  # user p4f hp4tf hp4mtf ['egress_filter']
+  def list_programs(self, parameters):
+    resp = ""
+    results = []
+    results += [each for each in os.listdir('.') if each.endswith('.p4')]
+    for p4f in results:
+      resp += p4f.split('.')[0] + '\n'
+    return resp.strip()
+
   def compile_p4(self, parameters):
     "Compile a P4 program"
-    egress_filter = False
+    egress_filter = True
     p4f = parameters[1]
-    hp4tf = parameters[2]
-    hp4mtf = parameters[3]
-    if len(parameters) > 4:
-      if parameters[4] == 'egress_filter':
-        egress_filter = True
+    if len(parameters) > 2:
+      if parameters[2] == 'no_egress_filter':
+        egress_filter = False
+    fname = p4f.split('.')[0]
+    hp4tf = fname + '.hp4t'
+    hp4mtf = fname + '.hp4mt'
 
     if egress_filter:
       if call(["./p4c-hp4", "-o", hp4tf, "-m", hp4mtf, "-s 20", p4f, '--egress_filter']) != 0:
@@ -566,11 +573,61 @@ class Controller():
         return 'ERROR: could not compile ' + p4f
 
     self.compiledp4s[p4f] = (hp4tf, hp4mtf)
-    return "Program " + p4f + " compiled as " + hp4f
+    return "Program " + p4f + " compiled as " + hp4tf + ", " + hp4mtf
 
-  def load(self, user, hp4, instance, device):
-    "Link an hp4->instance and load the instance onto a device"
+  def link(self, parameters):
+    "Link a .hp4t -> .hp4"
+    user = parameters[0]
+    hp4tf = parameters[1]
+    device = parameters[2]
+    finst_name = parameters[3]
+    # TODO: double check this... what is the effect of the --phys_ports on
+    #  linking - does it conflict with instance_chain abstraction?
+    context = self.users[user].devices[device].pports
+    if call(["../tools/hp4l", "--input", hp4tf, "--output", finst_name+'.hp4',
+             "--progID", str(self.devices[device].next_PID), "--phys_ports"]
+            + context) != 0:
+      return "ERROR: could not link " + hp4tf
+    self.devices[device].next_PID += 1
+    # TODO: finish
     pass
+
+  def verify_load(self, user, program, device, instance):
+    "Verify a load request"
+    # verify:
+    # - user exists
+    # - program exists
+    # - device exists
+    # - user has access to device
+    # - instance does not conflict with another of user's instances
+    if user not in self.users:
+      return "bad user (" + user + ")"
+    if program not in self.list_programs(''):
+      return "bad program (" + program + ")"
+    if device not in self.devices:
+      return "bad device (" + device + ")"
+    if device not in self.users[user].devices:
+      return "user " + user + " cannot access " + device
+    if instance in self.users[user].instances:
+      return "instance " + instance + " already in use by " + user
+    return "success"
+
+  def load(self, parameters):
+    "Load a program onto a device"
+    user = parameters[0]
+    program = parameters[1]
+    device = parameters[2]
+    instance = parameters[3]
+    result = verify_load(user, program, device, instance)
+    if result != "success":
+      return "ERROR: load request invalid: " + result
+    p4f = program + '.p4'
+    if p4f not in self.compiledp4s:
+      # need to compile
+      compile_result = self.compile_p4([user, p4f])
+      if 'ERROR' in compile_result:
+        return compile_result
+    self.compiledp4s[p4f]
 
   def interpret(self, user, instance, rule):
     "Interpret a rule"
