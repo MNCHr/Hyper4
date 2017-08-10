@@ -19,7 +19,7 @@ action finish_action(next_stage) {
 [+ dloop +]
 table tstg[+X+][+Y+]_update_state {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
   }
   actions {

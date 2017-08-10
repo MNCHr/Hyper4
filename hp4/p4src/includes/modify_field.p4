@@ -16,7 +16,7 @@ modify_field.p4: Carry out the various subtypes of the modify_field primitive,
 
 // 1
 action mod_meta_stdmeta_ingressport(leftshift, tmeta_mask) { 
-  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((standard_metadata.ingress_port << leftshift) & tmeta_mask)); // last "& mask" probably unnecessary
+  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((meta_ctrl.virt_ingress_port << leftshift) & tmeta_mask)); // last "& mask" probably unnecessary
 }
 
 // 2
@@ -26,7 +26,7 @@ action mod_meta_stdmeta_packetlength(leftshift, tmeta_mask) {
 
 // 3
 action mod_meta_stdmeta_egressspec(leftshift, tmeta_mask) {
-  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((standard_metadata.egress_spec << leftshift) & tmeta_mask));
+  modify_field(tmeta.data, (tmeta.data & ~tmeta_mask) | ((meta_ctrl.virt_egress_spec << leftshift) & tmeta_mask));
 }
 
 // 4
@@ -46,7 +46,7 @@ action mod_meta_stdmeta_insttype(leftshift, tmeta_mask) {
 
 // 7
 action mod_stdmeta_egressspec_meta(rightshift, tmask) {
-  modify_field(standard_metadata.egress_spec, (tmeta.data >> rightshift) & tmask);
+  modify_field(meta_ctrl.virt_egress_spec, (tmeta.data >> rightshift) & tmask);
 }
 
 // 8
@@ -56,7 +56,7 @@ action mod_meta_const(leftshift, tmeta_mask, val) {
 
 // 9
 action mod_stdmeta_egressspec_const(val) {
-  modify_field(standard_metadata.egress_spec, val);
+  modify_field(meta_ctrl.virt_egress_spec, val);
 }
 
 // 10
@@ -66,7 +66,7 @@ action mod_extracted_const(leftshift, emask, val) {
 
 // 11
 action mod_stdmeta_egressspec_stdmeta_ingressport() {
-  modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
+  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_ingress_port);
 }
 
 // 12
@@ -97,7 +97,7 @@ action _no_op() {
 
 table t_mod_11 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -123,7 +123,7 @@ table t_mod_11 {
 
 table t_mod_12 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -149,7 +149,7 @@ table t_mod_12 {
 
 table t_mod_13 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -175,7 +175,7 @@ table t_mod_13 {
 
 table t_mod_14 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -201,7 +201,7 @@ table t_mod_14 {
 
 table t_mod_15 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -227,7 +227,7 @@ table t_mod_15 {
 
 table t_mod_16 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -253,7 +253,7 @@ table t_mod_16 {
 
 table t_mod_17 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -279,7 +279,7 @@ table t_mod_17 {
 
 table t_mod_18 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -305,7 +305,7 @@ table t_mod_18 {
 
 table t_mod_19 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -331,7 +331,7 @@ table t_mod_19 {
 
 table t_mod_21 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -357,7 +357,7 @@ table t_mod_21 {
 
 table t_mod_22 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -383,7 +383,7 @@ table t_mod_22 {
 
 table t_mod_23 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -409,7 +409,7 @@ table t_mod_23 {
 
 table t_mod_24 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -435,7 +435,7 @@ table t_mod_24 {
 
 table t_mod_25 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -461,7 +461,7 @@ table t_mod_25 {
 
 table t_mod_26 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -487,7 +487,7 @@ table t_mod_26 {
 
 table t_mod_27 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -513,7 +513,7 @@ table t_mod_27 {
 
 table t_mod_28 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -539,7 +539,7 @@ table t_mod_28 {
 
 table t_mod_29 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -565,7 +565,7 @@ table t_mod_29 {
 
 table t_mod_31 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -591,7 +591,7 @@ table t_mod_31 {
 
 table t_mod_32 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -617,7 +617,7 @@ table t_mod_32 {
 
 table t_mod_33 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -643,7 +643,7 @@ table t_mod_33 {
 
 table t_mod_34 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -669,7 +669,7 @@ table t_mod_34 {
 
 table t_mod_35 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -695,7 +695,7 @@ table t_mod_35 {
 
 table t_mod_36 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -721,7 +721,7 @@ table t_mod_36 {
 
 table t_mod_37 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -747,7 +747,7 @@ table t_mod_37 {
 
 table t_mod_38 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -773,7 +773,7 @@ table t_mod_38 {
 
 table t_mod_39 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -799,7 +799,7 @@ table t_mod_39 {
 
 table t_mod_41 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -825,7 +825,7 @@ table t_mod_41 {
 
 table t_mod_42 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -851,7 +851,7 @@ table t_mod_42 {
 
 table t_mod_43 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -877,7 +877,7 @@ table t_mod_43 {
 
 table t_mod_44 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -903,7 +903,7 @@ table t_mod_44 {
 
 table t_mod_45 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -929,7 +929,7 @@ table t_mod_45 {
 
 table t_mod_46 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -955,7 +955,7 @@ table t_mod_46 {
 
 table t_mod_47 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -981,7 +981,7 @@ table t_mod_47 {
 
 table t_mod_48 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -1007,709 +1007,7 @@ table t_mod_48 {
 
 table t_mod_49 {
   reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_51 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_52 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_53 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_54 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_55 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_56 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_57 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_58 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_59 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_61 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_62 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_63 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_64 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_65 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_66 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_67 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_68 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_69 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_71 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_72 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_73 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_74 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_75 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_76 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_77 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_78 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.subtype : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    mod_meta_stdmeta_ingressport;
-    mod_meta_stdmeta_packetlength;
-    mod_meta_stdmeta_egressspec;
-    mod_meta_stdmeta_egressport;
-    mod_meta_stdmeta_egressinst;
-    mod_meta_stdmeta_insttype;
-    mod_stdmeta_egressspec_meta;
-    mod_meta_const;
-    mod_stdmeta_egressspec_const;
-    mod_extracted_const;
-    mod_stdmeta_egressspec_stdmeta_ingressport;
-    mod_extracted_extracted;
-    mod_meta_extracted;
-    mod_extracted_meta;
-    mod_intmeta_mcast_grp_const;
-  }
-}
-
-table t_mod_79 {
-  reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
@@ -1875,113 +1173,5 @@ control do_modify_field_48 {
 
 control do_modify_field_49 {
   apply(t_mod_49);
-}
-
-control do_modify_field_51 {
-  apply(t_mod_51);
-}
-
-control do_modify_field_52 {
-  apply(t_mod_52);
-}
-
-control do_modify_field_53 {
-  apply(t_mod_53);
-}
-
-control do_modify_field_54 {
-  apply(t_mod_54);
-}
-
-control do_modify_field_55 {
-  apply(t_mod_55);
-}
-
-control do_modify_field_56 {
-  apply(t_mod_56);
-}
-
-control do_modify_field_57 {
-  apply(t_mod_57);
-}
-
-control do_modify_field_58 {
-  apply(t_mod_58);
-}
-
-control do_modify_field_59 {
-  apply(t_mod_59);
-}
-
-control do_modify_field_61 {
-  apply(t_mod_61);
-}
-
-control do_modify_field_62 {
-  apply(t_mod_62);
-}
-
-control do_modify_field_63 {
-  apply(t_mod_63);
-}
-
-control do_modify_field_64 {
-  apply(t_mod_64);
-}
-
-control do_modify_field_65 {
-  apply(t_mod_65);
-}
-
-control do_modify_field_66 {
-  apply(t_mod_66);
-}
-
-control do_modify_field_67 {
-  apply(t_mod_67);
-}
-
-control do_modify_field_68 {
-  apply(t_mod_68);
-}
-
-control do_modify_field_69 {
-  apply(t_mod_69);
-}
-
-control do_modify_field_71 {
-  apply(t_mod_71);
-}
-
-control do_modify_field_72 {
-  apply(t_mod_72);
-}
-
-control do_modify_field_73 {
-  apply(t_mod_73);
-}
-
-control do_modify_field_74 {
-  apply(t_mod_74);
-}
-
-control do_modify_field_75 {
-  apply(t_mod_75);
-}
-
-control do_modify_field_76 {
-  apply(t_mod_76);
-}
-
-control do_modify_field_77 {
-  apply(t_mod_77);
-}
-
-control do_modify_field_78 {
-  apply(t_mod_78);
-}
-
-control do_modify_field_79 {
-  apply(t_mod_79);
 }
 

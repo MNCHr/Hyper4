@@ -171,7 +171,8 @@ table tset_pr_80_99 {
 }
 
 action a_set_context(program) {
-  modify_field(meta_ctrl.program, program);
+  modify_field(meta_ctrl.vdev_ID, program);
+  modify_field(meta_ctrl.virt_ingress_port, standard_metadata.ingress_port);
 }
 
 table tset_context {
@@ -192,7 +193,7 @@ action set_next_action(next_action, state) {
 
 action set_next_action_chg_program(next_action, state, programID) {
   modify_field(parse_ctrl.next_action, next_action);
-  modify_field(meta_ctrl.program, programID);
+  modify_field(meta_ctrl.vdev_ID, programID);
   modify_field(parse_ctrl.state, state);
 }
 
@@ -212,13 +213,13 @@ action extract_more(numbytes, state) {
 action extract_more_chg_program(numbytes, programID) {
   modify_field(parse_ctrl.numbytes, numbytes);
   modify_field(parse_ctrl.next_action, EXTRACT_MORE);
-  modify_field(meta_ctrl.program, programID);
+  modify_field(meta_ctrl.vdev_ID, programID);
   resubmit(fl_extract_more);
 }
 
 table tset_parse_control {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
   }
   actions {
@@ -231,7 +232,7 @@ table tset_parse_control {
 
 table tset_parse_select_SEB {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state: exact;
     ext[0].data : ternary;
     ext[1].data : ternary;
@@ -264,7 +265,7 @@ table tset_parse_select_SEB {
 
 table tset_parse_select_20_29 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[20].data : ternary;
     ext[21].data : ternary;
@@ -287,7 +288,7 @@ table tset_parse_select_20_29 {
 
 table tset_parse_select_30_39 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[30].data : ternary;
     ext[31].data : ternary;
@@ -310,7 +311,7 @@ table tset_parse_select_30_39 {
 
 table tset_parse_select_40_49 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[40].data : ternary;
     ext[41].data : ternary;
@@ -333,7 +334,7 @@ table tset_parse_select_40_49 {
 
 table tset_parse_select_50_59 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[50].data : ternary;
     ext[51].data : ternary;
@@ -356,7 +357,7 @@ table tset_parse_select_50_59 {
 
 table tset_parse_select_60_69 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[60].data : ternary;
     ext[61].data : ternary;
@@ -379,7 +380,7 @@ table tset_parse_select_60_69 {
 
 table tset_parse_select_70_79 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[70].data : ternary;
     ext[71].data : ternary;
@@ -402,7 +403,7 @@ table tset_parse_select_70_79 {
 
 table tset_parse_select_80_89 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[80].data : ternary;
     ext[81].data : ternary;
@@ -425,7 +426,7 @@ table tset_parse_select_80_89 {
 
 table tset_parse_select_90_99 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
     ext[90].data : ternary;
     ext[91].data : ternary;
@@ -455,7 +456,7 @@ action a_set_pipeline(tableID, val) {
 
 table tset_pipeline_config {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
   }
   actions {
@@ -475,7 +476,7 @@ table tset_in_virtnet {
 }
 
 action a_recirc_cleanup() {
-  modify_field(meta_ctrl.program, meta_ctrl.clone_program);
+  modify_field(meta_ctrl.vdev_ID, meta_ctrl.clone_program);
   modify_field(meta_ctrl.clone_program, 0); // necessary b/c used at egress
 }
 
@@ -488,7 +489,7 @@ table tset_recirc {
 // ------ Setup
 control setup {
   if (meta_ctrl.stage == INIT) {
-    if (meta_ctrl.program == 0) {
+    if (meta_ctrl.vdev_ID == 0) {
       apply(tset_context);
     }
     if (meta_ctrl.virt_egress_port > 0) {

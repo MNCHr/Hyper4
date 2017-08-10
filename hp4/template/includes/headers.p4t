@@ -38,15 +38,17 @@ header_type parse_ctrl_t {
 // is complete)
 header_type meta_ctrl_t {
   fields {
-    program : 8; // identifies which program to run
+    vdev_ID : 8; // identifies which program to run
     stage : 1; // INIT, NORM.
     next_table : 4;
     stage_state : 2; // CONTINUE, COMPLETE - 1 bit should be enough, certainly 2
     mcast_current_egress : 8;
     mcast_grp_id : 8;
+    vmcast_grp_id : 8;
     stdmeta_ID : 3;
     next_stage : 5;
     mc_flag : 1;
+    virt_egress_spec : 8;
     virt_egress_port : 8;
     virt_ingress_port : 8;
     clone_program : 8;

@@ -316,25 +316,13 @@ class User():
     self.instances = {}
 
 class AddRuleError(Exception):
-  def __init__(self, value):
-    self.value = value
-
-  def __str__(self):
-    return repr(self.value)
+  pass
 
 class ModRuleError(Exception):
-  def __init__(self, value):
-    self.value = value
-
-  def __str__(self):
-    return repr(self.value)
+  pass
 
 class DeleteRuleError(Exception):
-  def __init__(self, value):
-    self.value = value
-
-  def __str__(self):
-    return repr(self.value)
+  pass
 
 class Device():
   def __init__(self, rta, entries, phys_ports):
@@ -430,6 +418,12 @@ def server(args):
   ctrl.add_user(['system', 'admin', 'admin'])
   ctrl.dbugprint(args)
   ctrl.serverloop(args.host, args.port)
+
+class CompileError(Exception):
+  pass
+
+class LinkError(Exception):
+  pass
 
 class Controller():
   def __init__(self, args):
@@ -567,13 +561,13 @@ class Controller():
 
     if egress_filter:
       if call(["./p4c-hp4", "-o", hp4tf, "-m", hp4mtf, "-s 20", p4f, '--egress_filter']) != 0:
-        return 'ERROR: could not compile ' + p4f
+        raise CompileError('ERROR: could not compile ' + p4f)
     else:
       if call(["./p4c-hp4", "-o", hp4tf, "-m", hp4mtf, "-s 20", p4f]) != 0:
-        return 'ERROR: could not compile ' + p4f
+        raise CompileError('ERROR: could not compile ' + p4f)
 
-    self.compiledp4s[p4f] = (hp4tf, hp4mtf)
-    return "Program " + p4f + " compiled as " + hp4tf + ", " + hp4mtf
+    # self.compiledp4s[p4f] = (hp4tf, hp4mtf)
+    return (hp4tf, hp4tmf) #"Program " + p4f + " compiled as " + hp4tf + ", " + hp4mtf
 
   def link(self, parameters):
     "Link a .hp4t -> .hp4"
@@ -587,7 +581,7 @@ class Controller():
     if call(["../tools/hp4l", "--input", hp4tf, "--output", finst_name+'.hp4',
              "--progID", str(self.devices[device].next_PID), "--phys_ports"]
             + context) != 0:
-      return "ERROR: could not link " + hp4tf
+      raise LinkError("ERROR: could not link " + hp4tf)
     self.devices[device].next_PID += 1
     # TODO: finish
     pass
@@ -622,12 +616,24 @@ class Controller():
     if result != "success":
       return "ERROR: load request invalid: " + result
     p4f = program + '.p4'
+    # TODO: replace conditional with one that doesn't assume that just because
+    #  p4f is in self.compiledp4s it doesn't need to be compiled - should
+    #  involve a hash of the p4f file in order to detect changes
     if p4f not in self.compiledp4s:
       # need to compile
-      compile_result = self.compile_p4([user, p4f])
-      if 'ERROR' in compile_result:
-        return compile_result
-    self.compiledp4s[p4f]
+      try:
+        self.compiledp4s[p4f] = self.compile_p4([user, p4f])
+      except CompileError as e:
+        return "Compile Error: " + str(e)
+    try:
+      self.users[user].instances[instance] = self.link([user,
+                                                      self.compiledp4s[p4f][0],
+                                                      device,
+                                                      instance])
+    except LinkError as e:
+      return "Link Error: " + str(e)
+
+    return "Loaded " + program + " onto " + device + " as " + instance
 
   def interpret(self, user, instance, rule):
     "Interpret a rule"

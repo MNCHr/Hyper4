@@ -45,7 +45,7 @@ action a_ipv4_csum16(rshift_base) {
 
 table t_checksum {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     extracted.validbits : ternary;
   }
   actions {

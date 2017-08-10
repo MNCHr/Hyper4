@@ -299,6 +299,7 @@ class HP4C:
         self.action_ID[action] = self.actionID
         self.actionID += 1
 
+  """
   def gen_tset_context_entry(self):
     self.commands.append(HP4_Command("table_add",
                                        "tset_context",
@@ -312,6 +313,8 @@ class HP4C:
                                       "a_virt_ports_cleanup",
                                       [],
                                       []))
+  """
+
   """ Analyze a parse control state
       - Examine associated parse state's calls
         - extract calls affect field offsets
@@ -1328,15 +1331,13 @@ class HP4C:
 
     """ Provide a hook for the linker to fill in with context criteria
     """
-    self.gen_tset_context_entry()
+    # self.gen_tset_context_entry()
 
     """ TODO: Move to controller
         Creates default rule resetting virtual networking metadata
     """
-    self.gen_tset_virtnet_entry()
+    # self.gen_tset_virtnet_entry()
 
-    """ 
-    """
     self.gen_tset_parse_control_entries()
 
     self.gen_tset_parse_select_entries()

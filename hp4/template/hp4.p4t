@@ -21,23 +21,40 @@ metadata csum_t csum;
 metadata intrinsic_metadata_t intrinsic_metadata;
 [+ endtarget +]
 
-action a_handle_egress_virt(port) {
+action virt_fwd(port) {
   modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
   modify_field(meta_ctrl.virt_egress_port, port);
 }
 
-action a_handle_egress_phys(port) {
+action phys_fwd(port) {
   modify_field(standard_metadata.egress_spec, port);
 }
 
-table thp4_handle_egress {
+action virt_mcast(mcast_grp) {
+  modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
+  modify_field(meta_ctrl.vmcast_grp_id, mcast_grp);
+}
+
+action phys_mcast(mcast_grp) {
+  // TODO
+  // make sure to handle bmv2 vs other targets
+}
+
+action mixed_mcast(mcast_grp) {
+  // TODO
+}
+
+table t_virtnet {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     standard_metadata.egress_spec : exact;
   }
   actions {
-    a_handle_egress_virt;
-    a_handle_egress_phys;
+    virt_fwd;
+    phys_fwd;
+    virt_mcast;
+    phys_mcast;
+    mixed_mcast;
     _no_op;
   }
 }
@@ -51,13 +68,13 @@ control ingress {
       stage[+X+](); // stages.p4
     }
     [+ endsloop +]
-    apply(thp4_handle_egress);
+    apply(t_virtnet);
   }
 }
 
 table thp4_egress_filter_case1 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
   }
   actions {
     _no_op;
@@ -67,7 +84,7 @@ table thp4_egress_filter_case1 {
 
 table thp4_egress_filter_case2 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
   }
   actions {
     _no_op;
@@ -76,19 +93,19 @@ table thp4_egress_filter_case2 {
 }
 
 field_list fl_virtnet {
-  meta_ctrl.program;
+  meta_ctrl.vdev_ID;
   meta_ctrl.virt_egress_port;
   standard_metadata;
 }
 
-action a_virtnet_forward(next_prog) {
-  modify_field(meta_ctrl.program, next_prog);
+action a_virtnet_forward(next_vdev) {
+  modify_field(meta_ctrl.vdev_ID, next_vdev);
   recirculate(fl_virtnet);
 }
 
 table thp4_out_virtnet {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_ctrl.virt_egress_port : exact;
   }
   actions {

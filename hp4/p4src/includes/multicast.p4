@@ -21,7 +21,7 @@ action a_multicast(grp_id, highport) {
 
 table t_multicast_11 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -32,7 +32,7 @@ table t_multicast_11 {
 
 table t_multicast_12 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -43,7 +43,7 @@ table t_multicast_12 {
 
 table t_multicast_13 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -54,7 +54,7 @@ table t_multicast_13 {
 
 table t_multicast_14 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -65,7 +65,7 @@ table t_multicast_14 {
 
 table t_multicast_15 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -76,7 +76,7 @@ table t_multicast_15 {
 
 table t_multicast_16 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -87,7 +87,7 @@ table t_multicast_16 {
 
 table t_multicast_17 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -98,7 +98,7 @@ table t_multicast_17 {
 
 table t_multicast_18 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -109,7 +109,7 @@ table t_multicast_18 {
 
 table t_multicast_19 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -120,7 +120,7 @@ table t_multicast_19 {
 
 table t_multicast_21 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -131,7 +131,7 @@ table t_multicast_21 {
 
 table t_multicast_22 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -142,7 +142,7 @@ table t_multicast_22 {
 
 table t_multicast_23 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -153,7 +153,7 @@ table t_multicast_23 {
 
 table t_multicast_24 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -164,7 +164,7 @@ table t_multicast_24 {
 
 table t_multicast_25 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -175,7 +175,7 @@ table t_multicast_25 {
 
 table t_multicast_26 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -186,7 +186,7 @@ table t_multicast_26 {
 
 table t_multicast_27 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -197,7 +197,7 @@ table t_multicast_27 {
 
 table t_multicast_28 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -208,7 +208,7 @@ table t_multicast_28 {
 
 table t_multicast_29 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -219,7 +219,7 @@ table t_multicast_29 {
 
 table t_multicast_31 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -230,7 +230,7 @@ table t_multicast_31 {
 
 table t_multicast_32 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -241,7 +241,7 @@ table t_multicast_32 {
 
 table t_multicast_33 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -252,7 +252,7 @@ table t_multicast_33 {
 
 table t_multicast_34 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -263,7 +263,7 @@ table t_multicast_34 {
 
 table t_multicast_35 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -274,7 +274,7 @@ table t_multicast_35 {
 
 table t_multicast_36 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -285,7 +285,7 @@ table t_multicast_36 {
 
 table t_multicast_37 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -296,7 +296,7 @@ table t_multicast_37 {
 
 table t_multicast_38 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -307,7 +307,7 @@ table t_multicast_38 {
 
 table t_multicast_39 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -318,7 +318,7 @@ table t_multicast_39 {
 
 table t_multicast_41 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -329,7 +329,7 @@ table t_multicast_41 {
 
 table t_multicast_42 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -340,7 +340,7 @@ table t_multicast_42 {
 
 table t_multicast_43 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -351,7 +351,7 @@ table t_multicast_43 {
 
 table t_multicast_44 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -362,7 +362,7 @@ table t_multicast_44 {
 
 table t_multicast_45 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -373,7 +373,7 @@ table t_multicast_45 {
 
 table t_multicast_46 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -384,7 +384,7 @@ table t_multicast_46 {
 
 table t_multicast_47 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -395,7 +395,7 @@ table t_multicast_47 {
 
 table t_multicast_48 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -406,304 +406,7 @@ table t_multicast_48 {
 
 table t_multicast_49 {
   reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_51 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_52 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_53 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_54 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_55 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_56 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_57 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_58 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_59 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_61 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_62 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_63 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_64 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_65 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_66 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_67 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_68 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_69 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_71 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_72 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_73 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_74 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_75 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_76 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_77 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_78 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_multicast;
-  }
-}
-
-table t_multicast_79 {
-  reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -854,112 +557,4 @@ control do_multicast_48 {
 
 control do_multicast_49 {
   apply(t_multicast_49);
-}
-
-control do_multicast_51 {
-  apply(t_multicast_51);
-}
-
-control do_multicast_52 {
-  apply(t_multicast_52);
-}
-
-control do_multicast_53 {
-  apply(t_multicast_53);
-}
-
-control do_multicast_54 {
-  apply(t_multicast_54);
-}
-
-control do_multicast_55 {
-  apply(t_multicast_55);
-}
-
-control do_multicast_56 {
-  apply(t_multicast_56);
-}
-
-control do_multicast_57 {
-  apply(t_multicast_57);
-}
-
-control do_multicast_58 {
-  apply(t_multicast_58);
-}
-
-control do_multicast_59 {
-  apply(t_multicast_59);
-}
-
-control do_multicast_61 {
-  apply(t_multicast_61);
-}
-
-control do_multicast_62 {
-  apply(t_multicast_62);
-}
-
-control do_multicast_63 {
-  apply(t_multicast_63);
-}
-
-control do_multicast_64 {
-  apply(t_multicast_64);
-}
-
-control do_multicast_65 {
-  apply(t_multicast_65);
-}
-
-control do_multicast_66 {
-  apply(t_multicast_66);
-}
-
-control do_multicast_67 {
-  apply(t_multicast_67);
-}
-
-control do_multicast_68 {
-  apply(t_multicast_68);
-}
-
-control do_multicast_69 {
-  apply(t_multicast_69);
-}
-
-control do_multicast_71 {
-  apply(t_multicast_71);
-}
-
-control do_multicast_72 {
-  apply(t_multicast_72);
-}
-
-control do_multicast_73 {
-  apply(t_multicast_73);
-}
-
-control do_multicast_74 {
-  apply(t_multicast_74);
-}
-
-control do_multicast_75 {
-  apply(t_multicast_75);
-}
-
-control do_multicast_76 {
-  apply(t_multicast_76);
-}
-
-control do_multicast_77 {
-  apply(t_multicast_77);
-}
-
-control do_multicast_78 {
-  apply(t_multicast_78);
-}
-
-control do_multicast_79 {
-  apply(t_multicast_79);
 }

@@ -17,7 +17,7 @@ action a_addh(sz, offset, msk, vbits) {
 
 table t_addh_11 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -28,7 +28,7 @@ table t_addh_11 {
 
 table t_addh_12 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -39,7 +39,7 @@ table t_addh_12 {
 
 table t_addh_13 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -50,7 +50,7 @@ table t_addh_13 {
 
 table t_addh_14 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -61,7 +61,7 @@ table t_addh_14 {
 
 table t_addh_15 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -72,7 +72,7 @@ table t_addh_15 {
 
 table t_addh_16 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -83,7 +83,7 @@ table t_addh_16 {
 
 table t_addh_17 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -94,7 +94,7 @@ table t_addh_17 {
 
 table t_addh_18 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -105,7 +105,7 @@ table t_addh_18 {
 
 table t_addh_19 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -116,7 +116,7 @@ table t_addh_19 {
 
 table t_addh_21 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -127,7 +127,7 @@ table t_addh_21 {
 
 table t_addh_22 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -138,7 +138,7 @@ table t_addh_22 {
 
 table t_addh_23 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -149,7 +149,7 @@ table t_addh_23 {
 
 table t_addh_24 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -160,7 +160,7 @@ table t_addh_24 {
 
 table t_addh_25 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -171,7 +171,7 @@ table t_addh_25 {
 
 table t_addh_26 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -182,7 +182,7 @@ table t_addh_26 {
 
 table t_addh_27 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -193,7 +193,7 @@ table t_addh_27 {
 
 table t_addh_28 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -204,7 +204,7 @@ table t_addh_28 {
 
 table t_addh_29 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -215,7 +215,7 @@ table t_addh_29 {
 
 table t_addh_31 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -226,7 +226,7 @@ table t_addh_31 {
 
 table t_addh_32 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -237,7 +237,7 @@ table t_addh_32 {
 
 table t_addh_33 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -248,7 +248,7 @@ table t_addh_33 {
 
 table t_addh_34 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -259,7 +259,7 @@ table t_addh_34 {
 
 table t_addh_35 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -270,7 +270,7 @@ table t_addh_35 {
 
 table t_addh_36 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -281,7 +281,7 @@ table t_addh_36 {
 
 table t_addh_37 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -292,7 +292,7 @@ table t_addh_37 {
 
 table t_addh_38 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -303,7 +303,7 @@ table t_addh_38 {
 
 table t_addh_39 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -314,7 +314,7 @@ table t_addh_39 {
 
 table t_addh_41 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -325,7 +325,7 @@ table t_addh_41 {
 
 table t_addh_42 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -336,7 +336,7 @@ table t_addh_42 {
 
 table t_addh_43 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -347,7 +347,7 @@ table t_addh_43 {
 
 table t_addh_44 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -358,7 +358,7 @@ table t_addh_44 {
 
 table t_addh_45 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -369,7 +369,7 @@ table t_addh_45 {
 
 table t_addh_46 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -380,7 +380,7 @@ table t_addh_46 {
 
 table t_addh_47 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -391,7 +391,7 @@ table t_addh_47 {
 
 table t_addh_48 {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -402,304 +402,7 @@ table t_addh_48 {
 
 table t_addh_49 {
   reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_51 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_52 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_53 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_54 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_55 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_56 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_57 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_58 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_59 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_61 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_62 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_63 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_64 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_65 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_66 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_67 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_68 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_69 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_71 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_72 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_73 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_74 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_75 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_76 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_77 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_78 {
-  reads {
-    meta_ctrl.program : exact;
-    meta_primitive_state.action_ID : exact;
-    meta_primitive_state.match_ID : ternary;
-  }
-  actions {
-    a_addh;
-  }
-}
-
-table t_addh_79 {
-  reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -850,112 +553,4 @@ control do_add_header_48 {
 
 control do_add_header_49 {
   apply(t_addh_49);
-}
-
-control do_add_header_51 {
-  apply(t_addh_51);
-}
-
-control do_add_header_52 {
-  apply(t_addh_52);
-}
-
-control do_add_header_53 {
-  apply(t_addh_53);
-}
-
-control do_add_header_54 {
-  apply(t_addh_54);
-}
-
-control do_add_header_55 {
-  apply(t_addh_55);
-}
-
-control do_add_header_56 {
-  apply(t_addh_56);
-}
-
-control do_add_header_57 {
-  apply(t_addh_57);
-}
-
-control do_add_header_58 {
-  apply(t_addh_58);
-}
-
-control do_add_header_59 {
-  apply(t_addh_59);
-}
-
-control do_add_header_61 {
-  apply(t_addh_61);
-}
-
-control do_add_header_62 {
-  apply(t_addh_62);
-}
-
-control do_add_header_63 {
-  apply(t_addh_63);
-}
-
-control do_add_header_64 {
-  apply(t_addh_64);
-}
-
-control do_add_header_65 {
-  apply(t_addh_65);
-}
-
-control do_add_header_66 {
-  apply(t_addh_66);
-}
-
-control do_add_header_67 {
-  apply(t_addh_67);
-}
-
-control do_add_header_68 {
-  apply(t_addh_68);
-}
-
-control do_add_header_69 {
-  apply(t_addh_69);
-}
-
-control do_add_header_71 {
-  apply(t_addh_71);
-}
-
-control do_add_header_72 {
-  apply(t_addh_72);
-}
-
-control do_add_header_73 {
-  apply(t_addh_73);
-}
-
-control do_add_header_74 {
-  apply(t_addh_74);
-}
-
-control do_add_header_75 {
-  apply(t_addh_75);
-}
-
-control do_add_header_76 {
-  apply(t_addh_76);
-}
-
-control do_add_header_77 {
-  apply(t_addh_77);
-}
-
-control do_add_header_78 {
-  apply(t_addh_78);
-}
-
-control do_add_header_79 {
-  apply(t_addh_79);
 }

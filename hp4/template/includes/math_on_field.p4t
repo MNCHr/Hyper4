@@ -24,7 +24,7 @@ action a_subff_extracted_const_u(leftshift, val) {
 [+ dloop +]
 table t_math_on_field_[+X+][+Y+] {
   reads {
-    meta_ctrl.program : exact;
+    meta_ctrl.vdev_ID : exact;
     meta_primitive_state.subtype : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
