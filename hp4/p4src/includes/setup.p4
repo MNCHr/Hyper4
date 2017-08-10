@@ -170,9 +170,9 @@ table tset_pr_80_99 {
   }
 }
 
-action a_set_context(program) {
-  modify_field(meta_ctrl.vdev_ID, program);
-  modify_field(meta_ctrl.virt_ingress_port, standard_metadata.ingress_port);
+action a_set_context(vdev_ID, vingress) {
+  modify_field(meta_ctrl.vdev_ID, vdev_ID);
+  modify_field(meta_ctrl.virt_ingress_port, vingress);
 }
 
 table tset_context {
@@ -465,13 +465,15 @@ table tset_pipeline_config {
 }
 
 action a_virt_ports_cleanup() {
-  modify_field(meta_ctrl.virt_ingress_port, meta_ctrl.virt_egress_port);
-  modify_field(meta_ctrl.virt_egress_port, 0);
+  //modify_field(meta_ctrl.virt_ingress_port, meta_ctrl.virt_egress_port);
+  //modify_field(meta_ctrl.virt_egress_port, 0);
+  modify_field(meta_ctrl.vdev_ID, meta.next_vdev_ID);
+  modify_field(meta_ctrl.next_vdev_ID, 0);
 }
 
-table tset_in_virtnet {
+table update_vdev_ID {
   actions {
-    a_virt_ports_cleanup;
+    a_update_vdev_ID;
   }
 }
 
@@ -488,14 +490,22 @@ table tset_recirc {
 
 // ------ Setup
 control setup {
-  if (meta_ctrl.stage == INIT) {
-    if (meta_ctrl.vdev_ID == 0) {
-      apply(tset_context);
-    }
-    if (meta_ctrl.virt_egress_port > 0) {
-      apply(tset_in_virtnet);
-    }
+  //if (meta_ctrl.stage == INIT) {
+  //  if (meta_ctrl.vdev_ID == 0) {
+  //    apply(tset_context);
+  //  }
+  //  if (meta_ctrl.virt_egress_port > 0) {
+  //    apply(tset_in_virtnet);
+  //  }
+  //}
+
+  if (meta_ctrl.vdev_ID == 0) {
+    apply(tset_context);
   }
+  else if (meta_ctrl.stage == INIT) {
+    apply(update_vdev_ID);
+  }
+
   apply(tset_parse_control);
   if(parse_ctrl.next_action == PARSE_SELECT_SEB) {
     apply(tset_parse_select_SEB);

@@ -27,41 +27,29 @@ metadata csum_t csum;
 
 metadata intrinsic_metadata_t intrinsic_metadata;
 
-action virt_fwd(port) {
+action do_phys_fwd_only(spec) {
+  modify_field(standard_metadata.egress_spec, spec);
+}
+
+action do_phys_mcast(mcast_grp) {
+  modify_field(intrinsic_metadata.mcast_grp, mcast_grp);
+}
+
+action do_virt_fwd() {
   modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
-  modify_field(meta_ctrl.virt_egress_port, port);
-}
-
-action phys_fwd(port) {
-  modify_field(standard_metadata.egress_spec, port);
-}
-
-action virt_mcast(mcast_grp) {
-  modify_field(standard_metadata.egress_spec, standard_metadata.ingress_port);
-  modify_field(meta_ctrl.vmcast_grp_id, mcast_grp);
-}
-
-action phys_mcast(mcast_grp) {
-  // TODO
-  // make sure to handle bmv2 vs other targets
-}
-
-action mixed_mcast(mcast_grp) {
-  // TODO
+  modify_field(meta_ctrl.virt_fwd_flag, 1);
 }
 
 table t_virtnet {
   reads {
-    meta_ctrl.vdev_ID : exact;
-    standard_metadata.egress_spec : exact;
+    meta.vdev_ID : exact;
+    meta.virt_egress_spec : exact;
   }
   actions {
-    virt_fwd;
-    phys_fwd;
-    virt_mcast;
-    phys_mcast;
-    mixed_mcast;
-    _no_op;
+    a_drop;
+    do_phys_fwd_only;
+    do_phys_mcast;
+    do_virt_fwd;
   }
 }
 
@@ -88,62 +76,125 @@ control ingress {
   }
 }
 
-table thp4_egress_filter_case1 {
-  reads {
-    meta_ctrl.vdev_ID : exact;
-  }
-  actions {
-    _no_op;
-    a_drop;
-  }
-}
+//table thp4_egress_filter_case1 {
+//  reads {
+//    meta_ctrl.vdev_ID : exact;
+//  }
+//  actions {
+//    _no_op;
+//    a_drop;
+//  }
+//}
 
-table thp4_egress_filter_case2 {
-  reads {
-    meta_ctrl.vdev_ID : exact;
-  }
-  actions {
-    _no_op;
-    a_drop;
-  }
-}
+//table thp4_egress_filter_case2 {
+//  reads {
+//    meta_ctrl.vdev_ID : exact;
+//  }
+//  actions {
+//    _no_op;
+//    a_drop;
+//  }
+//}
 
-field_list fl_virtnet {
-  meta_ctrl.vdev_ID;
-  meta_ctrl.virt_egress_port;
+//field_list fl_virtnet {
+//  meta_ctrl.vdev_ID;
+//  meta_ctrl.virt_egress_port;
+//  standard_metadata;
+//}
+
+//action a_virtnet_forward(next_vdev) {
+//  modify_field(meta_ctrl.vdev_ID, next_vdev);
+//  recirculate(fl_virtnet);
+//}
+
+//table thp4_out_virtnet {
+//  reads {
+//    meta_ctrl.vdev_ID : exact;
+//    meta_ctrl.virt_egress_port : exact;
+//  }
+//  actions {
+//    _no_op;
+//    a_virtnet_forward;
+//  }
+//}
+
+field_list fl_recirc {
   standard_metadata;
+  meta_ctrl.vdev_ID;
+  meta_ctrl.next_vdev_ID;
+  meta_ctrl.virt_ingress_port;
 }
 
-action a_virtnet_forward(next_vdev) {
-  modify_field(meta_ctrl.vdev_ID, next_vdev);
-  recirculate(fl_virtnet);
+field list fl_clone {
+  standard_metadata;
+  meta_ctrl.vdev_ID;
+  meta_ctrl.next_vdev_ID;
+  meta_ctrl.virt_ingress_port;
+  meta_ctrl.virt_egress_spec;
+  meta_ctrl.virt_fwd_flag;
 }
 
-table thp4_out_virtnet {
+action vfwd(vdev_ID, vingress) {
+  modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
+  modify_field(meta_ctrl.virt_ingress_port, vingress);
+  recirculate(fl_recirc);
+}
+
+action vmcast(vdev_ID, vingress) {
+  modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
+  modify_field(meta_ctrl.virt_ingress_port, vingress);
+  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_egress_spec + 1);
+  recirculate(fl_recirc);
+  clone_egress_pkt_to_egress(standard_metadata.egress_port, fl_clone);
+}
+
+action vmcast_phys(vdev_ID, vingress, phys_spec) {
+  modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
+  modify_field(meta_ctrl.virt_ingress_port, vingress);
+  modify_field(meta.virt_egress_spec, meta.virt_egress_spec + 1);
+  recirculate(fl_recirc);
+  clone_egress_pkt_to_egress(phys_spec, fl_clone);
+}
+
+action pmcast(phys_spec) {
+  modify_field(meta_ctrl.virt_egress_spec, meta.virt_egress_spec + 1);
+  clone_egress_pkt_to_egress(phys_spec, fl_clone);
+}
+
+table t_egr_virtnet {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_ctrl.virt_egress_port : exact;
+    meta_ctrl.virt_egress_spec : exact;
   }
   actions {
-    _no_op;
-    a_virtnet_forward;
+    vfwd;
+    vmcast;
+    vmcast_phys;
+    pmcast;
+    a_drop;
   }
 }
 
 control egress {
   // egress filtering, recirculation
-  if(standard_metadata.egress_port == standard_metadata.ingress_port) {
-    if(meta_ctrl.virt_egress_port == 0) {
-      apply(thp4_egress_filter_case1);
-    }
-    else {
-      apply(thp4_out_virtnet);
-    }
+  //if(standard_metadata.egress_port == standard_metadata.ingress_port) {
+  //  if(meta_ctrl.virt_egress_port == 0) {
+  //    apply(thp4_egress_filter_case1);
+  //  }
+  //  else {
+  //    apply(thp4_out_virtnet);
+  //  }
+  //}
+  //if(meta_ctrl.virt_egress_port == meta_ctrl.virt_ingress_port) {
+  //  if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
+  //    apply(thp4_egress_filter_case2);
+  //  }
+  //}
+  if(meta_ctrl.virt_fwd_flag == 1) {
+    apply(t_egr_virtnet); // recirculate, maybe clone_e2e
   }
-  if(meta_ctrl.virt_egress_port == meta_ctrl.virt_ingress_port) {
-    if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
-      apply(thp4_egress_filter_case2);
-    }
+  else if(standard_metadata.egress_port == standard_metadata.ingress_port) {
+    apply(egress_filter);
   }
 
   apply(t_checksum);          // checksums.p4
