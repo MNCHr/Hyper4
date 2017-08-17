@@ -299,22 +299,6 @@ class HP4C:
         self.action_ID[action] = self.actionID
         self.actionID += 1
 
-  """
-  def gen_tset_context_entry(self):
-    self.commands.append(HP4_Command("table_add",
-                                       "tset_context",
-                                       "a_set_context",
-                                       ["[PPORT]"],
-                                       ["[program ID]"]))
-
-  def gen_tset_virtnet_entry(self):
-    self.commands.append(HP4_Command("table_set_default",
-                                      "tset_in_virtnet",
-                                      "a_virt_ports_cleanup",
-                                      [],
-                                      []))
-  """
-
   """ Analyze a parse control state
       - Examine associated parse state's calls
         - extract calls affect field offsets
@@ -468,7 +452,7 @@ class HP4C:
         # change values[i]
         if width > 0:
           value = value % (1 << width)
-    ret = ['[program ID]', str(pc_state)]
+    ret = ['[vdev ID]', str(pc_state)]
     for mparam in mparams:
       ret.append(str(mparam))
     return ret
@@ -598,18 +582,18 @@ class HP4C:
           self.commands.append(HP4_Command("table_add",
                                            "tset_parse_control",
                                            "extract_more",
-                                           ["[program ID]", "0"],
+                                           ["[vdev ID]", "0"],
                                            [str(self.pc_bits_extracted[0]), "1"]))
           self.commands.append(HP4_Command("table_add",
                                            "tset_parse_control",
                                            "set_next_action",
-                                           ["[program ID]", "1"],
+                                           ["[vdev ID]", "1"],
                                            [self.pc_action[0], "1"]))
         else:
           self.commands.append(HP4_Command("table_add",
                                            "tset_parse_control",
                                            "set_next_action",
-                                           ["[program ID]", "0"],
+                                           ["[vdev ID]", "0"],
                                            [self.pc_action[0], "1"]))
           self.pc_bits_extracted[0] = self.args.seb * 8
 
@@ -621,7 +605,7 @@ class HP4C:
         self.commands.append(HP4_Command("table_add",
                                          "tset_parse_control",
                                          "set_next_action",
-                                         ["[program ID]", str(key)],
+                                         ["[vdev ID]", str(key)],
                                          [self.pc_action[key], str(key)]))
 
   def gen_tset_parse_select_entries(self):
@@ -635,36 +619,6 @@ class HP4C:
           print("TODO: support direct jump to new parse node without extracting more")
           exit()
       self.commands.append(t)
-
-  # this activity now handled by dpmu, and anyway there was little point to
-  #  calculating which default table entries to generate
-  """
-  def gen_tset_pr_entries(self):
-    # table_set_default <table name> <action name> <action parameters>
-    self.commands.append(HP4_Command("table_set_default",
-                                     "tset_pr_SEB",
-                                     "a_pr_import_SEB",
-                                     [],
-                                     []))
-
-    # 1) identify highest byte range extracted anywhere in the parse tree
-    # 2) for SEB and all later byte ranges up to and including the one identified
-    #    in step 1, generate default table entry
-    max_extracted = int(math.ceil(max(self.pc_bits_extracted.values()) / 8.0))
-    bound = self.args.seb
-    while bound < max_extracted:
-      if bound >= 100:
-        print("ERROR: unsupported max extraction of %i bytes" % max_extracted)
-        exit()
-      tablename = 'tset_pr_' + str(bound) + '_' + str(bound + 19)
-      action = 'a_pr_import_' + str(bound) + '_' + str(bound + 19)
-      self.commands.append(HP4_Command("table_set_default",
-                                       tablename,
-                                       action,
-                                       [],
-                                       []))
-      bound += 20
-  """
 
   def gen_tset_pipeline_config_entries(self):
     # USEFUL DATA STRUCTURES:
@@ -761,7 +715,7 @@ class HP4C:
         self.commands.append(HP4_Command("table_add",
                                          "tset_pipeline_config",
                                          "a_set_pipeline",
-                                         ['[program ID]', str(pc_state)],
+                                         ['[vdev ID]', str(pc_state)],
                                          [aparam_table_ID, valstr]))
 
   def gen_bitmask(self, fieldwidth, offset, maskwidth):
@@ -801,7 +755,7 @@ class HP4C:
       isternary = False
       tname = str(self.table_to_trep[table])
       aname = 'init_program_state'
-      match_params = ['[program ID]']
+      match_params = ['[vdev ID]']
       if len(table.match_fields) > 1:
         print("Not yet supported: more than 1 match field (table: %s)" % table.name)
         exit()
@@ -946,7 +900,7 @@ class HP4C:
             us_aparams.append('0')
           else:
             us_aparams.append(str(self.table_to_trep[next_table].stage))
-          us_mparams = ['[program ID]']
+          us_mparams = ['[vdev ID]']
           us_mparams.append(str(self.action_ID[action]))
           self.commands.append(HP4_Command("table_add",
                                             us_tname,
@@ -979,7 +933,7 @@ class HP4C:
             us_aparams.append(next_prim_type)
             us_aparams.append(next_prim_subtype)
 
-          us_mparams = ['[program ID]']
+          us_mparams = ['[vdev ID]']
           us_mparams.append(str(self.action_ID[action]))
           if call[0] == 'modify_field':
             aname = mf_prim_subtype_action[call[1]]
@@ -989,7 +943,7 @@ class HP4C:
             aname = gen_prim_subtype_action[call[0]]
           mparams = []
           if call[0] != 'drop':
-            mparams.append('[program ID]')
+            mparams.append('[vdev ID]')
             if call[0] == 'modify_field' or call[0] == 'add_to_field':
               mparams.append( call[1] )
             mparams.append(str(self.action_ID[action]))
@@ -1193,7 +1147,7 @@ class HP4C:
       self.commands.append(HP4_Command("table_add",
                                        "thp4_egress_filter_case1",
                                        "a_drop",
-                                       ['[program ID]'],
+                                       ['[vdev ID]'],
                                        []))
 
     # these should be added by the dpmu server at startup
@@ -1253,7 +1207,7 @@ class HP4C:
                     self.commands.append(HP4_Command("table_add",
                                                       "t_checksum",
                                                       "a_ipv4_csum16",
-                                                      ['[program ID]', '0&&&0'],
+                                                      ['[vdev ID]', '0&&&0'],
                                                       [aparam]))
                 else:
                   if statement[2].op == 'valid':
@@ -1265,7 +1219,7 @@ class HP4C:
                       # TODO: reduce entries by isolating relevant bit
                       for key in self.vbits.keys():
                         if statement[2].right == key[1]:
-                          mparams = ['[program ID]']
+                          mparams = ['[vdev ID]']
                           val = format(self.vbits[key], '#x')
                           mparams.append(val + '&&&' + val)
                           self.commands.append(HP4_Command("table_add",
@@ -1329,23 +1283,12 @@ class HP4C:
     """
     self.collect_actions()
 
-    """ Provide a hook for the linker to fill in with context criteria
-    """
-    # self.gen_tset_context_entry()
-
-    """ TODO: Move to controller
-        Creates default rule resetting virtual networking metadata
-    """
-    # self.gen_tset_virtnet_entry()
-
     self.gen_tset_parse_control_entries()
 
     self.gen_tset_parse_select_entries()
-    # self.gen_tset_pr_entries()
     self.gen_tset_pipeline_config_entries()
     self.gen_tX_templates()
     self.gen_action_entries()
-    # TODO: self.gen_thp4_multicast_entries()
     self.gen_thp4_egress_filter_entries()
     self.gen_t_checksum_entries()
     self.gen_t_resize_pr_entries()

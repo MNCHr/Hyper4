@@ -42,8 +42,8 @@ action do_virt_fwd() {
 
 table t_virtnet {
   reads {
-    meta.vdev_ID : exact;
-    meta.virt_egress_spec : exact;
+    meta_ctrl.vdev_ID : exact;
+    meta_ctrl.virt_egress_spec : exact;
   }
   actions {
     a_drop;
@@ -125,7 +125,7 @@ field_list fl_recirc {
   meta_ctrl.virt_ingress_port;
 }
 
-field list fl_clone {
+field_list fl_clone {
   standard_metadata;
   meta_ctrl.vdev_ID;
   meta_ctrl.next_vdev_ID;
@@ -151,13 +151,13 @@ action vmcast(vdev_ID, vingress) {
 action vmcast_phys(vdev_ID, vingress, phys_spec) {
   modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
   modify_field(meta_ctrl.virt_ingress_port, vingress);
-  modify_field(meta.virt_egress_spec, meta.virt_egress_spec + 1);
+  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_egress_spec + 1);
   recirculate(fl_recirc);
   clone_egress_pkt_to_egress(phys_spec, fl_clone);
 }
 
 action pmcast(phys_spec) {
-  modify_field(meta_ctrl.virt_egress_spec, meta.virt_egress_spec + 1);
+  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_egress_spec + 1);
   clone_egress_pkt_to_egress(phys_spec, fl_clone);
 }
 
@@ -174,6 +174,8 @@ table t_egr_virtnet {
     a_drop;
   }
 }
+
+table egress_filter { actions { a_drop; } }
 
 control egress {
   // egress filtering, recirculation

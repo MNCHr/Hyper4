@@ -464,10 +464,10 @@ table tset_pipeline_config {
   }
 }
 
-action a_virt_ports_cleanup() {
+action a_update_vdev_ID() {
   //modify_field(meta_ctrl.virt_ingress_port, meta_ctrl.virt_egress_port);
   //modify_field(meta_ctrl.virt_egress_port, 0);
-  modify_field(meta_ctrl.vdev_ID, meta.next_vdev_ID);
+  modify_field(meta_ctrl.vdev_ID, meta_ctrl.next_vdev_ID);
   modify_field(meta_ctrl.next_vdev_ID, 0);
 }
 

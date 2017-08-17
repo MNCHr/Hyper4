@@ -25,7 +25,7 @@ f_c = open(args.output, 'w')
 sr = {}
 
 # TODO: read defines.p4 directly
-sr['[program ID]'] = args.progID
+sr['[vdev ID]'] = args.progID
 sr['[VIRT_PORT_0]'] = args.virt_ports[0]
 sr['[VIRT_PORT_1]'] = args.virt_ports[1]
 sr['[VIRT_PORT_2]'] = args.virt_ports[2]
