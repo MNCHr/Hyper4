@@ -569,6 +569,141 @@ table t_math_on_field_49 {
   }
 }
 
+table t_math_on_field_51 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_52 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_53 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_54 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_55 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_56 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_57 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_58 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
+table t_math_on_field_59 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_add2f_extracted_const_s;
+    a_add2f_extracted_const_u;
+    a_subff_extracted_const_s;
+    a_subff_extracted_const_u;
+  }
+}
+
 control do_math_on_field_11 {
   apply(t_math_on_field_11);
 }
@@ -711,4 +846,40 @@ control do_math_on_field_48 {
 
 control do_math_on_field_49 {
   apply(t_math_on_field_49);
+}
+
+control do_math_on_field_51 {
+  apply(t_math_on_field_51);
+}
+
+control do_math_on_field_52 {
+  apply(t_math_on_field_52);
+}
+
+control do_math_on_field_53 {
+  apply(t_math_on_field_53);
+}
+
+control do_math_on_field_54 {
+  apply(t_math_on_field_54);
+}
+
+control do_math_on_field_55 {
+  apply(t_math_on_field_55);
+}
+
+control do_math_on_field_56 {
+  apply(t_math_on_field_56);
+}
+
+control do_math_on_field_57 {
+  apply(t_math_on_field_57);
+}
+
+control do_math_on_field_58 {
+  apply(t_math_on_field_58);
+}
+
+control do_math_on_field_59 {
+  apply(t_math_on_field_59);
 }

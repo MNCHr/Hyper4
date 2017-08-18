@@ -411,6 +411,105 @@ table t_addh_49 {
   }
 }
 
+table t_addh_51 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_52 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_53 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_54 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_55 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_56 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_57 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_58 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
+table t_addh_59 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    a_addh;
+  }
+}
+
 control do_add_header_11 {
   apply(t_addh_11);
 }
@@ -553,4 +652,40 @@ control do_add_header_48 {
 
 control do_add_header_49 {
   apply(t_addh_49);
+}
+
+control do_add_header_51 {
+  apply(t_addh_51);
+}
+
+control do_add_header_52 {
+  apply(t_addh_52);
+}
+
+control do_add_header_53 {
+  apply(t_addh_53);
+}
+
+control do_add_header_54 {
+  apply(t_addh_54);
+}
+
+control do_add_header_55 {
+  apply(t_addh_55);
+}
+
+control do_add_header_56 {
+  apply(t_addh_56);
+}
+
+control do_add_header_57 {
+  apply(t_addh_57);
+}
+
+control do_add_header_58 {
+  apply(t_addh_58);
+}
+
+control do_add_header_59 {
+  apply(t_addh_59);
 }

@@ -72,6 +72,10 @@ control ingress {
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) {
       stage4(); // stages.p4
     }
+
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) {
+      stage5(); // stages.p4
+    }
     apply(t_virtnet);
   }
 }
