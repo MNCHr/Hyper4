@@ -434,11 +434,12 @@ table tset_parse_select_90_99 {
   }
 }
 
-action a_set_pipeline(tableID, val) {
+action a_set_pipeline(tableID, val, econd) {
   modify_field(meta_ctrl.next_table, tableID);
   modify_field(meta_ctrl.stage, NORM);
   modify_field(meta_ctrl.next_stage, 1);
   modify_field(extracted.validbits, val);
+  modify_field(meta_ctrl.econd, econd);
 }
 
 table tset_pipeline_config {

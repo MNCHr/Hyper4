@@ -54,6 +54,7 @@ header_type meta_ctrl_t {
     virt_ingress_port : 8;
     clone_program : 8;
     virt_fwd_flag : 8;
+    econd : 1; // whether egress handling mode is 'conditional'
   }
 }
 

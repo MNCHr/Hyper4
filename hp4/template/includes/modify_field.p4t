@@ -110,6 +110,7 @@ table t_mod_[+X+][+Y+] {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     [+ target bmv2-ss +]
     mod_intmeta_mcast_grp_const;
     [+ endtarget +]
@@ -119,6 +120,14 @@ table t_mod_[+X+][+Y+] {
 
 [+ dloop +]
 control do_modify_field_[+X+][+Y+] {
-  apply(t_mod_[+X+][+Y+]);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_[+X+][+Y+]);
+  }
 }
+
 [+ enddloop +]

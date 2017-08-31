@@ -117,6 +117,7 @@ table t_mod_11 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -143,6 +144,7 @@ table t_mod_12 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -169,6 +171,7 @@ table t_mod_13 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -195,6 +198,7 @@ table t_mod_14 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -221,6 +225,7 @@ table t_mod_15 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -247,6 +252,7 @@ table t_mod_16 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -273,6 +279,7 @@ table t_mod_17 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -299,6 +306,7 @@ table t_mod_18 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -325,6 +333,7 @@ table t_mod_19 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -351,6 +360,7 @@ table t_mod_21 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -377,6 +387,7 @@ table t_mod_22 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -403,6 +414,7 @@ table t_mod_23 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -429,6 +441,7 @@ table t_mod_24 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -455,6 +468,7 @@ table t_mod_25 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -481,6 +495,7 @@ table t_mod_26 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -507,6 +522,7 @@ table t_mod_27 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -533,6 +549,7 @@ table t_mod_28 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -559,6 +576,7 @@ table t_mod_29 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -585,6 +603,7 @@ table t_mod_31 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -611,6 +630,7 @@ table t_mod_32 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -637,6 +657,7 @@ table t_mod_33 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -663,6 +684,7 @@ table t_mod_34 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -689,6 +711,7 @@ table t_mod_35 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -715,6 +738,7 @@ table t_mod_36 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -741,6 +765,7 @@ table t_mod_37 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -767,6 +792,7 @@ table t_mod_38 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -793,6 +819,7 @@ table t_mod_39 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -819,6 +846,7 @@ table t_mod_41 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -845,6 +873,7 @@ table t_mod_42 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -871,6 +900,7 @@ table t_mod_43 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -897,6 +927,7 @@ table t_mod_44 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -923,6 +954,7 @@ table t_mod_45 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -949,6 +981,7 @@ table t_mod_46 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -975,6 +1008,7 @@ table t_mod_47 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1001,6 +1035,7 @@ table t_mod_48 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1027,6 +1062,7 @@ table t_mod_49 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1053,6 +1089,7 @@ table t_mod_51 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1079,6 +1116,7 @@ table t_mod_52 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1105,6 +1143,7 @@ table t_mod_53 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1131,6 +1170,7 @@ table t_mod_54 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1157,6 +1197,7 @@ table t_mod_55 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1183,6 +1224,7 @@ table t_mod_56 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1209,6 +1251,7 @@ table t_mod_57 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1235,6 +1278,7 @@ table t_mod_58 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
@@ -1261,187 +1305,548 @@ table t_mod_59 {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    _no_op;
     mod_intmeta_mcast_grp_const;
   }
 }
 
 control do_modify_field_11 {
-  apply(t_mod_11);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_11);
+  }
 }
+
 
 control do_modify_field_12 {
-  apply(t_mod_12);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_12);
+  }
 }
+
 
 control do_modify_field_13 {
-  apply(t_mod_13);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_13);
+  }
 }
+
 
 control do_modify_field_14 {
-  apply(t_mod_14);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_14);
+  }
 }
+
 
 control do_modify_field_15 {
-  apply(t_mod_15);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_15);
+  }
 }
+
 
 control do_modify_field_16 {
-  apply(t_mod_16);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_16);
+  }
 }
+
 
 control do_modify_field_17 {
-  apply(t_mod_17);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_17);
+  }
 }
+
 
 control do_modify_field_18 {
-  apply(t_mod_18);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_18);
+  }
 }
+
 
 control do_modify_field_19 {
-  apply(t_mod_19);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_19);
+  }
 }
+
 
 control do_modify_field_21 {
-  apply(t_mod_21);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_21);
+  }
 }
+
 
 control do_modify_field_22 {
-  apply(t_mod_22);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_22);
+  }
 }
+
 
 control do_modify_field_23 {
-  apply(t_mod_23);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_23);
+  }
 }
+
 
 control do_modify_field_24 {
-  apply(t_mod_24);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_24);
+  }
 }
+
 
 control do_modify_field_25 {
-  apply(t_mod_25);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_25);
+  }
 }
+
 
 control do_modify_field_26 {
-  apply(t_mod_26);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_26);
+  }
 }
+
 
 control do_modify_field_27 {
-  apply(t_mod_27);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_27);
+  }
 }
+
 
 control do_modify_field_28 {
-  apply(t_mod_28);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_28);
+  }
 }
+
 
 control do_modify_field_29 {
-  apply(t_mod_29);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_29);
+  }
 }
+
 
 control do_modify_field_31 {
-  apply(t_mod_31);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_31);
+  }
 }
+
 
 control do_modify_field_32 {
-  apply(t_mod_32);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_32);
+  }
 }
+
 
 control do_modify_field_33 {
-  apply(t_mod_33);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_33);
+  }
 }
+
 
 control do_modify_field_34 {
-  apply(t_mod_34);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_34);
+  }
 }
+
 
 control do_modify_field_35 {
-  apply(t_mod_35);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_35);
+  }
 }
+
 
 control do_modify_field_36 {
-  apply(t_mod_36);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_36);
+  }
 }
+
 
 control do_modify_field_37 {
-  apply(t_mod_37);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_37);
+  }
 }
+
 
 control do_modify_field_38 {
-  apply(t_mod_38);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_38);
+  }
 }
+
 
 control do_modify_field_39 {
-  apply(t_mod_39);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_39);
+  }
 }
+
 
 control do_modify_field_41 {
-  apply(t_mod_41);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_41);
+  }
 }
+
 
 control do_modify_field_42 {
-  apply(t_mod_42);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_42);
+  }
 }
+
 
 control do_modify_field_43 {
-  apply(t_mod_43);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_43);
+  }
 }
+
 
 control do_modify_field_44 {
-  apply(t_mod_44);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_44);
+  }
 }
+
 
 control do_modify_field_45 {
-  apply(t_mod_45);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_45);
+  }
 }
+
 
 control do_modify_field_46 {
-  apply(t_mod_46);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_46);
+  }
 }
+
 
 control do_modify_field_47 {
-  apply(t_mod_47);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_47);
+  }
 }
+
 
 control do_modify_field_48 {
-  apply(t_mod_48);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_48);
+  }
 }
+
 
 control do_modify_field_49 {
-  apply(t_mod_49);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_49);
+  }
 }
+
 
 control do_modify_field_51 {
-  apply(t_mod_51);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_51);
+  }
 }
+
 
 control do_modify_field_52 {
-  apply(t_mod_52);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_52);
+  }
 }
+
 
 control do_modify_field_53 {
-  apply(t_mod_53);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_53);
+  }
 }
+
 
 control do_modify_field_54 {
-  apply(t_mod_54);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_54);
+  }
 }
+
 
 control do_modify_field_55 {
-  apply(t_mod_55);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_55);
+  }
 }
+
 
 control do_modify_field_56 {
-  apply(t_mod_56);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_56);
+  }
 }
+
 
 control do_modify_field_57 {
-  apply(t_mod_57);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_57);
+  }
 }
+
 
 control do_modify_field_58 {
-  apply(t_mod_58);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_58);
+  }
 }
 
+
 control do_modify_field_59 {
-  apply(t_mod_59);
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_59);
+  }
 }
+
 
