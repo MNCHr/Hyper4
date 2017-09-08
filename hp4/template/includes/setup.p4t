@@ -457,6 +457,7 @@ action a_update_vdev_ID() {
   //modify_field(meta_ctrl.virt_egress_port, 0);
   modify_field(meta_ctrl.vdev_ID, meta_ctrl.next_vdev_ID);
   modify_field(meta_ctrl.next_vdev_ID, 0);
+  modify_field(meta_ctrl.stage, INIT);
 }
 
 table update_vdev_ID {
@@ -487,50 +488,50 @@ control setup {
   //  }
   //}
 
-  if (meta_ctrl.vdev_ID == 0) {
+  if (meta_ctrl.vdev_ID == 0) { // 0
     apply(tset_context);
   }
-  else if (meta_ctrl.stage == INIT) {
+  else if (meta_ctrl.stage == VFWD) { // 1
     apply(update_vdev_ID);
   }
 
   apply(tset_parse_control);
-  if(parse_ctrl.next_action == PARSE_SELECT_SEB) {
+  if(parse_ctrl.next_action == PARSE_SELECT_SEB) { // 2
     apply(tset_parse_select_SEB);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_20_29) {
+  if(parse_ctrl.next_action == PARSE_SELECT_20_29) { // 3
     apply(tset_parse_select_20_29);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_30_39) {
+  if(parse_ctrl.next_action == PARSE_SELECT_30_39) { // 4
     apply(tset_parse_select_30_39);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_40_49) {
+  if(parse_ctrl.next_action == PARSE_SELECT_40_49) { // 5
     apply(tset_parse_select_40_49);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_50_59) {
+  if(parse_ctrl.next_action == PARSE_SELECT_50_59) { // 6
     apply(tset_parse_select_50_59);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_60_69) {
+  if(parse_ctrl.next_action == PARSE_SELECT_60_69) { // 7
     apply(tset_parse_select_60_69);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_70_79) {
+  if(parse_ctrl.next_action == PARSE_SELECT_70_79) { // 8
     apply(tset_parse_select_70_79);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_80_89) {
+  if(parse_ctrl.next_action == PARSE_SELECT_80_89) { // 9
     apply(tset_parse_select_80_89);
   }
-  if(parse_ctrl.next_action == PARSE_SELECT_90_99) {
+  if(parse_ctrl.next_action == PARSE_SELECT_90_99) { // 10
     apply(tset_parse_select_90_99);
   }
-  if(parse_ctrl.next_action == PROCEED) {
+  if(parse_ctrl.next_action == PROCEED) { // 11
     apply(tset_pr_SEB);
-    if(parse_ctrl.numbytes > 20) {
+    if(parse_ctrl.numbytes > 20) { // 12
       apply(tset_pr_20_39);
-      if(parse_ctrl.numbytes > 40) {
+      if(parse_ctrl.numbytes > 40) { // 13
         apply(tset_pr_40_59);
-        if(parse_ctrl.numbytes > 60) {
+        if(parse_ctrl.numbytes > 60) { // 14
           apply(tset_pr_60_79);
-          if(parse_ctrl.numbytes > 80) {
+          if(parse_ctrl.numbytes > 80) { // 15
             apply(tset_pr_80_99);
           }
         }

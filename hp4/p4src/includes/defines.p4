@@ -31,6 +31,7 @@ defines.p4: Define constants
 // meta_ctrl.stage
 #define INIT	0
 #define NORM	1
+#define VFWD  2
 
 // meta_ctrl.next_table
 #define DONE            0

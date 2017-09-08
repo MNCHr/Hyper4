@@ -56,7 +56,7 @@ table t_virtnet {
 control ingress {
   setup();
 
-  if (meta_ctrl.stage == NORM) {
+  if (meta_ctrl.stage == NORM) { // 16
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) {
       stage1(); // stages.p4
     }
@@ -75,6 +75,14 @@ control ingress {
 
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) {
       stage5(); // stages.p4
+    }
+
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) {
+      stage6(); // stages.p4
+    }
+
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) {
+      stage7(); // stages.p4
     }
     apply(t_virtnet);
   }
@@ -141,6 +149,7 @@ field_list fl_clone {
 action vfwd(vdev_ID, vingress) {
   modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
   modify_field(meta_ctrl.virt_ingress_port, vingress);
+  modify_field(meta_ctrl.stage, VFWD);
   recirculate(fl_recirc);
 }
 
@@ -148,6 +157,7 @@ action vmcast(vdev_ID, vingress) {
   modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
   modify_field(meta_ctrl.virt_ingress_port, vingress);
   modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_egress_spec + 1);
+  modify_field(meta_ctrl.stage, VFWD);
   recirculate(fl_recirc);
   clone_egress_pkt_to_egress(standard_metadata.egress_port, fl_clone);
 }
@@ -156,6 +166,7 @@ action vmcast_phys(vdev_ID, vingress, phys_spec) {
   modify_field(meta_ctrl.next_vdev_ID, vdev_ID);
   modify_field(meta_ctrl.virt_ingress_port, vingress);
   modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_egress_spec + 1);
+  modify_field(meta_ctrl.stage, VFWD);
   recirculate(fl_recirc);
   clone_egress_pkt_to_egress(phys_spec, fl_clone);
 }

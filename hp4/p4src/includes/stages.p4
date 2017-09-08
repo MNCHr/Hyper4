@@ -523,6 +523,204 @@ table tstg59_update_state {
   }
 }
 
+table tstg61_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg62_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg63_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg64_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg65_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg66_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg67_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg68_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg69_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg71_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg72_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg73_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg74_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg75_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg76_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg77_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg78_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
+table tstg79_update_state {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.action_ID : exact;
+  }
+  actions {
+    update_state;
+    finish_action;
+  }
+}
+
 control stage1 {
   match_1(); // match.p4
   if(meta_ctrl.stage_state != COMPLETE) {
@@ -712,6 +910,86 @@ control stage5 {
                   if(meta_ctrl.stage_state != COMPLETE) {
                     switch_primitivetype_59(); // switch_primitivetype.p4
                     apply(tstg59_update_state);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+control stage6 {
+  match_6(); // match.p4
+  if(meta_ctrl.stage_state != COMPLETE) {
+    switch_primitivetype_61(); // switch_primitivetype.p4
+    apply(tstg61_update_state);
+    if(meta_ctrl.stage_state != COMPLETE) {
+      switch_primitivetype_62(); // switch_primitivetype.p4
+      apply(tstg62_update_state);
+      if(meta_ctrl.stage_state != COMPLETE) {
+        switch_primitivetype_63(); // switch_primitivetype.p4
+        apply(tstg63_update_state);
+        if(meta_ctrl.stage_state != COMPLETE) {
+          switch_primitivetype_64(); // switch_primitivetype.p4
+          apply(tstg64_update_state);
+          if(meta_ctrl.stage_state != COMPLETE) {
+            switch_primitivetype_65(); // switch_primitivetype.p4
+            apply(tstg65_update_state);
+            if(meta_ctrl.stage_state != COMPLETE) {
+              switch_primitivetype_66(); // switch_primitivetype.p4
+              apply(tstg66_update_state);
+              if(meta_ctrl.stage_state != COMPLETE) {
+                switch_primitivetype_67(); // switch_primitivetype.p4
+                apply(tstg67_update_state);
+                if(meta_ctrl.stage_state != COMPLETE) {
+                  switch_primitivetype_68(); // switch_primitivetype.p4
+                  apply(tstg68_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_69(); // switch_primitivetype.p4
+                    apply(tstg69_update_state);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+control stage7 {
+  match_7(); // match.p4
+  if(meta_ctrl.stage_state != COMPLETE) {
+    switch_primitivetype_71(); // switch_primitivetype.p4
+    apply(tstg71_update_state);
+    if(meta_ctrl.stage_state != COMPLETE) {
+      switch_primitivetype_72(); // switch_primitivetype.p4
+      apply(tstg72_update_state);
+      if(meta_ctrl.stage_state != COMPLETE) {
+        switch_primitivetype_73(); // switch_primitivetype.p4
+        apply(tstg73_update_state);
+        if(meta_ctrl.stage_state != COMPLETE) {
+          switch_primitivetype_74(); // switch_primitivetype.p4
+          apply(tstg74_update_state);
+          if(meta_ctrl.stage_state != COMPLETE) {
+            switch_primitivetype_75(); // switch_primitivetype.p4
+            apply(tstg75_update_state);
+            if(meta_ctrl.stage_state != COMPLETE) {
+              switch_primitivetype_76(); // switch_primitivetype.p4
+              apply(tstg76_update_state);
+              if(meta_ctrl.stage_state != COMPLETE) {
+                switch_primitivetype_77(); // switch_primitivetype.p4
+                apply(tstg77_update_state);
+                if(meta_ctrl.stage_state != COMPLETE) {
+                  switch_primitivetype_78(); // switch_primitivetype.p4
+                  apply(tstg78_update_state);
+                  if(meta_ctrl.stage_state != COMPLETE) {
+                    switch_primitivetype_79(); // switch_primitivetype.p4
+                    apply(tstg79_update_state);
                   }
                 }
               }

@@ -32,4 +32,5 @@ sudo PYTHONPATH=$PYTHONPATH:$BMV2_PATH/mininet/ \
     --behavioral-exe $BMV2_PATH/targets/simple_switch/simple_switch \
     --jsons $PROJ.json \
     --topo topo_multi.txt \
+    --commands hp4commands.txt \
     --cli $CLI_PATH

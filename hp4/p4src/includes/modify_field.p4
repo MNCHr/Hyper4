@@ -1310,6 +1310,492 @@ table t_mod_59 {
   }
 }
 
+table t_mod_61 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_62 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_63 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_64 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_65 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_66 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_67 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_68 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_69 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_71 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_72 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_73 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_74 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_75 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_76 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_77 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_78 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
+table t_mod_79 {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    mod_meta_stdmeta_ingressport;
+    mod_meta_stdmeta_packetlength;
+    mod_meta_stdmeta_egressspec;
+    mod_meta_stdmeta_egressport;
+    mod_meta_stdmeta_egressinst;
+    mod_meta_stdmeta_insttype;
+    mod_stdmeta_egressspec_meta;
+    mod_meta_const;
+    mod_stdmeta_egressspec_const;
+    mod_extracted_const;
+    mod_stdmeta_egressspec_stdmeta_ingressport;
+    mod_extracted_extracted;
+    mod_meta_extracted;
+    mod_extracted_meta;
+    _no_op;
+    mod_intmeta_mcast_grp_const;
+  }
+}
+
 control do_modify_field_11 {
   // subtypes 7, 9, 11 all write to stdmeta.egress_spec
   if ( (meta_ctrl.econd == 0) or
@@ -1846,6 +2332,222 @@ control do_modify_field_59 {
         (meta_primitive_state.subtype != 9) and
         (meta_primitive_state.subtype != 11)) ) {
     apply(t_mod_59);
+  }
+}
+
+
+control do_modify_field_61 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_61);
+  }
+}
+
+
+control do_modify_field_62 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_62);
+  }
+}
+
+
+control do_modify_field_63 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_63);
+  }
+}
+
+
+control do_modify_field_64 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_64);
+  }
+}
+
+
+control do_modify_field_65 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_65);
+  }
+}
+
+
+control do_modify_field_66 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_66);
+  }
+}
+
+
+control do_modify_field_67 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_67);
+  }
+}
+
+
+control do_modify_field_68 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_68);
+  }
+}
+
+
+control do_modify_field_69 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_69);
+  }
+}
+
+
+control do_modify_field_71 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_71);
+  }
+}
+
+
+control do_modify_field_72 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_72);
+  }
+}
+
+
+control do_modify_field_73 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_73);
+  }
+}
+
+
+control do_modify_field_74 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_74);
+  }
+}
+
+
+control do_modify_field_75 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_75);
+  }
+}
+
+
+control do_modify_field_76 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_76);
+  }
+}
+
+
+control do_modify_field_77 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_77);
+  }
+}
+
+
+control do_modify_field_78 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_78);
+  }
+}
+
+
+control do_modify_field_79 {
+  // subtypes 7, 9, 11 all write to stdmeta.egress_spec
+  if ( (meta_ctrl.econd == 0) or
+       (meta_ctrl.virt_egress_spec == 0) or
+       ((meta_primitive_state.subtype != 7) and
+        (meta_primitive_state.subtype != 9) and
+        (meta_primitive_state.subtype != 11)) ) {
+    apply(t_mod_79);
   }
 }
 
