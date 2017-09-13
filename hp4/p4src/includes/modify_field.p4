@@ -85,12 +85,6 @@ action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
 }
 // TODO: add rest of the modify_field actions
 
-// for bmv2-ss only: modify_field on intrinsic_metadata.mcast_grp
-// 80
-action mod_intmeta_mcast_grp_const(val) {
-  modify_field(intrinsic_metadata.mcast_grp, val);
-}
-
 action _no_op() {
   no_op();
 }
@@ -118,7 +112,6 @@ table t_mod_11 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -145,7 +138,6 @@ table t_mod_12 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -172,7 +164,6 @@ table t_mod_13 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -199,7 +190,6 @@ table t_mod_14 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -226,7 +216,6 @@ table t_mod_15 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -253,7 +242,6 @@ table t_mod_16 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -280,7 +268,6 @@ table t_mod_17 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -307,7 +294,6 @@ table t_mod_18 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -334,7 +320,6 @@ table t_mod_19 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -361,7 +346,6 @@ table t_mod_21 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -388,7 +372,6 @@ table t_mod_22 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -415,7 +398,6 @@ table t_mod_23 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -442,7 +424,6 @@ table t_mod_24 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -469,7 +450,6 @@ table t_mod_25 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -496,7 +476,6 @@ table t_mod_26 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -523,7 +502,6 @@ table t_mod_27 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -550,7 +528,6 @@ table t_mod_28 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -577,7 +554,6 @@ table t_mod_29 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -604,7 +580,6 @@ table t_mod_31 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -631,7 +606,6 @@ table t_mod_32 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -658,7 +632,6 @@ table t_mod_33 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -685,7 +658,6 @@ table t_mod_34 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -712,7 +684,6 @@ table t_mod_35 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -739,7 +710,6 @@ table t_mod_36 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -766,7 +736,6 @@ table t_mod_37 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -793,7 +762,6 @@ table t_mod_38 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -820,7 +788,6 @@ table t_mod_39 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -847,7 +814,6 @@ table t_mod_41 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -874,7 +840,6 @@ table t_mod_42 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -901,7 +866,6 @@ table t_mod_43 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -928,7 +892,6 @@ table t_mod_44 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -955,7 +918,6 @@ table t_mod_45 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -982,7 +944,6 @@ table t_mod_46 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1009,7 +970,6 @@ table t_mod_47 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1036,7 +996,6 @@ table t_mod_48 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1063,7 +1022,6 @@ table t_mod_49 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1090,7 +1048,6 @@ table t_mod_51 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1117,7 +1074,6 @@ table t_mod_52 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1144,7 +1100,6 @@ table t_mod_53 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1171,7 +1126,6 @@ table t_mod_54 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1198,7 +1152,6 @@ table t_mod_55 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1225,7 +1178,6 @@ table t_mod_56 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1252,7 +1204,6 @@ table t_mod_57 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1279,7 +1230,6 @@ table t_mod_58 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1306,7 +1256,6 @@ table t_mod_59 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1333,7 +1282,6 @@ table t_mod_61 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1360,7 +1308,6 @@ table t_mod_62 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1387,7 +1334,6 @@ table t_mod_63 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1414,7 +1360,6 @@ table t_mod_64 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1441,7 +1386,6 @@ table t_mod_65 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1468,7 +1412,6 @@ table t_mod_66 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1495,7 +1438,6 @@ table t_mod_67 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1522,7 +1464,6 @@ table t_mod_68 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1549,7 +1490,6 @@ table t_mod_69 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1576,7 +1516,6 @@ table t_mod_71 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1603,7 +1542,6 @@ table t_mod_72 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1630,7 +1568,6 @@ table t_mod_73 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1657,7 +1594,6 @@ table t_mod_74 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1684,7 +1620,6 @@ table t_mod_75 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1711,7 +1646,6 @@ table t_mod_76 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1738,7 +1672,6 @@ table t_mod_77 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1765,7 +1698,6 @@ table t_mod_78 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -1792,7 +1724,6 @@ table t_mod_79 {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    mod_intmeta_mcast_grp_const;
   }
 }
 
@@ -2550,5 +2481,4 @@ control do_modify_field_79 {
     apply(t_mod_79);
   }
 }
-
 

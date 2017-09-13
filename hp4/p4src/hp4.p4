@@ -27,12 +27,14 @@ metadata csum_t csum;
 
 metadata intrinsic_metadata_t intrinsic_metadata;
 
-action do_phys_fwd_only(spec) {
+action do_phys_fwd_only(spec, filter) {
   modify_field(standard_metadata.egress_spec, spec);
+  modify_field(meta_ctrl.efilter, filter);
 }
 
-action do_phys_mcast(mcast_grp) {
+action do_bmv2_mcast(mcast_grp, filter) {
   modify_field(intrinsic_metadata.mcast_grp, mcast_grp);
+  modify_field(meta_ctrl.efilter, filter);
 }
 
 action do_virt_fwd() {
@@ -48,7 +50,7 @@ table t_virtnet {
   actions {
     a_drop;
     do_phys_fwd_only;
-    do_phys_mcast;
+    do_bmv2_mcast;
     do_virt_fwd;
   }
 }
@@ -210,7 +212,9 @@ control egress {
   if(meta_ctrl.virt_fwd_flag == 1) {
     apply(t_egr_virtnet); // recirculate, maybe clone_e2e
   }
-  else if(standard_metadata.egress_port == standard_metadata.ingress_port) {
+
+  else if((standard_metadata.egress_port == standard_metadata.ingress_port) and
+          (meta_ctrl.efilter == 1)) {
     apply(egress_filter);
   }
 

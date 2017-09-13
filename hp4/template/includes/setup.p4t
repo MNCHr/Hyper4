@@ -453,8 +453,6 @@ table tset_pipeline_config {
 }
 
 action a_update_vdev_ID() {
-  //modify_field(meta_ctrl.virt_ingress_port, meta_ctrl.virt_egress_port);
-  //modify_field(meta_ctrl.virt_egress_port, 0);
   modify_field(meta_ctrl.vdev_ID, meta_ctrl.next_vdev_ID);
   modify_field(meta_ctrl.next_vdev_ID, 0);
   modify_field(meta_ctrl.stage, INIT);
@@ -466,28 +464,8 @@ table update_vdev_ID {
   }
 }
 
-action a_recirc_cleanup() {
-  modify_field(meta_ctrl.vdev_ID, meta_ctrl.clone_program);
-  modify_field(meta_ctrl.clone_program, 0); // necessary b/c used at egress
-}
-
-table tset_recirc {
-  actions {
-    a_recirc_cleanup;
-  }
-}
-
 // ------ Setup
 control setup {
-  //if (meta_ctrl.stage == INIT) {
-  //  if (meta_ctrl.vdev_ID == 0) {
-  //    apply(tset_context);
-  //  }
-  //  if (meta_ctrl.virt_egress_port > 0) {
-  //    apply(tset_in_virtnet);
-  //  }
-  //}
-
   if (meta_ctrl.vdev_ID == 0) { // 0
     apply(tset_context);
   }

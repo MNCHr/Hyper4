@@ -75,14 +75,6 @@ action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
 }
 // TODO: add rest of the modify_field actions
 
-[+ target bmv2-ss +]
-// for bmv2-ss only: modify_field on intrinsic_metadata.mcast_grp
-// 80
-action mod_intmeta_mcast_grp_const(val) {
-  modify_field(intrinsic_metadata.mcast_grp, val);
-}
-[+ endtarget +]
-
 action _no_op() {
   no_op();
 }
@@ -111,9 +103,6 @@ table t_mod_[+X+][+Y+] {
     mod_meta_extracted;
     mod_extracted_meta;
     _no_op;
-    [+ target bmv2-ss +]
-    mod_intmeta_mcast_grp_const;
-    [+ endtarget +]
   }
 }
 [+ enddloop +]
