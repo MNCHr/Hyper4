@@ -7,6 +7,9 @@ action a_drop() {
 
 [+ dloop +]
 table t_drop_[+X+][+Y+] {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+  }
   actions {
     a_drop;
   }
