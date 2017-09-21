@@ -73,6 +73,11 @@ action mod_meta_extracted(leftshift, rightshift, tmask, emask) {
 action mod_extracted_meta(leftshift, rightshift, emask, tmask) {
   modify_field(extracted.data, (extracted.data & ~emask) | ( ((tmeta.data << leftshift) >> rightshift) & tmask));
 }
+
+//15
+action mod_extracted_stdmeta_ingressport(leftshift, msk) {
+  modify_field(extracted.data, (extracted.data & ~msk) | (standard_metadata.ingress_port << leftshift));
+}
 // TODO: add rest of the modify_field actions
 
 action _no_op() {

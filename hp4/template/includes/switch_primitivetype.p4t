@@ -20,6 +20,9 @@ control switch_primitivetype_[+X+][+Y+] {
   else if(meta_primitive_state.primitive == A_ADD_HEADER) {
     do_add_header_[+X+][+Y+]();
   }
+  else if(meta_primitive_state.primitive == A_REMOVE_HEADER) {
+    do_remove_header_[+X+][+Y+]();
+  }
   else if(meta_primitive_state.primitive == A_TRUNCATE) {
     do_truncate_[+X+][+Y+]();
   }

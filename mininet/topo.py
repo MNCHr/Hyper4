@@ -18,7 +18,6 @@ from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
-from mininet.link import TCLink
 
 from p4_mininet import P4Switch, P4Host
 
@@ -26,6 +25,7 @@ import argparse
 from time import sleep
 import os
 import subprocess
+import code
 
 _THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 _THRIFT_BASE_PORT = 22222
@@ -57,11 +57,13 @@ class MyTopo(Topo):
                                     sw_path = sw_path,
                                     json_path = json_path,
                                     thrift_port = _THRIFT_BASE_PORT + i,
-                                    pcap_dump = args.pcap,
-                                    device_id = i)
+                                    pcap_dump = args.pcap) #,
+                                    # device_id = i)
         
         for h in xrange(nb_hosts):
-            host = self.addHost('h%d' % (h + 1), mac = '00:04:00:00:00:%02x' %h)
+            host = self.addHost('h%d' % (h + 1),
+                                ip = "10.0.0.%d/24" % (h+1),
+                                mac = '00:04:00:00:00:%02x' %h)
 
         for a, b in links:
             self.addLink(a, b)
@@ -109,6 +111,7 @@ def main():
         h.cmd("sysctl -w net.ipv6.conf.lo.disable_ipv6=1")
         h.cmd("sysctl -w net.ipv4.tcp_congestion_control=reno")
         h.cmd("iptables -I OUTPUT -p icmp --icmp-type destination-unreachable -j DROP")
+        h.setDefaultRoute("dev eth0")
 
     sleep(1)
 
@@ -139,7 +142,10 @@ def main():
 
     print "Ready !"
 
+    # code.interact(local=dict(globals(), **locals()))
     CLI( net )
+    #net.pingAll(timeout='1')
+
     net.stop()
 
 if __name__ == '__main__':
