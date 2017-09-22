@@ -26,10 +26,25 @@ SWITCH_PATH=$BMV2_PATH/targets/simple_switch/simple_switch
 
 CLI_PATH=$BMV2_PATH/targets/simple_switch/sswitch_CLI
 
+SCENARIO=""
+
+SEED=""
+
+if [ $# -gt 0 ]
+then
+  SCENARIO="--scenario "$1
+  if [ $# -gt 1 ]
+  then
+    SEED="--seed "$2
+  fi
+fi
+
 $P4C_BM_SCRIPT p4src/$PROJ.p4 --json $PROJ.json
 sudo PYTHONPATH=$PYTHONPATH:$BMV2_PATH/mininet/ \
     python $THIS_DIR/mininet/topo.py \
     --behavioral-exe $BMV2_PATH/targets/simple_switch/simple_switch \
     --json $PROJ.json \
     --commands hp4commands.txt \
-    --cli $CLI_PATH
+    --cli $CLI_PATH \
+    $SCENARIO \
+    $SEED

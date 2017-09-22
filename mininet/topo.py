@@ -17,6 +17,7 @@
 from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.log import setLogLevel, info
+#from mininet.util import createLink # error... not in 2.2.1?
 from mininet.cli import CLI
 
 from p4_mininet import P4Switch, P4Host
@@ -25,6 +26,8 @@ import argparse
 from time import sleep
 import os
 import subprocess
+import random
+
 import code
 
 _THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -41,6 +44,10 @@ parser.add_argument('--commands', help='Path to initial CLI commands',
                     type=str, action="store", default="commands.txt")
 parser.add_argument('--pcap', help='Turns on pcap generation',
                     action="store_true")
+parser.add_argument('--scenario', help='Simulation scenario',
+                    type=str, action="store")
+parser.add_argument('--seed', help='Seed for pseudorandom numbers',
+                    type=int, action="store")
 # Useful if we need to use runtime_CLI instead of sswitch_CLI:
 #parser.add_argument('--p4factory', help='Use p4factory intead of standalone repos',
 #                    action="store_true")
@@ -68,6 +75,31 @@ class MyTopo(Topo):
         for a, b in links:
             self.addLink(a, b)
 
+class ArpTestTopo(Topo):
+  def __init__(self, sw_path, json_path, nb_hosts, nb_switches, links, seed, **opts):
+    Topo.__init__(self, **opts)
+
+    random.seed(seed)
+
+    assert(nb_hosts < 255)
+    
+    for i in xrange(nb_switches):
+        switch = self.addSwitch('s%d' % (i + 1),
+                                sw_path = sw_path,
+                                json_path = json_path,
+                                thrift_port = _THRIFT_BASE_PORT + i,
+                                pcap_dump = args.pcap)
+
+    ip_addrs = range(1, 255)
+    for h in xrange(nb_hosts):
+      ip_addr = ip_addrs.pop(random.randint(0, len(ip_addrs) - 1))
+      host = self.addHost('h%d' % (h + 1),
+                          ip = "10.0.0.%d/24" % (ip_addr),
+                          mac = "00:04:00:00:00:%02x" %(h+1))
+
+    for a, b in links:
+      self.addLink(a, b)
+
 def read_topo():
     nb_hosts = 0
     nb_switches = 0
@@ -87,11 +119,29 @@ def read_topo():
             
 
 def main():
-    nb_hosts, nb_switches, links = read_topo()
 
-    topo = MyTopo(args.behavioral_exe,
-                  args.json,
-                  nb_hosts, nb_switches, links)
+    if args.scenario == 'arp':
+      nb_hosts = 24
+      nb_switches = 3
+      links = []
+      div = nb_hosts / nb_switches
+      for j in xrange(1, nb_switches + 1):
+        for i in xrange(div * (j - 1) + 1, div * j + 1):
+          links.append(('h%d'%i, 's%d'%j))
+
+      for j in xrange(1, nb_switches):
+        for i in xrange(j + 1, nb_switches + 1):
+          links.append(('s%d'%j, 's%d'%i))
+
+      topo = ArpTestTopo(args.behavioral_exe,
+                         args.json,
+                         nb_hosts, nb_switches, links, args.seed)
+
+    else:
+      nb_hosts, nb_switches, links = read_topo()
+      topo = MyTopo(args.behavioral_exe,
+                    args.json,
+                    nb_hosts, nb_switches, links)
 
     net = Mininet(topo = topo,
                   host = P4Host,
@@ -132,7 +182,7 @@ def main():
                 print e
                 print e.output
         s = net.get('s%d' % (i + 1))
-        cmd = "ifconfig | grep -o -E \'s%d\-eth.\'" % (i + 1)
+        cmd = "ifconfig | grep -o -E \'s%d\-eth[0-9]*\'" % (i + 1)
         ifaces = (s.cmd(cmd)).split()
         for iface in ifaces:
           print("Disconnecting %s" % iface)
