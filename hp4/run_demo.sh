@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
+# set MININET_PATH, BMV2_PATH, P4C_BM_PATH
 source $THIS_DIR/../env.sh
 
 PROJ=${PWD##*/}
@@ -27,24 +26,49 @@ SWITCH_PATH=$BMV2_PATH/targets/simple_switch/simple_switch
 CLI_PATH=$BMV2_PATH/targets/simple_switch/sswitch_CLI
 
 SCENARIO=""
-
 SEED=""
+COMMANDS=""
+TOPO=""
 
-if [ $# -gt 0 ]
-then
-  SCENARIO="--scenario "$1
-  if [ $# -gt 1 ]
-  then
-    SEED="--seed "$2
-  fi
+while [[ $# -gt 1 ]]
+do
+key="$1"
+
+case $key in
+    --scenario)
+    SCENARIO="--scenario $2"
+    shift # past argument
+    ;;
+    --seed)
+    SEED="--seed $2"
+    shift # past argument
+    ;;
+    -c|--commands)
+    COMMANDS="$COMMANDS $2"
+    shift # past argument
+    ;;
+    -t|--topo)
+    TOPO="--topo $2"
+    shift # past argument
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+if [ -z "${COMMANDS}" ]; then
+  COMMANDS="commands.txt"
 fi
 
 $P4C_BM_SCRIPT p4src/$PROJ.p4 --json $PROJ.json
 sudo PYTHONPATH=$PYTHONPATH:$BMV2_PATH/mininet/ \
-    python $THIS_DIR/mininet/topo.py \
-    --behavioral-exe $BMV2_PATH/targets/simple_switch/simple_switch \
+    python $MININET_PATH/topo.py \
+    --behavioral-exe $SWITCH_PATH \
     --json $PROJ.json \
-    --commands hp4commands.txt \
+    --commands $COMMANDS \
     --cli $CLI_PATH \
     $SCENARIO \
-    $SEED
+    $SEED \
+    $TOPO

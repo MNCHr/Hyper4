@@ -17,8 +17,8 @@
 from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.log import setLogLevel, info
-#from mininet.util import createLink # error... not in 2.2.1?
 from mininet.cli import CLI
+from mininet.link import TCLink
 
 from p4_mininet import P4Switch, P4Host
 
@@ -41,13 +41,15 @@ parser.add_argument('--json', help='Path to JSON config file',
 parser.add_argument('--cli', help='Path to BM CLI',
                     type=str, action="store", required=True)
 parser.add_argument('--commands', help='Path to initial CLI commands',
-                    type=str, action="store", default="commands.txt")
+                    type=str, nargs='*', action="store", default=["commands.txt"])
 parser.add_argument('--pcap', help='Turns on pcap generation',
                     action="store_true")
 parser.add_argument('--scenario', help='Simulation scenario',
                     type=str, action="store")
 parser.add_argument('--seed', help='Seed for pseudorandom numbers',
                     type=int, action="store")
+parser.add_argument('--topo', help='Topology file',
+                    type=str, action="store", default="topo.txt")
 # Useful if we need to use runtime_CLI instead of sswitch_CLI:
 #parser.add_argument('--p4factory', help='Use p4factory intead of standalone repos',
 #                    action="store_true")
@@ -64,8 +66,8 @@ class MyTopo(Topo):
                                     sw_path = sw_path,
                                     json_path = json_path,
                                     thrift_port = _THRIFT_BASE_PORT + i,
-                                    pcap_dump = args.pcap) #,
-                                    # device_id = i)
+                                    pcap_dump = args.pcap,
+                                    device_id = i)
         
         for h in xrange(nb_hosts):
             host = self.addHost('h%d' % (h + 1),
@@ -118,6 +120,18 @@ def read_topo():
     return int(nb_hosts), int(nb_switches), links
             
 
+def send_commands(s_id, cmdfile):
+
+  cmd = [args.cli, args.json, str(_THRIFT_BASE_PORT + s_id)]
+  with open(cmdfile, "r") as f:
+    print " ".join(cmd)
+    try:
+      output = subprocess.check_output(cmd, stdin = f)
+      print output
+    except subprocess.CalledProcessError as e:
+      print e
+      print e.output
+
 def main():
 
     if args.scenario == 'arp':
@@ -166,14 +180,13 @@ def main():
     sleep(1)
 
     for i in xrange(nb_switches):
-        # Useful if we need to use runtime_CLI instead of sswitch_CLI:
-        #if args.p4factory:
-        #  cmd = [args.cli, "--json", args.json,
-        #         "--thrift-port", str(_THRIFT_BASE_PORT + i)]
-        #else:
         cmd = [args.cli, args.json,
                str(_THRIFT_BASE_PORT + i)]
-        with open(args.commands, "r") as f:
+        if i < len(args.commands):
+          cmdfile = args.commands[i]
+        else:
+          cmdfile = args.commands[-1]
+        with open(cmdfile, "r") as f:
             print " ".join(cmd)
             try:
                 output = subprocess.check_output(cmd, stdin = f)
@@ -192,9 +205,7 @@ def main():
 
     print "Ready !"
 
-    # code.interact(local=dict(globals(), **locals()))
     CLI( net )
-    #net.pingAll(timeout='1')
 
     net.stop()
 
