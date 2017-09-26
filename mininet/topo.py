@@ -41,7 +41,7 @@ parser.add_argument('--json', help='Path to JSON config file',
 parser.add_argument('--cli', help='Path to BM CLI',
                     type=str, action="store", required=True)
 parser.add_argument('--commands', help='Path to initial CLI commands',
-                    type=str, nargs='*', action="store", default=["commands.txt"])
+                    type=str, nargs='*', action="store")
 parser.add_argument('--pcap', help='Turns on pcap generation',
                     action="store_true")
 parser.add_argument('--scenario', help='Simulation scenario',
@@ -106,7 +106,7 @@ def read_topo():
     nb_hosts = 0
     nb_switches = 0
     links = []
-    with open("topo.txt", "r") as f:
+    with open(args.topo, "r") as f:
         line = f.readline()[:-1]
         w, nb_switches = line.split()
         assert(w == "switches")
@@ -134,25 +134,14 @@ def send_commands(s_id, cmdfile):
 
 def main():
 
+    nb_hosts, nb_switches, links = read_topo()
+
     if args.scenario == 'arp':
-      nb_hosts = 24
-      nb_switches = 3
-      links = []
-      div = nb_hosts / nb_switches
-      for j in xrange(1, nb_switches + 1):
-        for i in xrange(div * (j - 1) + 1, div * j + 1):
-          links.append(('h%d'%i, 's%d'%j))
-
-      for j in xrange(1, nb_switches):
-        for i in xrange(j + 1, nb_switches + 1):
-          links.append(('s%d'%j, 's%d'%i))
-
       topo = ArpTestTopo(args.behavioral_exe,
                          args.json,
                          nb_hosts, nb_switches, links, args.seed)
 
     else:
-      nb_hosts, nb_switches, links = read_topo()
       topo = MyTopo(args.behavioral_exe,
                     args.json,
                     nb_hosts, nb_switches, links)
@@ -180,6 +169,7 @@ def main():
     sleep(1)
 
     for i in xrange(nb_switches):
+      if args.commands:
         cmd = [args.cli, args.json,
                str(_THRIFT_BASE_PORT + i)]
         if i < len(args.commands):
@@ -194,12 +184,12 @@ def main():
             except subprocess.CalledProcessError as e:
                 print e
                 print e.output
-        s = net.get('s%d' % (i + 1))
-        cmd = "ifconfig | grep -o -E \'s%d\-eth[0-9]*\'" % (i + 1)
-        ifaces = (s.cmd(cmd)).split()
-        for iface in ifaces:
-          print("Disconnecting %s" % iface)
-          s.cmd("nmcli dev disconnect iface %s" % iface)
+      s = net.get('s%d' % (i + 1))
+      cmd = "ifconfig | grep -o -E \'s%d\-eth[0-9]*\'" % (i + 1)
+      ifaces = (s.cmd(cmd)).split()
+      for iface in ifaces:
+        print("Disconnecting %s" % iface)
+        s.cmd("nmcli dev disconnect iface %s" % iface)
 
     sleep(1)
 

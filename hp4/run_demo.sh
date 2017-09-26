@@ -58,8 +58,8 @@ esac
 shift # past argument or value
 done
 
-if [ -z "${COMMANDS}" ]; then
-  COMMANDS="commands.txt"
+if [ ! -z "${COMMANDS}" ]; then
+  COMMANDS="--commands "$COMMANDS
 fi
 
 $P4C_BM_SCRIPT p4src/$PROJ.p4 --json $PROJ.json
@@ -67,7 +67,7 @@ sudo PYTHONPATH=$PYTHONPATH:$BMV2_PATH/mininet/ \
     python $MININET_PATH/topo.py \
     --behavioral-exe $SWITCH_PATH \
     --json $PROJ.json \
-    --commands $COMMANDS \
+    $COMMANDS \
     --cli $CLI_PATH \
     $SCENARIO \
     $SEED \
