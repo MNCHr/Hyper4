@@ -51,6 +51,16 @@ table t[+X+]_metadata_ternary {
   }
 }
 
+table t[+X+]_extracted_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    extracted.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t[+X+]_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
@@ -132,6 +142,9 @@ control match_[+X+] {
     apply(t[+X+]_stdmeta_egress_spec_exact);
   }
   else if(meta_ctrl.next_table == METADATA_TERNARY) {
+    apply(t[+X+]_metadata_ternary);
+  }
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
     apply(t[+X+]_metadata_ternary);
   }
 }

@@ -44,6 +44,7 @@ defines.p4: Define constants
 #define STDMETA_INSTANCE_TYPE_EXACT 7
 #define STDMETA_EGRESS_SPEC_EXACT		8
 #define METADATA_TERNARY						9
+#define EXTRACTED_TERNARY						10
 #define MATCHLESS				99
 
 // meta_ctrl.stage_state
