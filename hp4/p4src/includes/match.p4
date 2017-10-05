@@ -762,7 +762,7 @@ control match_1 {
     apply(t1_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t1_metadata_ternary);
+    apply(t1_extracted_ternary);
   }
 }
 
@@ -795,7 +795,7 @@ control match_2 {
     apply(t2_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t2_metadata_ternary);
+    apply(t2_extracted_ternary);
   }
 }
 
@@ -828,7 +828,7 @@ control match_3 {
     apply(t3_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t3_metadata_ternary);
+    apply(t3_extracted_ternary);
   }
 }
 
@@ -861,7 +861,7 @@ control match_4 {
     apply(t4_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t4_metadata_ternary);
+    apply(t4_extracted_ternary);
   }
 }
 
@@ -894,7 +894,7 @@ control match_5 {
     apply(t5_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t5_metadata_ternary);
+    apply(t5_extracted_ternary);
   }
 }
 
@@ -927,7 +927,7 @@ control match_6 {
     apply(t6_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t6_metadata_ternary);
+    apply(t6_extracted_ternary);
   }
 }
 
@@ -960,6 +960,6 @@ control match_7 {
     apply(t7_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t7_metadata_ternary);
+    apply(t7_extracted_ternary);
   }
 }

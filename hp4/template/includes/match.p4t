@@ -145,7 +145,7 @@ control match_[+X+] {
     apply(t[+X+]_metadata_ternary);
   }
   else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
-    apply(t[+X+]_metadata_ternary);
+    apply(t[+X+]_extracted_ternary);
   }
 }
 [+ endsloop +]
