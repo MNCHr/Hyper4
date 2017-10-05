@@ -48,6 +48,16 @@ table t1_metadata_exact {
   }
 }
 
+table t1_metadata_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t1_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
@@ -121,6 +131,16 @@ table t2_extracted_exact {
 }
 
 table t2_metadata_exact {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t2_metadata_ternary {
   reads {
     meta_ctrl.vdev_ID : exact;
     tmeta.data : ternary;
@@ -212,6 +232,16 @@ table t3_metadata_exact {
   }
 }
 
+table t3_metadata_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t3_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
@@ -285,6 +315,16 @@ table t4_extracted_exact {
 }
 
 table t4_metadata_exact {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t4_metadata_ternary {
   reads {
     meta_ctrl.vdev_ID : exact;
     tmeta.data : ternary;
@@ -376,6 +416,16 @@ table t5_metadata_exact {
   }
 }
 
+table t5_metadata_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t5_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
@@ -458,6 +508,16 @@ table t6_metadata_exact {
   }
 }
 
+table t6_metadata_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t6_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
@@ -531,6 +591,16 @@ table t7_extracted_exact {
 }
 
 table t7_metadata_exact {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
+table t7_metadata_ternary {
   reads {
     meta_ctrl.vdev_ID : exact;
     tmeta.data : ternary;

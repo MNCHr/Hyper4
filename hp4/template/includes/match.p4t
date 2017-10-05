@@ -41,6 +41,16 @@ table t[+X+]_metadata_exact {
   }
 }
 
+table t[+X+]_metadata_ternary {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    tmeta.data : ternary;
+  }
+  actions {
+    init_program_state;
+  }
+}
+
 table t[+X+]_extracted_valid {
   reads {
     meta_ctrl.vdev_ID : exact;
