@@ -131,5 +131,8 @@ control match_[+X+] {
   else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
     apply(t[+X+]_stdmeta_egress_spec_exact);
   }
+  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+    apply(t[+X+]_metadata_ternary);
+  }
 }
 [+ endsloop +]
