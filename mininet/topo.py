@@ -77,6 +77,28 @@ class MyTopo(Topo):
         for a, b in links:
             self.addLink(a, b)
 
+class ChainTestTopo(Topo):
+  def __init__(self, sw_path, json_path, nb_hosts, nb_switches, links, **opts):
+    Topo.__init__(self, **opts)
+
+    assert(nb_hosts < 155)
+    
+    for i in xrange(nb_switches):
+        switch = self.addSwitch('s%d' % (i + 1),
+                                sw_path = sw_path,
+                                json_path = json_path,
+                                thrift_port = _THRIFT_BASE_PORT + i,
+                                pcap_dump = args.pcap)
+
+    for h in xrange(nb_hosts):
+      ip_addr = "10.1.0.%d/24" % (101 + h)
+      host = self.addHost('h%d' % (h + 1),
+                          ip = ip_addr,
+                          mac = "00:04:00:00:00:%02x" %(h+1))
+
+    for a, b in links:
+      self.addLink(a, b)
+
 class ArpTestTopo(Topo):
   def __init__(self, sw_path, json_path, nb_hosts, nb_switches, links, seed, **opts):
     Topo.__init__(self, **opts)
@@ -140,7 +162,10 @@ def main():
       topo = ArpTestTopo(args.behavioral_exe,
                          args.json,
                          nb_hosts, nb_switches, links, args.seed)
-
+    elif args.scenario == 'chain':
+      topo = ChainTestTopo(args.behavioral_exe,
+                         args.json,
+                         nb_hosts, nb_switches, links)
     else:
       topo = MyTopo(args.behavioral_exe,
                     args.json,
