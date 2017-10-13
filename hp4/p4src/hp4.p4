@@ -137,6 +137,7 @@ field_list fl_recirc {
   meta_ctrl.vdev_ID;
   meta_ctrl.next_vdev_ID;
   meta_ctrl.virt_ingress_port;
+  meta_ctrl.stage;
 }
 
 field_list fl_clone {

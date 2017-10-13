@@ -14,6 +14,7 @@ table_set_default t_prep_deparse_40_59 a_prep_deparse_40_59
 table_set_default t_prep_deparse_60_79 a_prep_deparse_60_79
 table_set_default t_prep_deparse_80_99 a_prep_deparse_80_99
 table_set_default egress_filter a_drop
+table_add t_resize_pr _no_op 0 =>
 table_add t_resize_pr a_resize_pr_1 1 =>
 table_add t_resize_pr a_resize_pr_2 2 =>
 table_add t_resize_pr a_resize_pr_3 3 =>
