@@ -138,6 +138,7 @@ field_list fl_recirc {
   meta_ctrl.next_vdev_ID;
   meta_ctrl.virt_ingress_port;
   meta_ctrl.stage;
+  meta_ctrl.virt_egress_spec;
 }
 
 field_list fl_clone {
@@ -234,5 +235,4 @@ control egress {
       }
     }
   }
-
 }

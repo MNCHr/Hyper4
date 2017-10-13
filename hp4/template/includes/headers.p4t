@@ -40,7 +40,7 @@ header_type meta_ctrl_t {
   fields {
     vdev_ID : 8; // identifies which program to run
     next_vdev_ID : 8;
-    stage : 1; // INIT, NORM.
+    stage : 2; // INIT, NORM, VFWD
     next_table : 4;
     stage_state : 2; // CONTINUE, COMPLETE - 1 bit should be enough, certainly 2
     mcast_current_egress : 8;
