@@ -223,17 +223,10 @@ control egress {
   apply(t_checksum);          // checksums.p4
   apply(t_resize_pr);         // resize_pr.p4
   apply(t_prep_deparse_SEB);  // deparse_prep.p4
-  if(parse_ctrl.numbytes > 20) {
-    apply(t_prep_deparse_20_39);
-    if(parse_ctrl.numbytes > 40) {
-      apply(t_prep_deparse_40_59);
-      if(parse_ctrl.numbytes > 60) {
-        apply(t_prep_deparse_60_79);
-        if(parse_ctrl.numbytes > 80) {
-          apply(t_prep_deparse_80_99);
-        }
-      }
+  if(parse_ctrl.numbytes > 64) {
+    apply(t_prep_deparse_64_79);
+    if(parse_ctrl.numbytes > 80) {
+      apply(t_prep_deparse_80_99);
     }
   }
-
 }
