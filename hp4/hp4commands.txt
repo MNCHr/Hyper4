@@ -4,9 +4,7 @@ mirroring_add 3 3
 mirroring_add 4 4
 table_set_default update_vdev_ID a_update_vdev_ID
 table_set_default tset_pr_SEB a_pr_import_SEB
-table_set_default tset_pr_20_39 a_pr_import_20_39
-table_set_default tset_pr_40_59 a_pr_import_40_59
-table_set_default tset_pr_60_79 a_pr_import_60_79
+table_set_default tset_pr_64_79 a_pr_import_64_79
 table_set_default tset_pr_80_99 a_pr_import_80_99
 table_set_default t_prep_deparse_SEB a_prep_deparse_SEB
 table_set_default t_prep_deparse_20_39 a_prep_deparse_20_39

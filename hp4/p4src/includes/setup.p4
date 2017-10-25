@@ -46,15 +46,6 @@ action a_pr_import_SEB() {
   modify_field(extracted.data, extracted.data + (ext[17].data << 656));
   modify_field(extracted.data, extracted.data + (ext[18].data << 648));
   modify_field(extracted.data, extracted.data + (ext[19].data << 640));
-}
-
-table tset_pr_SEB {
-  actions {
-    a_pr_import_SEB;
-  }
-}
-
-action a_pr_import_20_39() {
   modify_field(extracted.data, extracted.data + (ext[20].data << 632));
   modify_field(extracted.data, extracted.data + (ext[21].data << 624));
   modify_field(extracted.data, extracted.data + (ext[22].data << 616));
@@ -75,15 +66,6 @@ action a_pr_import_20_39() {
   modify_field(extracted.data, extracted.data + (ext[37].data << 496));
   modify_field(extracted.data, extracted.data + (ext[38].data << 488));
   modify_field(extracted.data, extracted.data + (ext[39].data << 480));
-}
-
-table tset_pr_20_39 {
-  actions {
-    a_pr_import_20_39;
-  }
-}
-
-action a_pr_import_40_59() {
   modify_field(extracted.data, extracted.data + (ext[40].data << 472));
   modify_field(extracted.data, extracted.data + (ext[41].data << 464));
   modify_field(extracted.data, extracted.data + (ext[42].data << 456));
@@ -104,19 +86,20 @@ action a_pr_import_40_59() {
   modify_field(extracted.data, extracted.data + (ext[57].data << 336));
   modify_field(extracted.data, extracted.data + (ext[58].data << 328));
   modify_field(extracted.data, extracted.data + (ext[59].data << 320));
-}
-
-table tset_pr_40_59 {
-  actions {
-    a_pr_import_40_59;
-  }
-}
-
-action a_pr_import_60_79() {
   modify_field(extracted.data, extracted.data + (ext[60].data << 312));
   modify_field(extracted.data, extracted.data + (ext[61].data << 304));
   modify_field(extracted.data, extracted.data + (ext[62].data << 296));
   modify_field(extracted.data, extracted.data + (ext[63].data << 288));
+
+}
+
+table tset_pr_SEB {
+  actions {
+    a_pr_import_SEB;
+  }
+}
+
+action a_pr_import_64_79() {
   modify_field(extracted.data, extracted.data + (ext[64].data << 280));
   modify_field(extracted.data, extracted.data + (ext[65].data << 272));
   modify_field(extracted.data, extracted.data + (ext[66].data << 264));
@@ -135,9 +118,9 @@ action a_pr_import_60_79() {
   modify_field(extracted.data, extracted.data + (ext[79].data << 160));
 }
 
-table tset_pr_60_79 {
+table tset_pr_64_79 {
   actions {
-    a_pr_import_60_79;
+    a_pr_import_64_79;
   }
 }
 
@@ -516,16 +499,10 @@ control setup {
   }
   if(parse_ctrl.next_action == PROCEED) { // 11
     apply(tset_pr_SEB);
-    if(parse_ctrl.numbytes > 20) { // 12
-      apply(tset_pr_20_39);
-      if(parse_ctrl.numbytes > 40) { // 13
-        apply(tset_pr_40_59);
-        if(parse_ctrl.numbytes > 60) { // 14
-          apply(tset_pr_60_79);
-          if(parse_ctrl.numbytes > 80) { // 15
-            apply(tset_pr_80_99);
-          }
-        }
+    if(parse_ctrl.numbytes > 64) { // 12
+      apply(tset_pr_64_79);
+      if(parse_ctrl.numbytes > 80) { // 13
+        apply(tset_pr_80_99);
       }
     }
     apply(tset_pipeline_config);
