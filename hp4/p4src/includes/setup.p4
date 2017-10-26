@@ -26,7 +26,7 @@ setup.p4:
 //  a_set_pipeline -> pipeline_config
 
 action a_pr_import_SEB() {
-  modify_field(extracted.data, (ext_first.data << 288));
+  modify_field(extracted.data, (ext_first.data << 480));
 }
 
 table tset_pr_SEB {
@@ -35,52 +35,85 @@ table tset_pr_SEB {
   }
 }
 
-action a_pr_import_64_79() {
-  modify_field(extracted.data, extracted.data + (ext[0].data << 280));
-  modify_field(extracted.data, extracted.data + (ext[1].data << 272));
-  modify_field(extracted.data, extracted.data + (ext[2].data << 264));
-  modify_field(extracted.data, extracted.data + (ext[3].data << 256));
-  modify_field(extracted.data, extracted.data + (ext[4].data << 248));
-  modify_field(extracted.data, extracted.data + (ext[5].data << 240));
-  modify_field(extracted.data, extracted.data + (ext[6].data << 232));
-  modify_field(extracted.data, extracted.data + (ext[7].data << 224));
-  modify_field(extracted.data, extracted.data + (ext[8].data << 216));
-  modify_field(extracted.data, extracted.data + (ext[9].data << 208));
-  modify_field(extracted.data, extracted.data + (ext[10].data << 200));
-  modify_field(extracted.data, extracted.data + (ext[11].data << 192));
-  modify_field(extracted.data, extracted.data + (ext[12].data << 184));
-  modify_field(extracted.data, extracted.data + (ext[13].data << 176));
-  modify_field(extracted.data, extracted.data + (ext[14].data << 168));
-  modify_field(extracted.data, extracted.data + (ext[15].data << 160));
+action a_pr_import_40_59() {
+  modify_field(extracted.data, extracted.data + (ext[0].data << 472));
+  modify_field(extracted.data, extracted.data + (ext[1].data << 464));
+  modify_field(extracted.data, extracted.data + (ext[2].data << 456));
+  modify_field(extracted.data, extracted.data + (ext[3].data << 448));
+  modify_field(extracted.data, extracted.data + (ext[4].data << 440));
+  modify_field(extracted.data, extracted.data + (ext[5].data << 432));
+  modify_field(extracted.data, extracted.data + (ext[6].data << 424));
+  modify_field(extracted.data, extracted.data + (ext[7].data << 416));
+  modify_field(extracted.data, extracted.data + (ext[8].data << 408));
+  modify_field(extracted.data, extracted.data + (ext[9].data << 400));
+  modify_field(extracted.data, extracted.data + (ext[10].data << 392));
+  modify_field(extracted.data, extracted.data + (ext[11].data << 384));
+  modify_field(extracted.data, extracted.data + (ext[12].data << 376));
+  modify_field(extracted.data, extracted.data + (ext[13].data << 368));
+  modify_field(extracted.data, extracted.data + (ext[14].data << 360));
+  modify_field(extracted.data, extracted.data + (ext[15].data << 352));
+  modify_field(extracted.data, extracted.data + (ext[16].data << 344));
+  modify_field(extracted.data, extracted.data + (ext[17].data << 336));
+  modify_field(extracted.data, extracted.data + (ext[18].data << 328));
+  modify_field(extracted.data, extracted.data + (ext[19].data << 320));
 }
 
-table tset_pr_64_79 {
+table tset_pr_40_59 {
   actions {
-    a_pr_import_64_79;
+    a_pr_import_40_59;
+  }
+}
+
+action a_pr_import_60_79() {
+  modify_field(extracted.data, extracted.data + (ext[20].data << 312));
+  modify_field(extracted.data, extracted.data + (ext[21].data << 304));
+  modify_field(extracted.data, extracted.data + (ext[22].data << 296));
+  modify_field(extracted.data, extracted.data + (ext[23].data << 288));
+  modify_field(extracted.data, extracted.data + (ext[24].data << 280));
+  modify_field(extracted.data, extracted.data + (ext[25].data << 272));
+  modify_field(extracted.data, extracted.data + (ext[26].data << 264));
+  modify_field(extracted.data, extracted.data + (ext[27].data << 256));
+  modify_field(extracted.data, extracted.data + (ext[28].data << 248));
+  modify_field(extracted.data, extracted.data + (ext[29].data << 240));
+  modify_field(extracted.data, extracted.data + (ext[30].data << 232));
+  modify_field(extracted.data, extracted.data + (ext[31].data << 224));
+  modify_field(extracted.data, extracted.data + (ext[32].data << 216));
+  modify_field(extracted.data, extracted.data + (ext[33].data << 208));
+  modify_field(extracted.data, extracted.data + (ext[34].data << 200));
+  modify_field(extracted.data, extracted.data + (ext[35].data << 192));
+  modify_field(extracted.data, extracted.data + (ext[36].data << 184));
+  modify_field(extracted.data, extracted.data + (ext[37].data << 176));
+  modify_field(extracted.data, extracted.data + (ext[38].data << 168));
+  modify_field(extracted.data, extracted.data + (ext[39].data << 160));
+}
+
+table tset_pr_60_79 {
+  actions {
+    a_pr_import_60_79;
   }
 }
 
 action a_pr_import_80_99() {
-  modify_field(extracted.data, extracted.data + (ext[16].data << 152));
-  modify_field(extracted.data, extracted.data + (ext[17].data << 144));
-  modify_field(extracted.data, extracted.data + (ext[18].data << 136));
-  modify_field(extracted.data, extracted.data + (ext[19].data << 128));
-  modify_field(extracted.data, extracted.data + (ext[20].data << 120));
-  modify_field(extracted.data, extracted.data + (ext[21].data << 112));
-  modify_field(extracted.data, extracted.data + (ext[22].data << 104));
-  modify_field(extracted.data, extracted.data + (ext[23].data << 96));
-  modify_field(extracted.data, extracted.data + (ext[24].data << 88));
-  modify_field(extracted.data, extracted.data + (ext[25].data << 80));
-  modify_field(extracted.data, extracted.data + (ext[26].data << 72));
-  modify_field(extracted.data, extracted.data + (ext[27].data << 64));
-  modify_field(extracted.data, extracted.data + (ext[28].data << 56));
-  modify_field(extracted.data, extracted.data + (ext[29].data << 48));
-  modify_field(extracted.data, extracted.data + (ext[30].data << 40));
-  modify_field(extracted.data, extracted.data + (ext[31].data << 32));
-  modify_field(extracted.data, extracted.data + (ext[32].data << 24));
-  modify_field(extracted.data, extracted.data + (ext[33].data << 16));
-  modify_field(extracted.data, extracted.data + (ext[34].data << 8));
-  modify_field(extracted.data, extracted.data + (ext[35].data << 0));
+  modify_field(extracted.data, extracted.data + (ext[40].data << 152));
+  modify_field(extracted.data, extracted.data + (ext[41].data << 144));
+  modify_field(extracted.data, extracted.data + (ext[42].data << 136));
+  modify_field(extracted.data, extracted.data + (ext[43].data << 128));
+  modify_field(extracted.data, extracted.data + (ext[44].data << 120));
+  modify_field(extracted.data, extracted.data + (ext[45].data << 112));
+  modify_field(extracted.data, extracted.data + (ext[46].data << 104));
+  modify_field(extracted.data, extracted.data + (ext[47].data << 96));
+  modify_field(extracted.data, extracted.data + (ext[48].data << 88));
+  modify_field(extracted.data, extracted.data + (ext[49].data << 80));
+  modify_field(extracted.data, extracted.data + (ext[50].data << 72));
+  modify_field(extracted.data, extracted.data + (ext[51].data << 64));
+  modify_field(extracted.data, extracted.data + (ext[52].data << 56));
+  modify_field(extracted.data, extracted.data + (ext[53].data << 48));
+  modify_field(extracted.data, extracted.data + (ext[54].data << 40));
+  modify_field(extracted.data, extracted.data + (ext[55].data << 32));
+  modify_field(extracted.data, extracted.data + (ext[56].data << 24));
+  modify_field(extracted.data, extracted.data + (ext[57].data << 16));
+  modify_field(extracted.data, extracted.data + (ext[58].data << 8));
+  modify_field(extracted.data, extracted.data + ext[59].data);
 }
 
 table tset_pr_80_99 {
@@ -195,7 +228,16 @@ table tset_parse_select_40_49 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext_first.data : ternary;
+    ext[0].data : ternary;
+    ext[1].data : ternary;
+    ext[2].data : ternary;
+    ext[3].data : ternary;
+    ext[4].data : ternary;
+    ext[5].data : ternary;
+    ext[6].data : ternary;
+    ext[7].data : ternary;
+    ext[8].data : ternary;
+    ext[9].data : ternary;
   }
   actions {
     set_next_action;
@@ -209,7 +251,16 @@ table tset_parse_select_50_59 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext_first.data : ternary;
+    ext[10].data : ternary;
+    ext[11].data : ternary;
+    ext[12].data : ternary;
+    ext[13].data : ternary;
+    ext[14].data : ternary;
+    ext[15].data : ternary;
+    ext[16].data : ternary;
+    ext[17].data : ternary;
+    ext[18].data : ternary;
+    ext[19].data : ternary;
   }
   actions {
     set_next_action;
@@ -223,13 +274,16 @@ table tset_parse_select_60_69 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext_first.data : ternary;
-    ext[0].data : ternary;
-    ext[1].data : ternary;
-    ext[2].data : ternary;
-    ext[3].data : ternary;
-    ext[4].data : ternary;
-    ext[5].data : ternary;
+    ext[20].data : ternary;
+    ext[21].data : ternary;
+    ext[22].data : ternary;
+    ext[23].data : ternary;
+    ext[24].data : ternary;
+    ext[25].data : ternary;
+    ext[26].data : ternary;
+    ext[27].data : ternary;
+    ext[28].data : ternary;
+    ext[29].data : ternary;
   }
   actions {
     set_next_action;
@@ -243,16 +297,16 @@ table tset_parse_select_70_79 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext[6].data : ternary;
-    ext[7].data : ternary;
-    ext[8].data : ternary;
-    ext[9].data : ternary;
-    ext[10].data : ternary;
-    ext[11].data : ternary;
-    ext[12].data : ternary;
-    ext[13].data : ternary;
-    ext[14].data : ternary;
-    ext[15].data : ternary;
+    ext[30].data : ternary;
+    ext[31].data : ternary;
+    ext[32].data : ternary;
+    ext[33].data : ternary;
+    ext[34].data : ternary;
+    ext[35].data : ternary;
+    ext[36].data : ternary;
+    ext[37].data : ternary;
+    ext[38].data : ternary;
+    ext[39].data : ternary;
   }
   actions {
     set_next_action;
@@ -266,16 +320,16 @@ table tset_parse_select_80_89 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext[16].data : ternary;
-    ext[17].data : ternary;
-    ext[18].data : ternary;
-    ext[19].data : ternary;
-    ext[20].data : ternary;
-    ext[21].data : ternary;
-    ext[22].data : ternary;
-    ext[23].data : ternary;
-    ext[24].data : ternary;
-    ext[25].data : ternary;
+    ext[40].data : ternary;
+    ext[41].data : ternary;
+    ext[42].data : ternary;
+    ext[43].data : ternary;
+    ext[44].data : ternary;
+    ext[45].data : ternary;
+    ext[46].data : ternary;
+    ext[47].data : ternary;
+    ext[48].data : ternary;
+    ext[49].data : ternary;
   }
   actions {
     set_next_action;
@@ -289,16 +343,16 @@ table tset_parse_select_90_99 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state : exact;
-    ext[26].data : ternary;
-    ext[27].data : ternary;
-    ext[28].data : ternary;
-    ext[29].data : ternary;
-    ext[30].data : ternary;
-    ext[31].data : ternary;
-    ext[32].data : ternary;
-    ext[33].data : ternary;
-    ext[34].data : ternary;
-    ext[35].data : ternary;
+    ext[50].data : ternary;
+    ext[51].data : ternary;
+    ext[52].data : ternary;
+    ext[53].data : ternary;
+    ext[54].data : ternary;
+    ext[55].data : ternary;
+    ext[56].data : ternary;
+    ext[57].data : ternary;
+    ext[58].data : ternary;
+    ext[59].data : ternary;
   }
   actions {
     set_next_action;
@@ -377,10 +431,13 @@ control setup {
   }
   if(parse_ctrl.next_action == PROCEED) { // 11
     apply(tset_pr_SEB);
-    if(parse_ctrl.numbytes > 64) { // 12
-      apply(tset_pr_64_79);
-      if(parse_ctrl.numbytes > 80) { // 13
-        apply(tset_pr_80_99);
+    if(parse_ctrl.numbytes > 40) { // 12
+      apply(tset_pr_40_59);
+      if(parse_ctrl.numbytes > 60) { // 13
+        apply(tset_pr_60_79);
+        if(parse_ctrl.numbytes > 80) { // 14
+          apply(tset_pr_80_99);
+        }
       }
     }
     apply(tset_pipeline_config);
