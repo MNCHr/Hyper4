@@ -26,7 +26,7 @@ setup.p4:
 //  a_set_pipeline -> pipeline_config
 
 action a_pr_import_SEB() {
-  modify_field(extracted.data, extracted.data + (ext_first.data << 288));
+  modify_field(extracted.data, (ext_first.data << 288));
 }
 
 table tset_pr_SEB {
