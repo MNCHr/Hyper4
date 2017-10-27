@@ -61,6 +61,7 @@ header_type meta_ctrl_t {
     econd : 1; // whether egress handling mode is 'conditional'
     efilter : 1; // whether we filter if sm.egress_port == sm.ingress_port and
                  // virt_fwd_flag == FALSE
+    dropped : 1; // mark packet as dropped (0 = not dropped, 1 = dropped)
   }
 }
 

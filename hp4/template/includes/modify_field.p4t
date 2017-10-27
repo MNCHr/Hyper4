@@ -107,6 +107,7 @@ table t_mod_[+X+][+Y+] {
     mod_extracted_extracted;
     mod_meta_extracted;
     mod_extracted_meta;
+    mod_extracted_stdmeta_ingressport;
     _no_op;
   }
 }

@@ -3,6 +3,7 @@
 
 action a_drop() {
   drop();
+  modify_field(meta_ctrl.dropped, 1);
 }
 
 [+ dloop +]

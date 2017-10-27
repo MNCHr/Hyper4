@@ -62,7 +62,9 @@ control ingress {
       stage[+X+](); // stages.p4
     }
     [+ endsloop +]
-    apply(t_virtnet);
+    if (meta_ctrl.dropped == 0) {
+      apply(t_virtnet);
+    }
   }
 }
 
