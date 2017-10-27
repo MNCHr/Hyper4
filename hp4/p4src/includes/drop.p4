@@ -11,6 +11,7 @@ drop.p4: Implements the drop primitive.
 
 action a_drop() {
   drop();
+  modify_field(meta_ctrl.dropped, 1);
 }
 
 table t_drop_11 {
