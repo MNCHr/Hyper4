@@ -2,43 +2,25 @@
 [+ this_header +]
 
 metadata parse_ctrl_t parse_ctrl;
-header ext_t ext[100];
+header ext_first_t ext_first;
+header ext_t ext[60];
 
 parser start {
   set_metadata(parse_ctrl.next_action, PROCEED);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
+  extract(ext_first);
   return select(parse_ctrl.numbytes) {
     0 : ingress;
-    20 : ingress;
-    21 : pr01;
-    22 : pr02;
-    23 : pr03;
-    24 : pr04;
-    25 : pr05;
-    26 : pr06;
-    27 : pr07;
-    28 : pr08;
-    29 : pr09;
-    default : p30;
+    40 : ingress;
+    41 : pr01;
+    42 : pr02;
+    43 : pr03;
+    44 : pr04;
+    45 : pr05;
+    46 : pr06;
+    47 : pr07;
+    48 : pr08;
+    49 : pr09;
+    default : p50;
   }
 }
 
@@ -121,58 +103,6 @@ parser pr09 {
   extract(ext[next]);
   extract(ext[next]);
   return ingress;
-}
-
-parser p30 {
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  return select(parse_ctrl.numbytes) {
-    30 : ingress;
-    31 : pr01;
-    32 : pr02;
-    33 : pr03;
-    34 : pr04;
-    35 : pr05;
-    36 : pr06;
-    37 : pr07;
-    38 : pr08;
-    39 : pr09;
-    default : p40;
-  }
-}
-
-parser p40 {
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  extract(ext[next]);
-  return select(parse_ctrl.numbytes) {
-    40 : ingress;
-    41 : pr01;
-    42 : pr02;
-    43 : pr03;
-    44 : pr04;
-    45 : pr05;
-    46 : pr06;
-    47 : pr07;
-    48 : pr08;
-    49 : pr09;
-    default : p50;
-  }
 }
 
 parser p50 {

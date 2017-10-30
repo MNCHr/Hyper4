@@ -83,6 +83,12 @@ header_type tmeta_t {
   }
 }
 
+header_type ext_first_t {
+  fields {
+    data : 320;
+  }
+}
+
 header_type ext_t {
   fields {
     data : 8;
