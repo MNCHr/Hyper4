@@ -6,20 +6,10 @@ NANO_PATH=$THIS_DIR/../tools/nanomsg_client.py
 
 PROJ=${PWD##*/}
 
-SW=0
-QUIETOPT=
+ARG1=22222
 
-if [ $# -eq 1 ]
-  then
-    SW=$(($1-1))
+if [ "$#" -gt 0 ]; then
+  ARG1=$1
 fi
 
-if [ $# -eq 2 ]
-  then
-    if [[ $2 == q ]];
-      then
-        QUIETOPT=--quiet
-    fi
-fi
-
-sudo $NANO_PATH --json $PROJ.json --socket ipc:///tmp/bm-$SW-log.ipc $QUIETOPT
+sudo $NANO_PATH --thrift-port $ARG1

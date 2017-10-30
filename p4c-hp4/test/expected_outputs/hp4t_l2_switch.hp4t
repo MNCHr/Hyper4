@@ -1,4 +1,0 @@
-table_add tset_context set_program [PPORT] => [program ID] [VPORT_0]
-table_add tset_control set_next_action [program ID] 0 => [PROCEED] 1
-table_set_default tset_pr_SEB a_pr_import_SEB
-table_add tset_pipeline a_set_pipeline [program ID] 1 => [EXTRACTED_EXACT] 0x80000000000000000000

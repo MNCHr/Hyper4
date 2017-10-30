@@ -1,4 +1,0 @@
-add_user fred
-add_user george
-add_user bob
-add_device 127.0.0.1 22222 SimplePre beowulf 1000 1 2 3 4

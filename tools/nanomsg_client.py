@@ -1,7 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
-# Modified by David Hancock (dhancock@cs.utah.edu); original license info below.
-#
 # Copyright 2013-present Barefoot Networks, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,15 +25,17 @@ import struct
 import sys
 import json
 import argparse
+import bmpy_utils as utils
 
 parser = argparse.ArgumentParser(description='BM nanomsg event logger client')
 parser.add_argument('--socket', help='IPC socket to which to subscribe',
-                    action="store", default="ipc:///tmp/bm-0-log.ipc")
-
-parser.add_argument('--json', help='JSON description of P4 program',
-                    action="store")
-parser.add_argument('--quiet', help='print only PACKET_IN, PACKET_OUT, and TABLE_* events',
-                    action="store_true")
+                    action="store", required=False)
+parser.add_argument('--json', help='JSON description of P4 program [deprecated]',
+                    action="store", required=False)
+parser.add_argument('--thrift-port', help='Thrift server port for table updates',
+                    type=int, action="store", default=9090)
+parser.add_argument('--thrift-ip', help='Thrift IP address for table updates',
+                    type=str, action="store", default='localhost')
 
 args = parser.parse_args()
 
@@ -43,24 +43,27 @@ class NameMap:
     def __init__(self):
         self.names = {}
 
-    def load_names(self, json_src):
-        with open(json_src, 'r') as f:
-            json_ = json.load(f)
-            
-            for type_ in {"header_type", "header", "parser",
-                          "deparser", "action", "pipeline", "checksum"}:
-                json_list = json_[type_ + "s"]
-                for obj in json_list:
-                    self.names[(type_, obj["id"])] = obj["name"]
+    def load_names(self, json_cfg):
+        self.names = {}
+        json_ = json.loads(json_cfg)
+        # special case where the switch was started with an empty config
+        if len(json_.keys()) == 0:
+            return
 
-            for pipeline in json_["pipelines"]:
-                tables = pipeline["tables"]
-                for obj in tables:
-                    self.names[("table", obj["id"])] = obj["name"]
+        for type_ in {"header_type", "header", "parser",
+                      "deparser", "action", "pipeline", "checksum"}:
+            json_list = json_[type_ + "s"]
+            for obj in json_list:
+                self.names[(type_, obj["id"])] = obj["name"]
 
-                conds = pipeline["conditionals"]
-                for obj in conds:
-                    self.names[("condition", obj["id"])] = obj["name"]
+        for pipeline in json_["pipelines"]:
+            tables = pipeline["tables"]
+            for obj in tables:
+                self.names[("table", obj["id"])] = obj["name"]
+
+            conds = pipeline["conditionals"]
+            for obj in conds:
+                self.names[("condition", obj["id"])] = obj["name"]
 
     def get_name(self, type_, id_):
         return self.names.get( (type_, id_), None )
@@ -78,6 +81,7 @@ class MSG_TYPES:
      PIPELINE_START, PIPELINE_DONE,
      CONDITION_EVAL, TABLE_HIT, TABLE_MISS,
      ACTION_EXECUTE) = range(15)
+    CONFIG_CHANGE = 999
 
     @staticmethod
     def get_msg_class(type_):
@@ -97,6 +101,7 @@ class MSG_TYPES:
             MSG_TYPES.TABLE_HIT: TableHit,
             MSG_TYPES.TABLE_MISS: TableMiss,
             MSG_TYPES.ACTION_EXECUTE: ActionExecute,
+            MSG_TYPES.CONFIG_CHANGE: ConfigChange,
         }
         return classes[type_]
 
@@ -118,6 +123,7 @@ class MSG_TYPES:
             MSG_TYPES.TABLE_HIT: "TABLE_HIT",
             MSG_TYPES.TABLE_MISS: "TABLE_MISS",
             MSG_TYPES.ACTION_EXECUTE: "ACTION_EXECUTE",
+            MSG_TYPES.CONFIG_CHANGE: "CONFIG_CHANGE",
         }
         return strs[type_]
 
@@ -138,7 +144,7 @@ class Msg(object):
         return self.struct_.unpack(msg_remainder)
 
     def __str__(self):
-        return "type: %s, switch_id: %d, cxt_id : %d, sig: %d, " \
+        return "type: %s, switch_id: %d, cxt_id: %d, sig: %d, " \
             "id: %d, copy_id: %d" %\
             (self.type_str, self.switch_id, self.cxt_id,
              self.sig, self.id_, self.copy_id)
@@ -149,7 +155,7 @@ class PacketIn(Msg):
         self.type_ = MSG_TYPES.PACKET_IN
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.port_in, = super(PacketIn, self).extract()
 
@@ -163,7 +169,7 @@ class PacketOut(Msg):
         self.type_ = MSG_TYPES.PACKET_OUT
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.port_out, = super(PacketOut, self).extract()
 
@@ -177,7 +183,7 @@ class ParserStart(Msg):
         self.type_ = MSG_TYPES.PARSER_START
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.parser_id, = super(ParserStart, self).extract()
 
@@ -194,7 +200,7 @@ class ParserDone(Msg):
         self.type_ = MSG_TYPES.PARSER_DONE
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.parser_id, = super(ParserDone, self).extract()
 
@@ -211,7 +217,7 @@ class ParserExtract(Msg):
         self.type_ = MSG_TYPES.PARSER_EXTRACT
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.header_id, = super(ParserExtract, self).extract()
 
@@ -228,7 +234,7 @@ class DeparserStart(Msg):
         self.type_ = MSG_TYPES.DEPARSER_START
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.deparser_id, = super(DeparserStart, self).extract()
 
@@ -245,7 +251,7 @@ class DeparserDone(Msg):
         self.type_ = MSG_TYPES.DEPARSER_DONE
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.deparser_id, = super(DeparserDone, self).extract()
 
@@ -262,7 +268,7 @@ class DeparserEmit(Msg):
         self.type_ = MSG_TYPES.DEPARSER_EMIT
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
          self.header_id, = super(DeparserEmit, self).extract()
 
@@ -279,7 +285,7 @@ class ChecksumUpdate(Msg):
         self.type_ = MSG_TYPES.CHECKSUM_UPDATE
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
          self.cksum_id, = super(ChecksumUpdate, self).extract()
 
@@ -296,7 +302,7 @@ class PipelineStart(Msg):
         self.type_ = MSG_TYPES.PIPELINE_START
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.pipeline_id, = super(PipelineStart, self).extract()
 
@@ -313,7 +319,7 @@ class PipelineDone(Msg):
         self.type_ = MSG_TYPES.PIPELINE_DONE
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.pipeline_id, = super(PipelineDone, self).extract()
 
@@ -330,7 +336,7 @@ class ConditionEval(Msg):
         self.type_ = MSG_TYPES.CONDITION_EVAL
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("ii")
-        
+
     def extract(self):
         self.condition_id, self.result = super(ConditionEval, self).extract()
         self.result = True if self.result != 0 else False
@@ -350,7 +356,7 @@ class TableHit(Msg):
         self.type_ = MSG_TYPES.TABLE_HIT
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("ii")
-        
+
     def extract(self):
         self.table_id, self.entry_hdl = super(TableHit, self).extract()
 
@@ -368,7 +374,7 @@ class TableMiss(Msg):
         self.type_ = MSG_TYPES.TABLE_MISS
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.table_id, = super(TableMiss, self).extract()
 
@@ -385,7 +391,7 @@ class ActionExecute(Msg):
         self.type_ = MSG_TYPES.ACTION_EXECUTE
         self.type_str = MSG_TYPES.get_str(self.type_)
         self.struct_ = struct.Struct("i")
-        
+
     def extract(self):
         self.action_id, = super(ActionExecute, self).extract()
 
@@ -396,16 +402,34 @@ class ActionExecute(Msg):
         if name: s += " (" + name + ")"
         return s
 
-def recv_msgs():
+class ConfigChange(Msg):
+    def __init__(self, msg):
+        super(ConfigChange, self).__init__(msg)
+        self.type_ = MSG_TYPES.CONFIG_CHANGE
+        self.type_str = MSG_TYPES.get_str(self.type_)
+        self.struct_ = struct.Struct("")
+
+    def extract(self):
+        super(ConfigChange, self).extract()
+
+    def __str__(self):
+        return "type: %s, switch_id: %d" % (self.type_str, self.switch_id)
+
+def json_init(client):
+    json_cfg = utils.get_json_config(standard_client=client)
+    name_map.load_names(json_cfg)
+
+def recv_msgs(socket_addr, client):
     def get_msg_type(msg):
         type_, = struct.unpack('i', msg[:4])
         return type_
 
+    json_init(client)
+
     sub = nnpy.Socket(nnpy.AF_SP, nnpy.SUB)
-    sub.connect(args.socket)
+    sub.connect(socket_addr)
     sub.setsockopt(nnpy.SUB, nnpy.SUB_SUBSCRIBE, '')
-    
-    count = 0
+
     while True:
         msg = sub.recv()
         msg_type = get_msg_type(msg)
@@ -415,21 +439,36 @@ def recv_msgs():
         except:
             print "Unknown msg type", msg_type
             continue
-        if args.quiet:
-          if p.type_str == "PACKET_IN" or ("TABLE" in p.type_str) or p.type_str == "PACKET_OUT": 
-            p.extract()
-            print(p)
-        else:
-          p.extract()
-          print(p)
+        p.extract()
+        print p
+
+        if p.type_ == MSG_TYPES.CONFIG_CHANGE:
+            print "The JSON config has changed"
+            print "Requesting new config from switch,",
+            print "which may cause some log messages to be dropped"
+            json_init(client)
 
 def main():
-    json_src = args.json
+    deprecated_args = ["json"]
+    for a in deprecated_args:
+        if getattr(args, a) is not None:
+            print "Command line option '--{}' is deprecated".format(a),
+            print "and will be ignored"
 
-    if json_src:
-        name_map.load_names(json_src)
+    client = utils.thrift_connect_standard(args.thrift_ip, args.thrift_port)
+    info = client.bm_mgmt_get_info()
+    socket_addr = info.elogger_socket
+    if socket_addr is None:
+        print "The event logger is not enabled on the switch,",
+        print "run with '--nanolog <ip addr>'"
+        sys.exit(1)
+    if args.socket is not None:
+        socket_addr = args.socket
+    else:
+        print "'--socket' not provided, using", socket_addr,
+        print "(obtained from switch)"
 
-    recv_msgs()
+    recv_msgs(socket_addr, client)
 
 if __name__ == "__main__":
     main()
