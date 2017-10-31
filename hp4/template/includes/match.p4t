@@ -117,34 +117,34 @@ table t[+X+]_stdmeta_egress_spec_exact {
 
 [+ sloop +]
 control match_[+X+] {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t[+X+]_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t[+X+]_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t[+X+]_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t[+X+]_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t[+X+]_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t[+X+]_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t[+X+]_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t[+X+]_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t[+X+]_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t[+X+]_extracted_ternary);
   }
 }

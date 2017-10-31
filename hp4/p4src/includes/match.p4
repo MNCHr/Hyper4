@@ -734,232 +734,232 @@ table t7_stdmeta_egress_spec_exact {
 }
 
 control match_1 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t1_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t1_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t1_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t1_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t1_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t1_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t1_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t1_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t1_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t1_extracted_ternary);
   }
 }
 
 control match_2 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t2_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t2_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t2_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t2_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t2_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t2_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t2_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t2_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t2_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t2_extracted_ternary);
   }
 }
 
 control match_3 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t3_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t3_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t3_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t3_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t3_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t3_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t3_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t3_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t3_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t3_extracted_ternary);
   }
 }
 
 control match_4 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t4_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t4_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t4_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t4_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t4_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t4_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t4_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t4_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t4_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t4_extracted_ternary);
   }
 }
 
 control match_5 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t5_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t5_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t5_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t5_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t5_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t5_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t5_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t5_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t5_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t5_extracted_ternary);
   }
 }
 
 control match_6 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t6_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t6_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t6_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t6_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t6_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t6_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t6_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t6_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t6_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t6_extracted_ternary);
   }
 }
 
 control match_7 {
-  if(meta_ctrl.next_table == EXTRACTED_EXACT) {
+  if(meta_ctrl.next_table == EXTRACTED_EXACT) { // 17 if X == 1
     apply(t7_extracted_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_EXACT) {
+  else if(meta_ctrl.next_table == METADATA_EXACT) { // 18 if X == 1
     apply(t7_metadata_exact);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_VALID) {
+  else if(meta_ctrl.next_table == EXTRACTED_VALID) { // 19 if X == 1
     apply(t7_extracted_valid);
   }
-  else if(meta_ctrl.next_table == MATCHLESS) {
+  else if(meta_ctrl.next_table == MATCHLESS) {  // 20 if X == 1
     apply(t7_matchless);
   }
-  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INGRESS_PORT_EXACT) {  // 21 if X == 1
     apply(t7_stdmeta_ingress_port_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_PACKET_LENGTH_EXACT) { // 22 if X == 1
     apply(t7_stdmeta_packet_length_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_INSTANCE_TYPE_EXACT) { // 23 if X == 1
     apply(t7_stdmeta_instance_type_exact);
   }
-  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) {
+  else if(meta_ctrl.next_table == STDMETA_EGRESS_SPEC_EXACT) { // 24 if X == 1
     apply(t7_stdmeta_egress_spec_exact);
   }
-  else if(meta_ctrl.next_table == METADATA_TERNARY) {
+  else if(meta_ctrl.next_table == METADATA_TERNARY) { // 25 if X == 1
     apply(t7_metadata_ternary);
   }
-  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) {
+  else if(meta_ctrl.next_table == EXTRACTED_TERNARY) { // 26 if X == 1
     apply(t7_extracted_ternary);
   }
 }

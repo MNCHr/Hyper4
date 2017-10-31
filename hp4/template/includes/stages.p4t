@@ -14,6 +14,7 @@ action update_state(primitive, primitive_subtype) {
 action finish_action(next_stage) {
   modify_field(meta_ctrl.next_stage, next_stage);
   modify_field(meta_ctrl.stage_state, COMPLETE);
+  modify_field(meta_primitive_state.action_ID, 0);
 }
 
 [+ dloop +]

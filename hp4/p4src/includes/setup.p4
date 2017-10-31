@@ -29,9 +29,9 @@ action a_pr_import_SEB() {
   modify_field(extracted.data, (ext_first.data << 480));
 }
 
-table tset_pr_40_59 {
+table tset_pr_SEB {
   actions {
-    a_pr_import_40_59;
+    a_pr_import_SEB;
   }
 }
 

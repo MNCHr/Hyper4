@@ -58,32 +58,32 @@ table t_virtnet {
 control ingress {
   setup();
 
-  if (meta_ctrl.stage == NORM) { // 16
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) {
+  if (meta_ctrl.stage == NORM) { // 15
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { // 16
       stage1(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) { // 16
       stage2(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) { // 16
       stage3(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) { // 16
       stage4(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // 16
       stage5(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) { // 16
       stage6(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) {
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) { // 16
       stage7(); // stages.p4
     }
     if (meta_ctrl.dropped == 0) {
@@ -213,19 +213,19 @@ control egress {
   //    apply(thp4_egress_filter_case2);
   //  }
   //}
-  if(meta_ctrl.virt_fwd_flag == 1) {
+  if(meta_ctrl.virt_fwd_flag == 1) { // 724
     apply(t_egr_virtnet); // recirculate, maybe clone_e2e
   }
 
   else if((standard_metadata.egress_port == standard_metadata.ingress_port) and
-          (meta_ctrl.efilter == 1)) {
+          (meta_ctrl.efilter == 1)) { // 725
     apply(egress_filter);
   }
 
   apply(t_checksum);          // checksums.p4
   apply(t_resize_pr);         // resize_pr.p4
   apply(t_prep_deparse_SEB);  // deparse_prep.p4
-  if(parse_ctrl.numbytes > 40) {
+  if(parse_ctrl.numbytes > 40) { // 726
     apply(t_prep_deparse_40_59);
     if(parse_ctrl.numbytes > 60) {
       apply(t_prep_deparse_60_79);
