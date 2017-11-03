@@ -23,9 +23,7 @@ action update_state(primitive, primitive_subtype) {
   modify_field(meta_primitive_state.subtype, primitive_subtype);
 }
 
-action finish_action(next_stage) {
-  modify_field(meta_ctrl.next_stage, next_stage);
-  modify_field(meta_ctrl.stage_state, COMPLETE);
+action finish_action() {
   modify_field(meta_primitive_state.action_ID, 0);
 }
 
@@ -724,31 +722,31 @@ table tstg79_update_state {
 
 control stage1 {
   match_1(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_11(); // switch_primitivetype.p4
     apply(tstg11_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_12(); // switch_primitivetype.p4
       apply(tstg12_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_13(); // switch_primitivetype.p4
         apply(tstg13_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_14(); // switch_primitivetype.p4
           apply(tstg14_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_15(); // switch_primitivetype.p4
             apply(tstg15_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_16(); // switch_primitivetype.p4
               apply(tstg16_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_17(); // switch_primitivetype.p4
                 apply(tstg17_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_18(); // switch_primitivetype.p4
                   apply(tstg18_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_19(); // switch_primitivetype.p4
                     apply(tstg19_update_state);
                   }
@@ -764,31 +762,31 @@ control stage1 {
 
 control stage2 {
   match_2(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_21(); // switch_primitivetype.p4
     apply(tstg21_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_22(); // switch_primitivetype.p4
       apply(tstg22_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_23(); // switch_primitivetype.p4
         apply(tstg23_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_24(); // switch_primitivetype.p4
           apply(tstg24_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_25(); // switch_primitivetype.p4
             apply(tstg25_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_26(); // switch_primitivetype.p4
               apply(tstg26_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_27(); // switch_primitivetype.p4
                 apply(tstg27_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_28(); // switch_primitivetype.p4
                   apply(tstg28_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_29(); // switch_primitivetype.p4
                     apply(tstg29_update_state);
                   }
@@ -804,31 +802,31 @@ control stage2 {
 
 control stage3 {
   match_3(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_31(); // switch_primitivetype.p4
     apply(tstg31_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_32(); // switch_primitivetype.p4
       apply(tstg32_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_33(); // switch_primitivetype.p4
         apply(tstg33_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_34(); // switch_primitivetype.p4
           apply(tstg34_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_35(); // switch_primitivetype.p4
             apply(tstg35_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_36(); // switch_primitivetype.p4
               apply(tstg36_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_37(); // switch_primitivetype.p4
                 apply(tstg37_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_38(); // switch_primitivetype.p4
                   apply(tstg38_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_39(); // switch_primitivetype.p4
                     apply(tstg39_update_state);
                   }
@@ -844,31 +842,31 @@ control stage3 {
 
 control stage4 {
   match_4(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_41(); // switch_primitivetype.p4
     apply(tstg41_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_42(); // switch_primitivetype.p4
       apply(tstg42_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_43(); // switch_primitivetype.p4
         apply(tstg43_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_44(); // switch_primitivetype.p4
           apply(tstg44_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_45(); // switch_primitivetype.p4
             apply(tstg45_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_46(); // switch_primitivetype.p4
               apply(tstg46_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_47(); // switch_primitivetype.p4
                 apply(tstg47_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_48(); // switch_primitivetype.p4
                   apply(tstg48_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_49(); // switch_primitivetype.p4
                     apply(tstg49_update_state);
                   }
@@ -884,31 +882,31 @@ control stage4 {
 
 control stage5 {
   match_5(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_51(); // switch_primitivetype.p4
     apply(tstg51_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_52(); // switch_primitivetype.p4
       apply(tstg52_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_53(); // switch_primitivetype.p4
         apply(tstg53_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_54(); // switch_primitivetype.p4
           apply(tstg54_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_55(); // switch_primitivetype.p4
             apply(tstg55_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_56(); // switch_primitivetype.p4
               apply(tstg56_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_57(); // switch_primitivetype.p4
                 apply(tstg57_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_58(); // switch_primitivetype.p4
                   apply(tstg58_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_59(); // switch_primitivetype.p4
                     apply(tstg59_update_state);
                   }
@@ -924,31 +922,31 @@ control stage5 {
 
 control stage6 {
   match_6(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_61(); // switch_primitivetype.p4
     apply(tstg61_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_62(); // switch_primitivetype.p4
       apply(tstg62_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_63(); // switch_primitivetype.p4
         apply(tstg63_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_64(); // switch_primitivetype.p4
           apply(tstg64_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_65(); // switch_primitivetype.p4
             apply(tstg65_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_66(); // switch_primitivetype.p4
               apply(tstg66_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_67(); // switch_primitivetype.p4
                 apply(tstg67_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_68(); // switch_primitivetype.p4
                   apply(tstg68_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_69(); // switch_primitivetype.p4
                     apply(tstg69_update_state);
                   }
@@ -964,31 +962,31 @@ control stage6 {
 
 control stage7 {
   match_7(); // match.p4
-  if(meta_ctrl.stage_state != COMPLETE) {
+  if(meta_primitive_state.action_ID != 0) {
     switch_primitivetype_71(); // switch_primitivetype.p4
     apply(tstg71_update_state);
-    if(meta_ctrl.stage_state != COMPLETE) {
+    if(meta_primitive_state.action_ID != 0) {
       switch_primitivetype_72(); // switch_primitivetype.p4
       apply(tstg72_update_state);
-      if(meta_ctrl.stage_state != COMPLETE) {
+      if(meta_primitive_state.action_ID != 0) {
         switch_primitivetype_73(); // switch_primitivetype.p4
         apply(tstg73_update_state);
-        if(meta_ctrl.stage_state != COMPLETE) {
+        if(meta_primitive_state.action_ID != 0) {
           switch_primitivetype_74(); // switch_primitivetype.p4
           apply(tstg74_update_state);
-          if(meta_ctrl.stage_state != COMPLETE) {
+          if(meta_primitive_state.action_ID != 0) {
             switch_primitivetype_75(); // switch_primitivetype.p4
             apply(tstg75_update_state);
-            if(meta_ctrl.stage_state != COMPLETE) {
+            if(meta_primitive_state.action_ID != 0) {
               switch_primitivetype_76(); // switch_primitivetype.p4
               apply(tstg76_update_state);
-              if(meta_ctrl.stage_state != COMPLETE) {
+              if(meta_primitive_state.action_ID != 0) {
                 switch_primitivetype_77(); // switch_primitivetype.p4
                 apply(tstg77_update_state);
-                if(meta_ctrl.stage_state != COMPLETE) {
+                if(meta_primitive_state.action_ID != 0) {
                   switch_primitivetype_78(); // switch_primitivetype.p4
                   apply(tstg78_update_state);
-                  if(meta_ctrl.stage_state != COMPLETE) {
+                  if(meta_primitive_state.action_ID != 0) {
                     switch_primitivetype_79(); // switch_primitivetype.p4
                     apply(tstg79_update_state);
                   }

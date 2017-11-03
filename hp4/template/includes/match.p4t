@@ -1,14 +1,14 @@
 [+ std_header +]
 [+ this_header +]
 
-action init_program_state(action_ID, match_ID, next_table, primitive, primitive_subtype) {
+action init_program_state(action_ID, match_ID, next_stage, next_table, primitive, primitive_subtype) {
   modify_field(meta_primitive_state.action_ID, action_ID);
   modify_field(meta_primitive_state.match_ID, match_ID);
+  modify_field(meta_ctrl.next_stage, next_stage);
   modify_field(meta_primitive_state.primitive_index, 1);
   modify_field(meta_ctrl.next_table, next_table);
   modify_field(meta_primitive_state.primitive, primitive);
   modify_field(meta_primitive_state.subtype, primitive_subtype);
-  modify_field(meta_ctrl.stage_state, CONTINUE);
 }
 
 [+ sloop +]
@@ -77,7 +77,7 @@ table t[+X+]_extracted_valid {
 table t[+X+]_stdmeta_ingress_port_exact {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_ctrl.virt_ingress_port : exact;
+    meta_ctrl.virt_ingress_port : ternary;
   }
   actions {
     init_program_state;
@@ -87,7 +87,7 @@ table t[+X+]_stdmeta_ingress_port_exact {
 table t[+X+]_stdmeta_packet_length_exact {
   reads {
     meta_ctrl.vdev_ID : exact;
-    standard_metadata.packet_length : exact;
+    standard_metadata.packet_length : ternary;
   }
   actions {
     init_program_state;
@@ -97,7 +97,7 @@ table t[+X+]_stdmeta_packet_length_exact {
 table t[+X+]_stdmeta_instance_type_exact {
   reads {
     meta_ctrl.vdev_ID : exact;
-    standard_metadata.instance_type : exact;
+    standard_metadata.instance_type : ternary;
   }
   actions {
     init_program_state;
@@ -107,7 +107,7 @@ table t[+X+]_stdmeta_instance_type_exact {
 table t[+X+]_stdmeta_egress_spec_exact {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_ctrl.virt_egress_spec : exact;
+    meta_ctrl.virt_egress_spec : ternary;
   }
   actions {
     init_program_state;
