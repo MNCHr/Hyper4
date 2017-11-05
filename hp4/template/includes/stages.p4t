@@ -32,7 +32,7 @@ table tstg[+X+][+Y+]_update_state {
 control stage[+X+] {
   match_[+X+](); // match.p4
   [+ nif +]
-  if(meta_primitive_state.action_ID != 0) {
+  if(meta_primitive_state.action_ID != 0) { // 27|128|...
     switch_primitivetype_[+X+][+Y+](); // switch_primitivetype.p4
     apply(tstg[+X+][+Y+]_update_state);
   [+ endnif +]

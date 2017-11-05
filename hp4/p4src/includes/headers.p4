@@ -47,7 +47,7 @@ header_type meta_ctrl_t {
     vdev_ID : 8; // identifies which program to run
     next_vdev_ID : 8;
     stage : 2; // INIT, NORM, VFWD
-    next_table : 4;
+    next_table : 8;
     mcast_current_egress : 8;
     mcast_grp_id : 8;
     vmcast_grp_id : 8;

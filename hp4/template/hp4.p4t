@@ -58,7 +58,7 @@ control ingress {
 
   if (meta_ctrl.stage == NORM) { // 15
     [+ sloop +]
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == [+X+]) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == [+X+]) { // 16|117|218|...
       stage[+X+](); // stages.p4
     }
     [+ endsloop +]

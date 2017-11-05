@@ -59,31 +59,31 @@ control ingress {
   setup();
 
   if (meta_ctrl.stage == NORM) { // 15
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { // 16|117|218|...
       stage1(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) { // 16|117|218|...
       stage2(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) { // 16|117|218|...
       stage3(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) { // 16|117|218|...
       stage4(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // 16|117|218|...
       stage5(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) { // 16|117|218|...
       stage6(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) { // 16
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) { // 16|117|218|...
       stage7(); // stages.p4
     }
     if (meta_ctrl.dropped == 0) {
