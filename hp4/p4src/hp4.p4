@@ -141,6 +141,7 @@ field_list fl_recirc {
   meta_ctrl.virt_ingress_port;
   meta_ctrl.stage;
   meta_ctrl.virt_egress_spec;
+  meta_ctrl.orig_virt_ingress_port;
 }
 
 field_list fl_clone {
