@@ -66,7 +66,7 @@ action mod_extracted_const(leftshift, emask, val) {
 
 // 11
 action mod_stdmeta_egressspec_stdmeta_ingressport() {
-  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.virt_ingress_port);
+  modify_field(meta_ctrl.virt_egress_spec, meta_ctrl.orig_virt_ingress_port);
 }
 
 // 12

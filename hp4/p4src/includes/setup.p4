@@ -125,6 +125,7 @@ table tset_pr_80_99 {
 action a_set_context(vdev_ID, vingress) {
   modify_field(meta_ctrl.vdev_ID, vdev_ID);
   modify_field(meta_ctrl.virt_ingress_port, vingress);
+  modify_field(meta_ctrl.orig_virt_ingress_port, vingress);
 }
 
 table tset_context {

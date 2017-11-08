@@ -56,6 +56,7 @@ header_type meta_ctrl_t {
     mc_flag : 1;
     virt_egress_spec : 8;
     virt_ingress_port : 8;
+    orig_virt_ingress_port : 8;
     virt_fwd_flag : 8;
     econd : 1; // whether egress handling mode is 'conditional'
     efilter : 1; // whether we filter if sm.egress_port == sm.ingress_port and
