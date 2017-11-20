@@ -33,22 +33,10 @@ filestart2 = "run" + sys.argv[1] + "-eth2"
 
 file1pcap = filestart1 + ".pcap"
 file2pcap = filestart2 + ".pcap"
-#file1txt = filestart1 + ".txt"
-#file2txt = filestart2 + ".txt"
-
-# use tcpdump -r to convert .pcap files to .txt
-#execstr1 = "tcpdump -r " + file1pcap + " > " + file1txt
-#execstr2 = "tcpdump -r " + file2pcap + " > " + file2txt
-#os.system(execstr1)
-#os.system(execstr2)
 
 times1 = {}
 times2 = {}
 diffs = []
-
-#curr_year = int(time.strftime("%Y"))
-#curr_month = int(time.strftime("%m"))
-#curr_day = int(time.strftime("%d"))
 
 # process the two files
 packets_eth1 = sniff(offline=file1pcap)
@@ -84,23 +72,7 @@ for pkt in packets_eth2:
   else:
     continue
   times2[(ip, seq)] = pkt.time
-code.interact(local=locals())
-'''
-i = 0
-with open(file1txt, 'r') as f1:
-  for line in f1:
-    i += 1
-    # store the time in an array
-    t = datetime.datetime.strptime( line.split()[0], "%H:%M:%S.%f" )
-    t = t.replace(year=curr_year, month=curr_month, day=curr_day)
-    ip = line.split(' ')[2]
-    code.interact(local=locals())
-    seq = int(line.split(', ')[2].split('seq ')[1])
-    times1[(ip, seq)] = time.mktime(t.timetuple()) + (t.microsecond / 1000000.0)
 
-if i < 1000:
-  print("WARNING: number of samples in " + file1txt + " (%d) less than 1000; percentile values may not be appropriate" % i)
-'''
 lostpkts = []
 # - calculate difference between corresponding timestamps
 for key in times1.keys():
@@ -119,7 +91,6 @@ arr = np.array(diffs)
 
 density, bins = np.histogram(arr, density=True)
 unity_density = density / density.sum()
-#pbins = np.arange(0, 104, 4)
 pbins = np.array([0, 50, 90, 99, 99.9, 99.99, 100])
 pindices = np.arange(len(pbins))
 percentile = np.zeros(len(pbins))
@@ -133,7 +104,6 @@ widths = bins[:-1] - bins[1:]
 ax1.bar(bins[1:], unity_density, width=widths)
 ax2.bar(bins[1:], unity_density.cumsum(), width = widths)
 ax3.plot(pindices, percentile)
-#ax3.plot(pbins, percentile)
 ax3.xaxis.set_ticks(pindices)
 ax3.xaxis.set_ticklabels(pbins)
 ax1.set_xlabel('PDF (ms)')

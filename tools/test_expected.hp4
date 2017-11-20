@@ -1,9 +1,0 @@
-table_add t_set_validbits a_set_validbits 1 1 => 0xC0000000000000000000
-table_add t_set_validbits a_set_validbits 1 0 => 0x80000000000000000000
-table_add t1_stdmeta_exact set_meta_stdmeta 1 => 1
-table_add t_test test_action 1 => 1
-table_add t_test test_action 3 => 1
-table_add t_test test_action 5 => 1
-table_add tset_context set_program 1 => 1 69
-table_add tset_context set_program 3 => 1 69
-table_add tset_context set_program 5 => 1 69
