@@ -9,14 +9,40 @@ HyPer4: A P4 Program to Run Other P4 Programs
 match.p4: Support various types of matching used by the target P4 program.
 */
 
-action init_program_state(action_ID, match_ID, next_stage, next_table, primitive, primitive_subtype) {
+action init_program_state(action_ID, match_ID, next_stage, next_table
+                          , primitive1, primitive_subtype1
+                          , primitive2, primitive_subtype2
+                          , primitive3, primitive_subtype3
+                          , primitive4, primitive_subtype4
+                          , primitive5, primitive_subtype5
+                          , primitive6, primitive_subtype6
+                          , primitive7, primitive_subtype7
+                          , primitive8, primitive_subtype8
+                          , primitive9, primitive_subtype9
+                         ) {
   modify_field(meta_primitive_state.action_ID, action_ID);
   modify_field(meta_primitive_state.match_ID, match_ID);
   modify_field(meta_ctrl.next_stage, next_stage);
-  modify_field(meta_primitive_state.primitive_index, 1);
+  //modify_field(meta_primitive_state.primitive_index, 1);
   modify_field(meta_ctrl.next_table, next_table);
-  modify_field(meta_primitive_state.primitive, primitive);
-  modify_field(meta_primitive_state.subtype, primitive_subtype);
+  modify_field(meta_primitive_state.primitive1, primitive1);
+  modify_field(meta_primitive_state.subtype1, primitive_subtype1);
+  modify_field(meta_primitive_state.primitive2, primitive2);
+  modify_field(meta_primitive_state.subtype2, primitive_subtype2);
+  modify_field(meta_primitive_state.primitive3, primitive3);
+  modify_field(meta_primitive_state.subtype3, primitive_subtype3);
+  modify_field(meta_primitive_state.primitive4, primitive4);
+  modify_field(meta_primitive_state.subtype4, primitive_subtype4);
+  modify_field(meta_primitive_state.primitive5, primitive5);
+  modify_field(meta_primitive_state.subtype5, primitive_subtype5);
+  modify_field(meta_primitive_state.primitive6, primitive6);
+  modify_field(meta_primitive_state.subtype6, primitive_subtype6);
+  modify_field(meta_primitive_state.primitive7, primitive7);
+  modify_field(meta_primitive_state.subtype7, primitive_subtype7);
+  modify_field(meta_primitive_state.primitive8, primitive8);
+  modify_field(meta_primitive_state.subtype8, primitive_subtype8);
+  modify_field(meta_primitive_state.primitive9, primitive9);
+  modify_field(meta_primitive_state.subtype9, primitive_subtype9);
 }
 
 table t1_matchless {

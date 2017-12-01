@@ -71,8 +71,24 @@ header_type meta_primitive_state_t {
     action_ID : 7; // identifies the compound action being executed
     match_ID : 23; // identifies the match entry
     primitive_index : 6; // place within compound action
-    primitive : 6; // e.g. modify_field, add_header, etc.
-    subtype : 6; // maps to a set identifying the parameters' types
+    primitive1 : 6; // e.g. modify_field, add_header, etc.
+    subtype1 : 6; // maps to a set identifying the parameters' types
+    primitive2 : 6; // e.g. modify_field, add_header, etc.
+    subtype2 : 6; // maps to a set identifying the parameters' types
+    primitive3 : 6; // e.g. modify_field, add_header, etc.
+    subtype3 : 6; // maps to a set identifying the parameters' types
+    primitive4 : 6; // e.g. modify_field, add_header, etc.
+    subtype4 : 6; // maps to a set identifying the parameters' types
+    primitive5 : 6; // e.g. modify_field, add_header, etc.
+    subtype5 : 6; // maps to a set identifying the parameters' types
+    primitive6 : 6; // e.g. modify_field, add_header, etc.
+    subtype6 : 6; // maps to a set identifying the parameters' types
+    primitive7 : 6; // e.g. modify_field, add_header, etc.
+    subtype7 : 6; // maps to a set identifying the parameters' types
+    primitive8 : 6; // e.g. modify_field, add_header, etc.
+    subtype8 : 6; // maps to a set identifying the parameters' types
+    primitive9 : 6; // e.g. modify_field, add_header, etc.
+    subtype9 : 6; // maps to a set identifying the parameters' types
   }
 }
 

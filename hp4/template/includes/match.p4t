@@ -1,14 +1,20 @@
 [+ std_header +]
 [+ this_header +]
 
-action init_program_state(action_ID, match_ID, next_stage, next_table, primitive, primitive_subtype) {
+action init_program_state(action_ID, match_ID, next_stage, next_table
+                          [+ sloop primitives ss +]
+                          , primitive[+X+], primitive_subtype[+X+]
+                          [+ endsloop +]
+                         ) {
   modify_field(meta_primitive_state.action_ID, action_ID);
   modify_field(meta_primitive_state.match_ID, match_ID);
   modify_field(meta_ctrl.next_stage, next_stage);
-  modify_field(meta_primitive_state.primitive_index, 1);
+  //modify_field(meta_primitive_state.primitive_index, 1);
   modify_field(meta_ctrl.next_table, next_table);
-  modify_field(meta_primitive_state.primitive, primitive);
-  modify_field(meta_primitive_state.subtype, primitive_subtype);
+  [+ sloop primitives ss +]
+  modify_field(meta_primitive_state.primitive[+X+], primitive[+X+]);
+  modify_field(meta_primitive_state.subtype[+X+], primitive_subtype[+X+]);
+  [+ endsloop +]
 }
 
 [+ sloop +]

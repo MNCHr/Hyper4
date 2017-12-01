@@ -88,7 +88,7 @@ action _no_op() {
 table t_mod_[+X+][+Y+] {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype[+Y+] : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -118,9 +118,9 @@ control do_modify_field_[+X+][+Y+] {
   // subtypes 7, 9, 11 all write to stdmeta.egress_spec
   if ( (meta_ctrl.econd == 0) or
        (meta_ctrl.virt_egress_spec == 0) or
-       ((meta_primitive_state.subtype != 7) and
-        (meta_primitive_state.subtype != 9) and
-        (meta_primitive_state.subtype != 11)) ) {
+       ((meta_primitive_state.subtype[+Y+] != 7) and
+        (meta_primitive_state.subtype[+Y+] != 9) and
+        (meta_primitive_state.subtype[+Y+] != 11)) ) {
     apply(t_mod_[+X+][+Y+]);
   }
 }

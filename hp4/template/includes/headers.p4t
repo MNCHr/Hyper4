@@ -64,9 +64,11 @@ header_type meta_primitive_state_t {
   fields {
     action_ID : 7; // identifies the compound action being executed
     match_ID : 23; // identifies the match entry
-    primitive_index : 6; // place within compound action
-    primitive : 6; // e.g. modify_field, add_header, etc.
-    subtype : 6; // maps to a set identifying the parameters' types
+    //primitive_index : 6; // place within compound action
+    [+ sloop primitives ss +]
+    primitive[+X+] : 6; // e.g. modify_field, add_header, etc.
+    subtype[+X+] : 6; // maps to a set identifying the parameters' types
+    [+ endsloop +]
   }
 }
 

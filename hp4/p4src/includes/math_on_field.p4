@@ -32,7 +32,7 @@ action a_subff_extracted_const_u(leftshift, val) {
 table t_math_on_field_11 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -47,7 +47,7 @@ table t_math_on_field_11 {
 table t_math_on_field_12 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -62,7 +62,7 @@ table t_math_on_field_12 {
 table t_math_on_field_13 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -77,7 +77,7 @@ table t_math_on_field_13 {
 table t_math_on_field_14 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -92,7 +92,7 @@ table t_math_on_field_14 {
 table t_math_on_field_15 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -107,7 +107,7 @@ table t_math_on_field_15 {
 table t_math_on_field_16 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -122,7 +122,7 @@ table t_math_on_field_16 {
 table t_math_on_field_17 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -137,7 +137,7 @@ table t_math_on_field_17 {
 table t_math_on_field_18 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -152,7 +152,7 @@ table t_math_on_field_18 {
 table t_math_on_field_19 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -167,7 +167,7 @@ table t_math_on_field_19 {
 table t_math_on_field_21 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -182,7 +182,7 @@ table t_math_on_field_21 {
 table t_math_on_field_22 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -197,7 +197,7 @@ table t_math_on_field_22 {
 table t_math_on_field_23 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -212,7 +212,7 @@ table t_math_on_field_23 {
 table t_math_on_field_24 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -227,7 +227,7 @@ table t_math_on_field_24 {
 table t_math_on_field_25 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -242,7 +242,7 @@ table t_math_on_field_25 {
 table t_math_on_field_26 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -257,7 +257,7 @@ table t_math_on_field_26 {
 table t_math_on_field_27 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -272,7 +272,7 @@ table t_math_on_field_27 {
 table t_math_on_field_28 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -287,7 +287,7 @@ table t_math_on_field_28 {
 table t_math_on_field_29 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -302,7 +302,7 @@ table t_math_on_field_29 {
 table t_math_on_field_31 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -317,7 +317,7 @@ table t_math_on_field_31 {
 table t_math_on_field_32 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -332,7 +332,7 @@ table t_math_on_field_32 {
 table t_math_on_field_33 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -347,7 +347,7 @@ table t_math_on_field_33 {
 table t_math_on_field_34 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -362,7 +362,7 @@ table t_math_on_field_34 {
 table t_math_on_field_35 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -377,7 +377,7 @@ table t_math_on_field_35 {
 table t_math_on_field_36 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -392,7 +392,7 @@ table t_math_on_field_36 {
 table t_math_on_field_37 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -407,7 +407,7 @@ table t_math_on_field_37 {
 table t_math_on_field_38 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -422,7 +422,7 @@ table t_math_on_field_38 {
 table t_math_on_field_39 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -437,7 +437,7 @@ table t_math_on_field_39 {
 table t_math_on_field_41 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -452,7 +452,7 @@ table t_math_on_field_41 {
 table t_math_on_field_42 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -467,7 +467,7 @@ table t_math_on_field_42 {
 table t_math_on_field_43 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -482,7 +482,7 @@ table t_math_on_field_43 {
 table t_math_on_field_44 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -497,7 +497,7 @@ table t_math_on_field_44 {
 table t_math_on_field_45 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -512,7 +512,7 @@ table t_math_on_field_45 {
 table t_math_on_field_46 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -527,7 +527,7 @@ table t_math_on_field_46 {
 table t_math_on_field_47 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -542,7 +542,7 @@ table t_math_on_field_47 {
 table t_math_on_field_48 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -557,7 +557,7 @@ table t_math_on_field_48 {
 table t_math_on_field_49 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -572,7 +572,7 @@ table t_math_on_field_49 {
 table t_math_on_field_51 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -587,7 +587,7 @@ table t_math_on_field_51 {
 table t_math_on_field_52 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -602,7 +602,7 @@ table t_math_on_field_52 {
 table t_math_on_field_53 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -617,7 +617,7 @@ table t_math_on_field_53 {
 table t_math_on_field_54 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -632,7 +632,7 @@ table t_math_on_field_54 {
 table t_math_on_field_55 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -647,7 +647,7 @@ table t_math_on_field_55 {
 table t_math_on_field_56 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -662,7 +662,7 @@ table t_math_on_field_56 {
 table t_math_on_field_57 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -677,7 +677,7 @@ table t_math_on_field_57 {
 table t_math_on_field_58 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -692,7 +692,7 @@ table t_math_on_field_58 {
 table t_math_on_field_59 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -707,7 +707,7 @@ table t_math_on_field_59 {
 table t_math_on_field_61 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -722,7 +722,7 @@ table t_math_on_field_61 {
 table t_math_on_field_62 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -737,7 +737,7 @@ table t_math_on_field_62 {
 table t_math_on_field_63 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -752,7 +752,7 @@ table t_math_on_field_63 {
 table t_math_on_field_64 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -767,7 +767,7 @@ table t_math_on_field_64 {
 table t_math_on_field_65 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -782,7 +782,7 @@ table t_math_on_field_65 {
 table t_math_on_field_66 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -797,7 +797,7 @@ table t_math_on_field_66 {
 table t_math_on_field_67 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -812,7 +812,7 @@ table t_math_on_field_67 {
 table t_math_on_field_68 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -827,7 +827,7 @@ table t_math_on_field_68 {
 table t_math_on_field_69 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -842,7 +842,7 @@ table t_math_on_field_69 {
 table t_math_on_field_71 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype1 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -857,7 +857,7 @@ table t_math_on_field_71 {
 table t_math_on_field_72 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype2 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -872,7 +872,7 @@ table t_math_on_field_72 {
 table t_math_on_field_73 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype3 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -887,7 +887,7 @@ table t_math_on_field_73 {
 table t_math_on_field_74 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype4 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -902,7 +902,7 @@ table t_math_on_field_74 {
 table t_math_on_field_75 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype5 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -917,7 +917,7 @@ table t_math_on_field_75 {
 table t_math_on_field_76 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype6 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -932,7 +932,7 @@ table t_math_on_field_76 {
 table t_math_on_field_77 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype7 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -947,7 +947,7 @@ table t_math_on_field_77 {
 table t_math_on_field_78 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype8 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }
@@ -962,7 +962,7 @@ table t_math_on_field_78 {
 table t_math_on_field_79 {
   reads {
     meta_ctrl.vdev_ID : exact;
-    meta_primitive_state.subtype : exact;
+    meta_primitive_state.subtype9 : exact;
     meta_primitive_state.action_ID : exact;
     meta_primitive_state.match_ID : ternary;
   }

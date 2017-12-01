@@ -14,27 +14,27 @@
 
 [+ dloop +]
 control switch_primitivetype_[+X+][+Y+] {
-  if(meta_primitive_state.primitive == A_MODIFY_FIELD) {
+  if(meta_primitive_state.primitive[+Y+] == A_MODIFY_FIELD) {
     do_modify_field_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_ADD_HEADER) {
+  else if(meta_primitive_state.primitive[+Y+] == A_ADD_HEADER) {
     do_add_header_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_REMOVE_HEADER) {
+  else if(meta_primitive_state.primitive[+Y+] == A_REMOVE_HEADER) {
     do_remove_header_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_TRUNCATE) {
+  else if(meta_primitive_state.primitive[+Y+] == A_TRUNCATE) {
     do_truncate_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_DROP) {
+  else if(meta_primitive_state.primitive[+Y+] == A_DROP) {
     do_drop_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_NO_OP) {
+  else if(meta_primitive_state.primitive[+Y+] == A_NO_OP) {
   }
-  else if(meta_primitive_state.primitive == A_MULTICAST) {
+  else if(meta_primitive_state.primitive[+Y+] == A_MULTICAST) {
     do_multicast_[+X+][+Y+]();
   }
-  else if(meta_primitive_state.primitive == A_MATH_ON_FIELD) {
+  else if(meta_primitive_state.primitive[+Y+] == A_MATH_ON_FIELD) {
     do_math_on_field_[+X+][+Y+]();
   }
 }

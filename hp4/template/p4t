@@ -92,11 +92,15 @@ class P4tParser:
 
   def handle_sloop(self, startmarker):
     body = []
+    
     x = args.numstages
     conditionalbreak = "\n"
     directive_a = startmarker.split("+")[1].strip().upper().split()
     if len(directive_a) > 1:
-      x = int(directive_a[1])
+      if directive_a[1] == "PRIMITIVES":
+        x = args.numprimitives
+      else:
+        x = int(directive_a[1])
       if len(directive_a) > 2:
         if directive_a[2] == "SS" or directive_a[2] == "SINGLESPACE":
           conditionalbreak = ""

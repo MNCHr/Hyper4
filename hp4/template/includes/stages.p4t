@@ -4,6 +4,7 @@
 #include "match.p4"
 #include "switch_primitivetype.p4"
 
+/*
 action update_state(primitive, primitive_subtype) {
   modify_field(meta_primitive_state.primitive_index, 
                meta_primitive_state.primitive_index + 1);
@@ -27,14 +28,15 @@ table tstg[+X+][+Y+]_update_state {
   }
 }
 [+ enddloop +]
+*/
 
 [+ sloop +]
 control stage[+X+] {
   match_[+X+](); // match.p4
   [+ nif +]
-  if(meta_primitive_state.action_ID != 0) { // 27|128|...
+  if(meta_primitive_state.primitive[+Y+] != 0) { // 27|128|...
     switch_primitivetype_[+X+][+Y+](); // switch_primitivetype.p4
-    apply(tstg[+X+][+Y+]_update_state);
+    // apply(tstg[+X+][+Y+]_update_state);
   [+ endnif +]
 }
 [+ endsloop +]
