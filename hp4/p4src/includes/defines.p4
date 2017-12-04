@@ -56,7 +56,6 @@ defines.p4: Define constants
 #define STDMETA_EGRESS_SPEC	  6
 
 // meta_primitive_state.primitive
-#define A_MODIFY_FIELD	      	0
 #define A_ADD_HEADER		        1
 #define A_COPY_HEADER		        2
 #define A_REMOVE_HEADER		      3
@@ -77,3 +76,4 @@ defines.p4: Define constants
 #define A_CLONE_EGRESS_EGRESS	  18
 #define A_MULTICAST		          19
 #define A_MATH_ON_FIELD		      20
+#define A_MODIFY_FIELD	      	21
