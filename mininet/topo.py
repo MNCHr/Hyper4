@@ -42,6 +42,8 @@ parser.add_argument('--cli', help='Path to BM CLI',
                     type=str, action="store", required=True)
 parser.add_argument('--commands', help='Path to initial CLI commands',
                     type=str, nargs='*', action="store")
+parser.add_argument('--pre', help='Execute script of mn commands',
+                    type=str, action="store")
 parser.add_argument('--pcap', help='Turns on pcap generation',
                     action="store_true")
 parser.add_argument('--scenario', help='Simulation scenario',
@@ -50,9 +52,6 @@ parser.add_argument('--seed', help='Seed for pseudorandom numbers',
                     type=int, action="store")
 parser.add_argument('--topo', help='Topology file',
                     type=str, action="store", default="topo.txt")
-# Useful if we need to use runtime_CLI instead of sswitch_CLI:
-#parser.add_argument('--p4factory', help='Use p4factory intead of standalone repos',
-#                    action="store_true")
 
 args = parser.parse_args()
 
@@ -217,6 +216,9 @@ def main():
         s.cmd("nmcli dev disconnect iface %s" % iface)
 
     sleep(1)
+
+    if args.pre:
+      print("script: " + args.pre)
 
     print "Ready !"
 
