@@ -29,6 +29,7 @@ import subprocess
 import random
 
 import code
+# code.interact(local=dict(globals(), **locals()))
 
 _THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 _THRIFT_BASE_PORT = 22222
@@ -219,6 +220,21 @@ def main():
 
     if args.pre:
       print("script: " + args.pre)
+      with open(args.pre, "r") as f:
+        for cmd in f:
+          print cmd
+          try:
+            n = net.get(cmd.split()[0])
+            tokens = cmd.split()[1:]
+            newcmd = []
+            for token in tokens:
+              if token in net.keys():
+                newcmd.append(net.get(token).intf().ip)
+              else:
+                newcmd.append(token)
+            print n.cmd(' '.join(newcmd))
+          except Exception as e:
+            print e
 
     print "Ready !"
 
