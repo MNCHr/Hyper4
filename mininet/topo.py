@@ -44,7 +44,7 @@ parser.add_argument('--cli', help='Path to BM CLI',
 parser.add_argument('--commands', help='Path to initial CLI commands',
                     type=str, nargs='*', action="store")
 parser.add_argument('--pre', help='Execute script of mn commands',
-                    type=str, action="store")
+                    type=str, action="store", default=None)
 parser.add_argument('--pcap', help='Turns on pcap generation',
                     action="store_true")
 parser.add_argument('--scenario', help='Simulation scenario',
@@ -220,25 +220,10 @@ def main():
 
     if args.pre:
       print("script: " + args.pre)
-      with open(args.pre, "r") as f:
-        for cmd in f:
-          print cmd
-          try:
-            n = net.get(cmd.split()[0])
-            tokens = cmd.split()[1:]
-            newcmd = []
-            for token in tokens:
-              if token in net.keys():
-                newcmd.append(net.get(token).intf().ip)
-              else:
-                newcmd.append(token)
-            print n.cmd(' '.join(newcmd))
-          except Exception as e:
-            print e
 
     print "Ready !"
 
-    CLI( net )
+    CLI( net, script=args.pre )
 
     net.stop()
 
