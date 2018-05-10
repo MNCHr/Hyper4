@@ -7,18 +7,22 @@
 # University of Utah
 
 import os
+import sys
 import subprocess
 import importlib
 
 def source_env():
+  """Set up P4-related environment variables."""
   command = ['bash', '-c', 'set -a && source ../env.sh && env']
   proc = subprocess.Popen(command, stdout = subprocess.PIPE)
   for line in proc.stdout:
     (key, _, value) = line.partition("=")
     os.environ[key] = value
   proc.communicate()
+  sys.path.append(os.environ['BMV2_PATH'].rstrip() + '/mininet')
 
 def compile_p4_files():
+  """Compile 'test*.p4' files in current directory, return basenames."""
   tests = []
   files = []
   for f in filter(os.path.isfile, os.listdir( os.curdir ) ):
@@ -50,7 +54,9 @@ def main():
       testlib = importlib.import_module(test)
     else:
       testlib = importlib.import_module("test_mininet")
-    testlib.main()
+    print(test + ":")
+    testlib.main(project=test)
+    print("")
 
 if __name__ == '__main__':
   main()

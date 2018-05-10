@@ -1,9 +1,24 @@
 #!/usr/bin/python
 
-#
 # David Hancock
 # Flux Research Group
 # University of Utah
+
+import os
+import subprocess
+
+#command = ['bash', '-c', 'set -a && source ../env.sh && env']
+#proc = subprocess.Popen(command, stdout = subprocess.PIPE)
+#for line in proc.stdout:
+#  (key, _, value) = line.partition("=")
+#  os.environ[key] = value
+#proc.communicate()
+
+import sys
+from p4_mininet import P4Switch, P4Host
+
+from hp4controller.clients.client import ChainSliceManager as HP4ClientSliceManager
+from hp4controller.clients.client import Administrator as HP4ClientAdmin
 
 from mininet.net import Mininet
 from mininet.topo import Topo
@@ -13,13 +28,17 @@ from mininet.link import TCLink
 
 import argparse
 from time import sleep
-import os
-import subprocess
 
 import unittest
 
+import code
+# code.interact(local=dict(globals(), **locals()))
+
 _THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 _THRIFT_BASE_PORT = 22222
+_HP4_CTRL_PORT = 33333
+_MININET_DEBUG = False
+_TEST_DEBUG = False
 
 class TestTopo(Topo):
   def __init__(self, **opts):
@@ -66,6 +85,10 @@ class TestLoaderWithKwargs(unittest.TestLoader):
 
         return loaded_suite 
 
+def testdebug_print(s):
+  if _TEST_DEBUG:
+    print(s)
+
 class TestPings(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
@@ -87,21 +110,83 @@ class TestPings(unittest.TestCase):
     def test_good_ping(self):
         h1 = self.net.get('h1')
         res = h1.cmd("ping 10.0.0.2 -c 1 -W 1")
-        print('good_ping: ' + res)
+        testdebug_print('good_ping: ' + res)
         ans = self.get_loss(res)
         self.assertEqual(ans, '0% packet loss')
 
     def test_bad_ping(self):
       h1 = self.net.get('h1')
       res = h1.cmd("ping 10.0.0.3 -c 1 -W 1")
-      print('bad_ping: ' + res)
+      testdebug_print('bad_ping: ' + res)
       ans = self.get_loss(res)
       self.assertEqual(ans, '100% packet loss')
 
+def mndebug_print(s):
+  if _MININET_DEBUG:
+    print(s)
+
+def hp4_ctrl_start(devname, slicename):
+  controllerpath = os.environ['HP4_CTRL_PATH'].rstrip() + '/hp4controller/controller.py'
+  print controllerpath
+  p = subprocess.Popen([controllerpath])
+  sleep(2) # wait until socket is open
+  hp4c = HP4ClientAdmin()
+
+  #code.interact(local=dict(globals(), **locals()))
+
+  # create_device <devname> localhost 22222 bmv2_SSwitch SimplePreLAG 1000 1 2 3 4
+  devip = 'localhost'
+  devport = '22222' # port for control plane
+  devtype = 'bmv2_SSwitch'
+  devpre = 'SimplePreLAG' # pre = packet replication engine
+  devrulelimit = '1000'
+  devifaces = ['1', '2', '3', '4']
+  # hp4c.do_create_device('alpha localhost 22222 bmv2_SSwitch SimplePreLAG 1000 1 2 3 4')
+  hp4c.do_create_device(devname + ' ' + \
+                        devip + ' ' + \
+                        devport + ' ' + \
+                        devtype + ' ' + \
+                        devpre + ' ' + \
+                        devrulelimit + ' ' + \
+                        ' '.join(devifaces))
+            
+  # create_slice <slicename>
+  hp4c.do_create_slice(slicename)
+
+  # grant_lease jupiter alpha 500 Chain 1 2 3 4
+  slicerulelimit = '500'
+  slicetype = 'Chain'
+  hp4c.do_grant_lease(slicename + ' ' + \
+                      devname + ' ' + \
+                      slicerulelimit + ' ' + \
+                      slicetype + ' ' + \
+                      ' '.join(devifaces)) # all the interfaces
+
+def hp4_vdev_start(project, slicename, devname):
+  vdev_p4path = project + '.p4'
+  vdev_cmdfile = project + '.commands'
+  hp4c = HP4ClientSliceManager(user=slicename)
+  # vdev_create tests/hp4t_l2_switch.p4 switch
+  hp4c.do_vdev_create(vdev_p4path + ' ' + project)
+  # lease_insert alpha switch 0 etrue
+  vdev_position = '0'
+  vdev_egress_handling = 'etrue'
+  hp4c.do_lease_insert(devname + ' ' + project + ' ' + \
+                       vdev_position + ' ' + vdev_egress_handling)
+  # lease_config_egress alpha 5 mcast filtered
+  vegress_spec = '5'
+  vegress_command = 'mcast'
+  vegress_mcast_filtered = 'filtered'
+  hp4c.do_lease_config_egress(devname + ' ' + vegress_spec + ' ' + \
+                              vegress_command + ' ' + vegress_mcast_filtered)
+  # vdev_interpretf switch bmv2 tests/t01/t01_switch_entries
+  devtype = 'bmv2'
+  hp4c.do_vdev_interpretf(project + ' ' + devtype + ' ' + vdev_cmdfile)
+
 def mn_start(project):
-  jsonpath = project + '.json'
-  cmdfile = project + '.commands'
-  topo = TestTopo(json=jsonpath)
+  hp4_jsonpath = '../hp4/hp4.json'
+  hp4_cmdfile = '../hp4.hp4commands.txt'
+  topo = TestTopo(json=hp4_jsonpath)
   net = Mininet(topo = topo,
                 host = P4Host,
                 switch = P4Switch,
@@ -112,48 +197,44 @@ def mn_start(project):
       h = net.get('h%d' % (n + 1))
       for off in ["rx", "tx", "sg"]:
           cmd = "/sbin/ethtool --offload eth0 %s off" % off
-          print cmd
+          mndebug_print(cmd)
           h.cmd(cmd)
       h.cmd("sysctl -w net.ipv4.tcp_congestion_control=reno")
       h.cmd("iptables -I OUTPUT -p icmp --icmp-type destination-unreachable -j DROP")
       h.setDefaultRoute("dev eth0")
 
   cli = os.environ['BMV2_PATH'].rstrip() + '/targets/simple_switch/sswitch_CLI'
-  cmd = [cli, jsonpath, str(_THRIFT_BASE_PORT)]
-  if os.path.isfile(cmdfile):
-    with open(cmdfile, "r") as f:
-      print " ".join(cmd)
+  cmd = [cli, hp4_jsonpath, str(_THRIFT_BASE_PORT)]
+  if os.path.isfile(hp4_cmdfile):
+    with open(hp4_cmdfile, "r") as f:
+      mndebug_print(" ".join(cmd))
       try:
         output = subprocess.check_output(cmd, stdin = f)
-        print output
+        mndebug_print(output)
       except subprocess.CalledProcessError as e:
         print e
         print e.output
   else:
-    print(cmdfile + " not found")
+    mndebug_print(hp4_cmdfile + " not found")
+
+  #TODO: invoke controller to set up slice and vdev
+  devname = 'alpha'
+  slicename = 'jupiter'
+  hp4_ctrl_start(devname, slicename)
+  hp4_vdev_start(project, slicename, devname)
 
   sleep(1)
-  print("ready!")
+  mndebug_print("ready!")
 
   return net
 
-def main(project='test_hub'):
-    net = mn_start(project)
-    loader = TestLoaderWithKwargs()
-    suite = loader.loadTestsFromTestCase(TestPings, mn=net)
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    net.stop()
+def main(project='test_hub', tc_class_name='TestPings'):
+  net = mn_start(project)
+  loader = TestLoaderWithKwargs()
+  tc_class = reduce(getattr, tc_class_name.split("."), sys.modules[__name__])
+  suite = loader.loadTestsFromTestCase(tc_class, mn=net)
+  unittest.TextTestRunner(verbosity=2).run(suite)
+  net.stop()
 
 if __name__ == '__main__':
-  command = ['bash', '-c', 'set -a && source ../env.sh && env']
-  proc = subprocess.Popen(command, stdout = subprocess.PIPE)
-  for line in proc.stdout:
-    (key, _, value) = line.partition("=")
-    os.environ[key] = value
-  proc.communicate()
-
-  import sys
-  sys.path.append(os.environ['BMV2_PATH'].rstrip() + '/mininet/')
-  from p4_mininet import P4Switch, P4Host
-
   main()
