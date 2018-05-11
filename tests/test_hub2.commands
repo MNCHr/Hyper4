@@ -1,0 +1,6 @@
+table_add read_ingress ingr_one 1 =>
+table_add read_ingress ingr_two 2 =>
+table_add read_ingress ingr_three 3 =>
+table_set_default fwd_one a_fwd_one
+table_set_default fwd_two a_fwd_two
+table_set_default t_drop _drop

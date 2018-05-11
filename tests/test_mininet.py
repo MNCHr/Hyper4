@@ -28,6 +28,7 @@ from mininet.link import TCLink
 
 import argparse
 from time import sleep
+import signal
 
 import unittest
 
@@ -127,21 +128,19 @@ def mndebug_print(s):
 
 def hp4_ctrl_start(devname, slicename):
   controllerpath = os.environ['HP4_CTRL_PATH'].rstrip() + '/hp4controller/controller.py'
-  print controllerpath
   p = subprocess.Popen([controllerpath])
-  sleep(2) # wait until socket is open
+  # TODO: cleaner solution?
+  sleep(1) # wait until socket is open
   hp4c = HP4ClientAdmin()
 
-  #code.interact(local=dict(globals(), **locals()))
-
-  # create_device <devname> localhost 22222 bmv2_SSwitch SimplePreLAG 1000 1 2 3 4
+  # create_device <devname> <devip> <devport> <devtype> <dev pre engine>
+  #               <devrulelimit> <dev ifaces>
   devip = 'localhost'
   devport = '22222' # port for control plane
   devtype = 'bmv2_SSwitch'
   devpre = 'SimplePreLAG' # pre = packet replication engine
   devrulelimit = '1000'
   devifaces = ['1', '2', '3', '4']
-  # hp4c.do_create_device('alpha localhost 22222 bmv2_SSwitch SimplePreLAG 1000 1 2 3 4')
   hp4c.do_create_device(devname + ' ' + \
                         devip + ' ' + \
                         devport + ' ' + \
@@ -153,7 +152,7 @@ def hp4_ctrl_start(devname, slicename):
   # create_slice <slicename>
   hp4c.do_create_slice(slicename)
 
-  # grant_lease jupiter alpha 500 Chain 1 2 3 4
+  # grant_lease <slicename> <devname> <slicerulelimit> <slicetype> <dev ifaces>
   slicerulelimit = '500'
   slicetype = 'Chain'
   hp4c.do_grant_lease(slicename + ' ' + \
@@ -161,25 +160,30 @@ def hp4_ctrl_start(devname, slicename):
                       slicerulelimit + ' ' + \
                       slicetype + ' ' + \
                       ' '.join(devifaces)) # all the interfaces
+  return p
 
 def hp4_vdev_start(project, slicename, devname):
   vdev_p4path = project + '.p4'
   vdev_cmdfile = project + '.commands'
   hp4c = HP4ClientSliceManager(user=slicename)
-  # vdev_create tests/hp4t_l2_switch.p4 switch
+
+  # vdev_create <p4 path> <vdevname>
   hp4c.do_vdev_create(vdev_p4path + ' ' + project)
-  # lease_insert alpha switch 0 etrue
+
+  # lease_insert <devname> <vdevname> <vdev chain position> <vdev egr handling>
   vdev_position = '0'
   vdev_egress_handling = 'etrue'
   hp4c.do_lease_insert(devname + ' ' + project + ' ' + \
                        vdev_position + ' ' + vdev_egress_handling)
-  # lease_config_egress alpha 5 mcast filtered
+
+  # lease_config_egress <devname> <vegr spec> <vegr cmd> <vegr mcast filtered>
   vegress_spec = '5'
   vegress_command = 'mcast'
   vegress_mcast_filtered = 'filtered'
   hp4c.do_lease_config_egress(devname + ' ' + vegress_spec + ' ' + \
                               vegress_command + ' ' + vegress_mcast_filtered)
-  # vdev_interpretf switch bmv2 tests/t01/t01_switch_entries
+
+  # vdev_interpretf <vdevname> <devtype> <vdev cmdfile path>
   devtype = 'bmv2'
   hp4c.do_vdev_interpretf(project + ' ' + devtype + ' ' + vdev_cmdfile)
 
@@ -217,24 +221,25 @@ def mn_start(project):
   else:
     mndebug_print(hp4_cmdfile + " not found")
 
-  #TODO: invoke controller to set up slice and vdev
+  # invoke controller to set up slice and vdev
   devname = 'alpha'
   slicename = 'jupiter'
-  hp4_ctrl_start(devname, slicename)
+  p = hp4_ctrl_start(devname, slicename)
   hp4_vdev_start(project, slicename, devname)
 
   sleep(1)
   mndebug_print("ready!")
 
-  return net
+  return net, p
 
 def main(project='test_hub', tc_class_name='TestPings'):
-  net = mn_start(project)
+  net, p = mn_start(project)
   loader = TestLoaderWithKwargs()
   tc_class = reduce(getattr, tc_class_name.split("."), sys.modules[__name__])
   suite = loader.loadTestsFromTestCase(tc_class, mn=net)
   unittest.TextTestRunner(verbosity=2).run(suite)
   net.stop()
+  p.send_signal(signal.SIGTERM)
 
 if __name__ == '__main__':
   main()
