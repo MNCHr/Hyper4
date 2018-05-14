@@ -7,13 +7,6 @@
 import os
 import subprocess
 
-#command = ['bash', '-c', 'set -a && source ../env.sh && env']
-#proc = subprocess.Popen(command, stdout = subprocess.PIPE)
-#for line in proc.stdout:
-#  (key, _, value) = line.partition("=")
-#  os.environ[key] = value
-#proc.communicate()
-
 import sys
 from p4_mininet import P4Switch, P4Host
 
@@ -128,6 +121,7 @@ def mndebug_print(s):
 
 def hp4_ctrl_start(devname, slicename):
   controllerpath = os.environ['HP4_CTRL_PATH'].rstrip() + '/hp4controller/controller.py'
+
   p = subprocess.Popen([controllerpath])
   # TODO: cleaner solution?
   sleep(1) # wait until socket is open
