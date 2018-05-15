@@ -34,6 +34,7 @@ do
     cd ..
     cloc ../p4src/test/config_$j$i/ --force-lang="C",p4 --report-file=../p4src/test/config_$j$i/results_byfile.csv --csv --by-file
     cloc ../p4src/test/config_$j$i/ --force-lang="C",p4 --report-file=../p4src/test/config_$j$i/results_sum.csv --csv
-    grep -roh --include \*.p4 "^table.*{" ../p4src/test/config_$j$i/ | wc -l > ../p4src/test/config_$j$i/numtables 
+    grep -roh --include \*.p4 "^table.*{" ../p4src/test/config_$j$i/ | wc -l > ../p4src/test/config_$j$i/numtables
+    grep -roh --include \*.p4 "^action.*{" ../p4src/test/config_$j$i/ | wc -l > ../p4src/test/config_$j$i/numactions 
   done
 done
