@@ -36,10 +36,23 @@ Max 248B headers can be removed
 
 -----
 
+Number of tables is a limiting factor; table at ../analysis/results_tables.ods
+shows which configurations are supported, e.g.:
+- 2 x 9
+- 3 x 8
+- 4 x 5
+- 5 x 4
+- 6 x 3
+- 8 x 2
+- 9 x 1
+
 Tasks:
 - Determine # actions per:
   - stage
   - num primitives / stage
   Fill in a table for stages 1-9 x # prims 1-9
+- Result: 150; number is constant regardless of num stages / primitives supported
+  - this number will increase as we support more primitives, but we are well under
+    Agilio's limit
 
 
