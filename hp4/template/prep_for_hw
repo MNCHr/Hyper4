@@ -47,12 +47,38 @@ shows which configurations are supported, e.g.:
 - 9 x 1
 
 Tasks:
-- Determine # actions per:
+- [COMPLETE] Determine # actions per:
   - stage
   - num primitives / stage
   Fill in a table for stages 1-9 x # prims 1-9
-- Result: 150; number is constant regardless of num stages / primitives supported
+- RESULT: 150; number is constant regardless of num stages / primitives supported
   - this number will increase as we support more primitives, but we are well under
     Agilio's limit
 
-
+- [IN PROGRESS] Determine all hp4 fields > 32b and whether each is involved in:
+  - shift - all offending cases are shifts
+  - multiply - none
+  - divide - none
+  - modulo - none
+  Fields:
+  - [good] csum.csmask 768b
+    - used: checksums.p4::a_ipv4_csum16
+  - [bad] tmeta.data 256b
+    - bad uses:
+      - modify_field.p4::mod_extracted_meta
+      - modify_field.p4::mod_stdmeta_egressspec_meta
+  - [bad] ext_first.data 320b
+    - bad use:
+      - setup.p4::a_pr_import_SEB
+  - [bad] extracted.data 800b
+    - bad use:
+      - modify_field.p4::mod_extracted_extracted
+      - modify_field.p4::mod_meta_extracted
+      - add_header.p4::a_addh
+      - checksums.p4::a_ipv4_csum16
+      - deparse_prep.p4::a_prep_deparse_* (4 actions... 61 total primitives)
+      - remove_header.p4::a_removeh
+  - [good] extracted.validbits 80b
+- RESULT: 3/5 large hp4 fields are involved in shift operations Agilio can't handle
+  - dozens of operations to fix
+  - do not know at this point what the fix options are... need to re-read the doc - maybe not all are bad.  DevTools: "Non-constant shifts, multiply, divide and modulo operations may only take operands of 32-bits or less."
