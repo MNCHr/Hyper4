@@ -14,7 +14,7 @@ h.p4_parse_states['start'].return_statement:
 )
 
 0: 'select'
-1: list of fields used as criteria
+1: list of fields used as criteria - each element is of type 'str'
 2: list of tuples, where each tuple consists of:
    - a list of tuples, where each tuple consists of:
      - 'value' or 'default'
@@ -37,7 +37,14 @@ h.p4_parse_states['start'].return_statement:
    of the offset and width
 2: list of tuples... as above
 
-DO: have p4_hp4 detect use of 'current' by looking at the type of the second element of the return_statement
+DO: have p4_hp4 detect use of 'current' by looking at the type of the elements of the second element of the return_statement
+- e.g.:
+    if isinstance(criteria_fields[0], str):
+      # does not indicate use of 'current'
+      pass
+    elif isinstance(criteria_fields[0], tuple):
+      # indicates use of 'current'
+      pass
 
 A point of confusion:
 
@@ -70,3 +77,27 @@ to complete the tset_parse_select_* table entry.
 
 In other words, perhaps gen_tset_parse_control_entries is a bit of a misnomer, as
 it does more than simply generate tset_parse_control entries.
+
+-----
+
+The fix consisted of checks for the type of the criteria field in a few locations
+to avoid a KeyError on '(0, 48)' in field_offsets and h.p4_fields, substituting the
+examination of the tuple for the proper setting of any offset and/or width variable
+needed to construct tset_parse_select match parameters.  Functions affected:
+- fill_parse_select_match_params (previously named fill_tics_match_params)
+- fill_parse_select_match_params_under40 (previously: fill_tics_match_params_under40)
+
+Inspecting impact of fix warrants examination of p4_hp4's data structures related to:
+- tset_parse_control entries
+- tset_parse_select_* entries
+- tset_pipeline_config entries
+
+This includes:
+- field_offsets
+- ps_to_pc
+- pc_to_ps
+- pc_to_preceding_pcs
+- pc_bits_extracted
+- parse_select_table_names
+- vbits
+- commands
