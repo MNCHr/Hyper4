@@ -84,6 +84,9 @@ action _no_op() {
 }
 
 table t {
+  reads {
+    A.f1 : exact;
+  }
   actions {
     _no_op;
   }
