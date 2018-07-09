@@ -183,7 +183,7 @@ table tset_parse_control {
   }
 }
 
-table tset_parse_select_SEB {
+table tset_parse_select_00_19 {
   reads {
     meta_ctrl.vdev_ID : exact;
     parse_ctrl.state: exact;
@@ -403,8 +403,8 @@ control setup {
   }
 
   apply(tset_parse_control);
-  if(parse_ctrl.next_action == PARSE_SELECT_SEB) { // 2
-    apply(tset_parse_select_SEB);
+  if(parse_ctrl.next_action == PARSE_SELECT_00_19) { // 2
+    apply(tset_parse_select_00_19);
   }
   if(parse_ctrl.next_action == PARSE_SELECT_20_29) { // 3
     apply(tset_parse_select_20_29);

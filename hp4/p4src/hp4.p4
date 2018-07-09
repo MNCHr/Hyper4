@@ -78,14 +78,6 @@ control ingress {
     if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // 16|117|218|...
       stage5(); // stages.p4
     }
-
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 6) { // 16|117|218|...
-      stage6(); // stages.p4
-    }
-
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 7) { // 16|117|218|...
-      stage7(); // stages.p4
-    }
     if (meta_ctrl.dropped == 0) {
       apply(t_virtnet);
     }

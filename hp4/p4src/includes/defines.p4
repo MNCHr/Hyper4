@@ -17,7 +17,7 @@ defines.p4: Define constants
 
 // parse_ctrl.next_action
 #define PROCEED				0
-#define PARSE_SELECT_SEB		1
+#define PARSE_SELECT_00_19 1
 #define PARSE_SELECT_20_29 2
 #define PARSE_SELECT_30_39 3
 #define PARSE_SELECT_40_49 4
@@ -77,3 +77,4 @@ defines.p4: Define constants
 #define A_MULTICAST		          19
 #define A_MATH_ON_FIELD		      20
 #define A_MODIFY_FIELD	      	21
+#define A_MODIFY_FIELD_RNG_U		22
