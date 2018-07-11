@@ -7,9 +7,31 @@ header ext_t ext[60];
 
 parser start {
   set_metadata(parse_ctrl.next_action, PROCEED);
+  return select(parse_ctrl.small_packet) {
+    1 : startsmall;
+    default : prX;
+  }
+}
+
+parser startsmall {
+  return select(parse_ctrl.numbytes) {
+    1 : pr01;
+    2 : pr02;
+    3 : pr03;
+    4 : pr04;
+    5 : pr05;
+    6 : pr06;
+    7 : pr07;
+    8 : pr08;
+    9 : pr09;
+    default : pr10;
+  }
+}
+
+parser prX {
   extract(ext_first);
   return select(parse_ctrl.numbytes) {
-    0 : ingress;
+    0 : pr0;
     40 : ingress;
     41 : pr01;
     42 : pr02;
@@ -22,6 +44,11 @@ parser start {
     49 : pr09;
     default : p50;
   }
+}
+
+parser pr0 {
+  set_metadata(parse_ctrl.numbytes, 40);
+  return ingress;
 }
 
 parser pr01 {
@@ -103,6 +130,88 @@ parser pr09 {
   extract(ext[next]);
   extract(ext[next]);
   return ingress;
+}
+
+parser pr10 {
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  return select(parse_ctrl.numbytes) {
+    10 : ingress;
+    11 : pr01;
+    12 : pr02;
+    13 : pr03;
+    14 : pr04;
+    15 : pr05;
+    16 : pr06;
+    17 : pr07;
+    18 : pr08;
+    19 : pr09;
+    default : pr20;
+  }
+}
+
+parser pr20 {
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  return select(parse_ctrl.numbytes) {
+    20 : ingress;
+    21 : pr01;
+    22 : pr02;
+    23 : pr03;
+    24 : pr04;
+    25 : pr05;
+    26 : pr06;
+    27 : pr07;
+    28 : pr08;
+    29 : pr09;
+    default : pr30;
+  }
+}
+
+parser_exception pe_unhandled_select {
+  parser_drop;
+}
+
+parser pr30 {
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  extract(ext[next]);
+  return select(parse_ctrl.numbytes) {
+    30 : ingress;
+    31 : pr01;
+    32 : pr02;
+    33 : pr03;
+    34 : pr04;
+    35 : pr05;
+    36 : pr06;
+    37 : pr07;
+    38 : pr08;
+    39 : pr09;
+    default : parse_error pe_unhandled_select;
+  }
 }
 
 parser p50 {

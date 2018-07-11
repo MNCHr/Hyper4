@@ -7,6 +7,7 @@ table_set_default tset_pr_SEB a_pr_import_SEB
 table_set_default tset_pr_40_59 a_pr_import_40_59
 table_set_default tset_pr_60_79 a_pr_import_60_79
 table_set_default tset_pr_80_99 a_pr_import_80_99
+table_set_default t_prep_deparse_00_38 a_prep_deparse_00_38
 table_set_default t_prep_deparse_SEB a_prep_deparse_SEB
 table_set_default t_prep_deparse_40_59 a_prep_deparse_40_59
 table_set_default t_prep_deparse_60_79 a_prep_deparse_60_79
@@ -52,7 +53,7 @@ table_add t_resize_pr a_resize_pr_36 36 =>
 table_add t_resize_pr a_resize_pr_37 37 =>
 table_add t_resize_pr a_resize_pr_38 38 =>
 table_add t_resize_pr a_resize_pr_39 39 =>
-table_add t_resize_pr a_resize_pr_40 40 =>
+table_add t_resize_pr _no_op 40 =>
 table_add t_resize_pr a_resize_pr_41 41 =>
 table_add t_resize_pr a_resize_pr_42 42 =>
 table_add t_resize_pr a_resize_pr_43 43 =>

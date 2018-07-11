@@ -30,6 +30,7 @@ header_type parse_ctrl_t {
     numbytes : 8;
     state : 12;
     next_action : 4;
+    small_packet : 8;
   }
 }
 
