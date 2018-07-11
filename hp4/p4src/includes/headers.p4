@@ -93,6 +93,12 @@ header_type meta_primitive_state_t {
   }
 }
 
+header_type temp_t {
+  fields {
+    data : 64;
+  }
+}
+
 // tmeta: HyPer4's representation of the target's metadata
 header_type tmeta_t {
   fields {

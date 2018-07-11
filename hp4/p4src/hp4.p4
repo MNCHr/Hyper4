@@ -22,6 +22,7 @@ hp4.p4: Define the ingress and egress pipelines, including multicast support.
 metadata meta_ctrl_t meta_ctrl;
 metadata meta_primitive_state_t meta_primitive_state;
 metadata extracted_t extracted;
+metadata temp_t temp;
 metadata tmeta_t tmeta;
 metadata csum_t csum;
 
