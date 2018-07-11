@@ -11,6 +11,7 @@ deparse_prep.p4: Prepare packet for deparsing
 
 action a_prep_deparse_00_38() {
   modify_field(parse_ctrl.small_packet, 1);
+  remove_header(ext_first);
   modify_field(ext[0].data, (extracted.data >> 792) & 0xFF);
   modify_field(ext[1].data, (extracted.data >> 784) & 0xFF);
   modify_field(ext[2].data, (extracted.data >> 776) & 0xFF);
