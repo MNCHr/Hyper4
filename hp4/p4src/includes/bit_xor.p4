@@ -9,19 +9,47 @@ HyPer4: A P4 Program to Run Other P4 Programs
 bit_xor.p4: Carry out the bit_xor primitive
 */
 
-action bit_xor_meta_const(leftshift, tmeta_mask, val) {
+/*
+  TODO: expand because there are three parameters in a bit_xor:
+  - dst
+  - fld/val 1
+  - fld/val 2
+  Combinatorics say that if we consider [meta|extracted] as
+  options for dst, and [meta|extracted|const] for fld/val 1
+  and fld/val 2, there would be 18 actions to cover all
+  cases
+*/
+
+action bit_xor_meta_meta_const(mlshift, mrshift, vlshift,
+                               dest_mask, src_mask,
+                               val) {
   modify_field(tmeta.data,
-    (tmeta.data & ~tmeta_mask) | 
-      ( (val << leftshift) ^ (tmeta.data & tmeta_mask) )
+    (tmeta.data & ~dest_mask) | 
+      ( (((val << vlshift) ^ (tmeta.data & (src_mask << vlshift)))
+        << mlshift) >> mrshift )
   );
 }
 
-action bit_xor_extracted_const(leftshift, emask, val) {
+action bit_xor_extracted_extracted_const(elshift, ershift, vlshift,
+                                         dest_mask, src_mask,
+                                         val) {
   modify_field(extracted.data,
-    (extracted.data & ~emask) | 
-      ( (val << leftshift) ^ (extracted.data & emask) )
+    (extracted.data & ~dest_mask) | 
+      ( (((val << vlshift) ^ (extracted.data & (src_mask << vlshift)))
+        << elshift) >> ershift )
   );
 }
+
+action bit_xor_meta_extracted_const(elshift, ershift, vlshift,
+                                    dest_mask, src_mask,
+                                    val) {
+  modify_field(tmeta.data,
+    (tmeta.data & ~dest_mask) |
+      ( (((val << vlshift) ^ (extracted.data & (src_mask << vlshift)))
+        << elshift) >> ershift )
+  );
+}
+
 
 table t_bit_xor_11 {
   reads {
@@ -31,8 +59,9 @@ table t_bit_xor_11 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -45,8 +74,9 @@ table t_bit_xor_12 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -59,8 +89,9 @@ table t_bit_xor_13 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -73,8 +104,9 @@ table t_bit_xor_14 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -87,8 +119,9 @@ table t_bit_xor_15 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -101,8 +134,9 @@ table t_bit_xor_16 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -115,8 +149,9 @@ table t_bit_xor_17 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -129,8 +164,9 @@ table t_bit_xor_18 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -143,8 +179,9 @@ table t_bit_xor_19 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -157,8 +194,9 @@ table t_bit_xor_21 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -171,8 +209,9 @@ table t_bit_xor_22 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -185,8 +224,9 @@ table t_bit_xor_23 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -199,8 +239,9 @@ table t_bit_xor_24 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -213,8 +254,9 @@ table t_bit_xor_25 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -227,8 +269,9 @@ table t_bit_xor_26 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -241,8 +284,9 @@ table t_bit_xor_27 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -255,8 +299,9 @@ table t_bit_xor_28 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -269,8 +314,9 @@ table t_bit_xor_29 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -283,8 +329,9 @@ table t_bit_xor_31 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -297,8 +344,9 @@ table t_bit_xor_32 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -311,8 +359,9 @@ table t_bit_xor_33 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -325,8 +374,9 @@ table t_bit_xor_34 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -339,8 +389,9 @@ table t_bit_xor_35 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -353,8 +404,9 @@ table t_bit_xor_36 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -367,8 +419,9 @@ table t_bit_xor_37 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -381,8 +434,9 @@ table t_bit_xor_38 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -395,8 +449,9 @@ table t_bit_xor_39 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -409,8 +464,9 @@ table t_bit_xor_41 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -423,8 +479,9 @@ table t_bit_xor_42 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -437,8 +494,9 @@ table t_bit_xor_43 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -451,8 +509,9 @@ table t_bit_xor_44 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -465,8 +524,9 @@ table t_bit_xor_45 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -479,8 +539,9 @@ table t_bit_xor_46 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -493,8 +554,9 @@ table t_bit_xor_47 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -507,8 +569,9 @@ table t_bit_xor_48 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -521,8 +584,9 @@ table t_bit_xor_49 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -535,8 +599,9 @@ table t_bit_xor_51 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -549,8 +614,9 @@ table t_bit_xor_52 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -563,8 +629,9 @@ table t_bit_xor_53 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -577,8 +644,9 @@ table t_bit_xor_54 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -591,8 +659,9 @@ table t_bit_xor_55 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -605,8 +674,9 @@ table t_bit_xor_56 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -619,8 +689,9 @@ table t_bit_xor_57 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -633,8 +704,9 @@ table t_bit_xor_58 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
@@ -647,8 +719,9 @@ table t_bit_xor_59 {
     meta_primitive_state.match_ID : ternary;
   }
   actions {
-    bit_xor_meta_const;
-    bit_xor_extracted_const;
+    bit_xor_meta_meta_const;
+    bit_xor_extracted_extracted_const;
+    bit_xor_meta_extracted_const;
     _no_op;
   }
 }
