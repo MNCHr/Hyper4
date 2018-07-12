@@ -78,3 +78,4 @@ defines.p4: Define constants
 #define A_MATH_ON_FIELD		      20
 #define A_MODIFY_FIELD	      	21
 #define A_MODIFY_FIELD_RNG_U		22
+#define A_BIT_XOR								23

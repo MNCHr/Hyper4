@@ -1,0 +1,39 @@
+[+ std_header +]
+[+ this_header +]
+
+action bit_xor_meta_const(leftshift, tmeta_mask, val) {
+  modify_field(tmeta.data,
+    (tmeta.data & ~tmeta_mask) | 
+      ( (val << leftshift) ^ (tmeta.data & tmeta_mask) )
+  );
+}
+
+action bit_xor_extracted_const(leftshift, emask, val) {
+  modify_field(extracted.data,
+    (extracted.data & ~emask) | 
+      ( (val << leftshift) ^ (extracted.data & emask) )
+  );
+}
+
+[+ dloop +]
+table t_bit_xor_[+X+][+Y+] {
+  reads {
+    meta_ctrl.vdev_ID : exact;
+    meta_primitive_state.subtype[+Y+] : exact;
+    meta_primitive_state.action_ID : exact;
+    meta_primitive_state.match_ID : ternary;
+  }
+  actions {
+    bit_xor_meta_const;
+    bit_xor_extracted_const;
+    _no_op;
+  }
+}
+[+ enddloop +]
+
+[+ dloop +]
+control do_bit_xor_[+X+][+Y+] {
+  apply(t_bit_xor_[+X+][+Y+]);
+}
+
+[+ enddloop +]

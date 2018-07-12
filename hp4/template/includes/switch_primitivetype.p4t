@@ -12,6 +12,7 @@
 #include "math_on_field.p4"
 #include "truncate.p4"
 #include "modify_field_rng.p4"
+#include "bit_xor.p4"
 
 [+ dloop +]
 control switch_primitivetype_[+X+][+Y+] {
@@ -40,6 +41,9 @@ control switch_primitivetype_[+X+][+Y+] {
   }
   else if(meta_primitive_state.primitive[+Y+] == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_[+X+][+Y+]();
+  }
+  else if(meta_primitive_state.primitive[+Y+] == A_BIT_XOR) {
+    do_bit_xor_[+X+][+Y+]();
   }
 }
 [+ enddloop +]

@@ -21,6 +21,7 @@ switch_primitivetype.p4: Redirect execution to the control function appropriate
 #include "math_on_field.p4"
 #include "truncate.p4"
 #include "modify_field_rng.p4"
+#include "bit_xor.p4"
 
 control switch_primitivetype_11 {
   if(meta_primitive_state.primitive1 == A_MODIFY_FIELD) {
@@ -48,6 +49,9 @@ control switch_primitivetype_11 {
   }
   else if(meta_primitive_state.primitive1 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_11();
+  }
+  else if(meta_primitive_state.primitive1 == A_BIT_XOR) {
+    do_bit_xor_11();
   }
 }
 
@@ -78,6 +82,9 @@ control switch_primitivetype_12 {
   else if(meta_primitive_state.primitive2 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_12();
   }
+  else if(meta_primitive_state.primitive2 == A_BIT_XOR) {
+    do_bit_xor_12();
+  }
 }
 
 control switch_primitivetype_13 {
@@ -106,6 +113,9 @@ control switch_primitivetype_13 {
   }
   else if(meta_primitive_state.primitive3 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_13();
+  }
+  else if(meta_primitive_state.primitive3 == A_BIT_XOR) {
+    do_bit_xor_13();
   }
 }
 
@@ -136,6 +146,9 @@ control switch_primitivetype_14 {
   else if(meta_primitive_state.primitive4 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_14();
   }
+  else if(meta_primitive_state.primitive4 == A_BIT_XOR) {
+    do_bit_xor_14();
+  }
 }
 
 control switch_primitivetype_15 {
@@ -164,6 +177,9 @@ control switch_primitivetype_15 {
   }
   else if(meta_primitive_state.primitive5 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_15();
+  }
+  else if(meta_primitive_state.primitive5 == A_BIT_XOR) {
+    do_bit_xor_15();
   }
 }
 
@@ -194,6 +210,9 @@ control switch_primitivetype_16 {
   else if(meta_primitive_state.primitive6 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_16();
   }
+  else if(meta_primitive_state.primitive6 == A_BIT_XOR) {
+    do_bit_xor_16();
+  }
 }
 
 control switch_primitivetype_17 {
@@ -222,6 +241,9 @@ control switch_primitivetype_17 {
   }
   else if(meta_primitive_state.primitive7 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_17();
+  }
+  else if(meta_primitive_state.primitive7 == A_BIT_XOR) {
+    do_bit_xor_17();
   }
 }
 
@@ -252,6 +274,9 @@ control switch_primitivetype_18 {
   else if(meta_primitive_state.primitive8 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_18();
   }
+  else if(meta_primitive_state.primitive8 == A_BIT_XOR) {
+    do_bit_xor_18();
+  }
 }
 
 control switch_primitivetype_19 {
@@ -280,6 +305,9 @@ control switch_primitivetype_19 {
   }
   else if(meta_primitive_state.primitive9 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_19();
+  }
+  else if(meta_primitive_state.primitive9 == A_BIT_XOR) {
+    do_bit_xor_19();
   }
 }
 
@@ -310,6 +338,9 @@ control switch_primitivetype_21 {
   else if(meta_primitive_state.primitive1 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_21();
   }
+  else if(meta_primitive_state.primitive1 == A_BIT_XOR) {
+    do_bit_xor_21();
+  }
 }
 
 control switch_primitivetype_22 {
@@ -338,6 +369,9 @@ control switch_primitivetype_22 {
   }
   else if(meta_primitive_state.primitive2 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_22();
+  }
+  else if(meta_primitive_state.primitive2 == A_BIT_XOR) {
+    do_bit_xor_22();
   }
 }
 
@@ -368,6 +402,9 @@ control switch_primitivetype_23 {
   else if(meta_primitive_state.primitive3 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_23();
   }
+  else if(meta_primitive_state.primitive3 == A_BIT_XOR) {
+    do_bit_xor_23();
+  }
 }
 
 control switch_primitivetype_24 {
@@ -396,6 +433,9 @@ control switch_primitivetype_24 {
   }
   else if(meta_primitive_state.primitive4 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_24();
+  }
+  else if(meta_primitive_state.primitive4 == A_BIT_XOR) {
+    do_bit_xor_24();
   }
 }
 
@@ -426,6 +466,9 @@ control switch_primitivetype_25 {
   else if(meta_primitive_state.primitive5 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_25();
   }
+  else if(meta_primitive_state.primitive5 == A_BIT_XOR) {
+    do_bit_xor_25();
+  }
 }
 
 control switch_primitivetype_26 {
@@ -454,6 +497,9 @@ control switch_primitivetype_26 {
   }
   else if(meta_primitive_state.primitive6 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_26();
+  }
+  else if(meta_primitive_state.primitive6 == A_BIT_XOR) {
+    do_bit_xor_26();
   }
 }
 
@@ -484,6 +530,9 @@ control switch_primitivetype_27 {
   else if(meta_primitive_state.primitive7 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_27();
   }
+  else if(meta_primitive_state.primitive7 == A_BIT_XOR) {
+    do_bit_xor_27();
+  }
 }
 
 control switch_primitivetype_28 {
@@ -512,6 +561,9 @@ control switch_primitivetype_28 {
   }
   else if(meta_primitive_state.primitive8 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_28();
+  }
+  else if(meta_primitive_state.primitive8 == A_BIT_XOR) {
+    do_bit_xor_28();
   }
 }
 
@@ -542,6 +594,9 @@ control switch_primitivetype_29 {
   else if(meta_primitive_state.primitive9 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_29();
   }
+  else if(meta_primitive_state.primitive9 == A_BIT_XOR) {
+    do_bit_xor_29();
+  }
 }
 
 control switch_primitivetype_31 {
@@ -570,6 +625,9 @@ control switch_primitivetype_31 {
   }
   else if(meta_primitive_state.primitive1 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_31();
+  }
+  else if(meta_primitive_state.primitive1 == A_BIT_XOR) {
+    do_bit_xor_31();
   }
 }
 
@@ -600,6 +658,9 @@ control switch_primitivetype_32 {
   else if(meta_primitive_state.primitive2 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_32();
   }
+  else if(meta_primitive_state.primitive2 == A_BIT_XOR) {
+    do_bit_xor_32();
+  }
 }
 
 control switch_primitivetype_33 {
@@ -628,6 +689,9 @@ control switch_primitivetype_33 {
   }
   else if(meta_primitive_state.primitive3 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_33();
+  }
+  else if(meta_primitive_state.primitive3 == A_BIT_XOR) {
+    do_bit_xor_33();
   }
 }
 
@@ -658,6 +722,9 @@ control switch_primitivetype_34 {
   else if(meta_primitive_state.primitive4 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_34();
   }
+  else if(meta_primitive_state.primitive4 == A_BIT_XOR) {
+    do_bit_xor_34();
+  }
 }
 
 control switch_primitivetype_35 {
@@ -686,6 +753,9 @@ control switch_primitivetype_35 {
   }
   else if(meta_primitive_state.primitive5 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_35();
+  }
+  else if(meta_primitive_state.primitive5 == A_BIT_XOR) {
+    do_bit_xor_35();
   }
 }
 
@@ -716,6 +786,9 @@ control switch_primitivetype_36 {
   else if(meta_primitive_state.primitive6 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_36();
   }
+  else if(meta_primitive_state.primitive6 == A_BIT_XOR) {
+    do_bit_xor_36();
+  }
 }
 
 control switch_primitivetype_37 {
@@ -744,6 +817,9 @@ control switch_primitivetype_37 {
   }
   else if(meta_primitive_state.primitive7 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_37();
+  }
+  else if(meta_primitive_state.primitive7 == A_BIT_XOR) {
+    do_bit_xor_37();
   }
 }
 
@@ -774,6 +850,9 @@ control switch_primitivetype_38 {
   else if(meta_primitive_state.primitive8 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_38();
   }
+  else if(meta_primitive_state.primitive8 == A_BIT_XOR) {
+    do_bit_xor_38();
+  }
 }
 
 control switch_primitivetype_39 {
@@ -802,6 +881,9 @@ control switch_primitivetype_39 {
   }
   else if(meta_primitive_state.primitive9 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_39();
+  }
+  else if(meta_primitive_state.primitive9 == A_BIT_XOR) {
+    do_bit_xor_39();
   }
 }
 
@@ -832,6 +914,9 @@ control switch_primitivetype_41 {
   else if(meta_primitive_state.primitive1 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_41();
   }
+  else if(meta_primitive_state.primitive1 == A_BIT_XOR) {
+    do_bit_xor_41();
+  }
 }
 
 control switch_primitivetype_42 {
@@ -860,6 +945,9 @@ control switch_primitivetype_42 {
   }
   else if(meta_primitive_state.primitive2 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_42();
+  }
+  else if(meta_primitive_state.primitive2 == A_BIT_XOR) {
+    do_bit_xor_42();
   }
 }
 
@@ -890,6 +978,9 @@ control switch_primitivetype_43 {
   else if(meta_primitive_state.primitive3 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_43();
   }
+  else if(meta_primitive_state.primitive3 == A_BIT_XOR) {
+    do_bit_xor_43();
+  }
 }
 
 control switch_primitivetype_44 {
@@ -918,6 +1009,9 @@ control switch_primitivetype_44 {
   }
   else if(meta_primitive_state.primitive4 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_44();
+  }
+  else if(meta_primitive_state.primitive4 == A_BIT_XOR) {
+    do_bit_xor_44();
   }
 }
 
@@ -948,6 +1042,9 @@ control switch_primitivetype_45 {
   else if(meta_primitive_state.primitive5 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_45();
   }
+  else if(meta_primitive_state.primitive5 == A_BIT_XOR) {
+    do_bit_xor_45();
+  }
 }
 
 control switch_primitivetype_46 {
@@ -976,6 +1073,9 @@ control switch_primitivetype_46 {
   }
   else if(meta_primitive_state.primitive6 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_46();
+  }
+  else if(meta_primitive_state.primitive6 == A_BIT_XOR) {
+    do_bit_xor_46();
   }
 }
 
@@ -1006,6 +1106,9 @@ control switch_primitivetype_47 {
   else if(meta_primitive_state.primitive7 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_47();
   }
+  else if(meta_primitive_state.primitive7 == A_BIT_XOR) {
+    do_bit_xor_47();
+  }
 }
 
 control switch_primitivetype_48 {
@@ -1034,6 +1137,9 @@ control switch_primitivetype_48 {
   }
   else if(meta_primitive_state.primitive8 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_48();
+  }
+  else if(meta_primitive_state.primitive8 == A_BIT_XOR) {
+    do_bit_xor_48();
   }
 }
 
@@ -1064,6 +1170,9 @@ control switch_primitivetype_49 {
   else if(meta_primitive_state.primitive9 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_49();
   }
+  else if(meta_primitive_state.primitive9 == A_BIT_XOR) {
+    do_bit_xor_49();
+  }
 }
 
 control switch_primitivetype_51 {
@@ -1092,6 +1201,9 @@ control switch_primitivetype_51 {
   }
   else if(meta_primitive_state.primitive1 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_51();
+  }
+  else if(meta_primitive_state.primitive1 == A_BIT_XOR) {
+    do_bit_xor_51();
   }
 }
 
@@ -1122,6 +1234,9 @@ control switch_primitivetype_52 {
   else if(meta_primitive_state.primitive2 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_52();
   }
+  else if(meta_primitive_state.primitive2 == A_BIT_XOR) {
+    do_bit_xor_52();
+  }
 }
 
 control switch_primitivetype_53 {
@@ -1150,6 +1265,9 @@ control switch_primitivetype_53 {
   }
   else if(meta_primitive_state.primitive3 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_53();
+  }
+  else if(meta_primitive_state.primitive3 == A_BIT_XOR) {
+    do_bit_xor_53();
   }
 }
 
@@ -1180,6 +1298,9 @@ control switch_primitivetype_54 {
   else if(meta_primitive_state.primitive4 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_54();
   }
+  else if(meta_primitive_state.primitive4 == A_BIT_XOR) {
+    do_bit_xor_54();
+  }
 }
 
 control switch_primitivetype_55 {
@@ -1208,6 +1329,9 @@ control switch_primitivetype_55 {
   }
   else if(meta_primitive_state.primitive5 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_55();
+  }
+  else if(meta_primitive_state.primitive5 == A_BIT_XOR) {
+    do_bit_xor_55();
   }
 }
 
@@ -1238,6 +1362,9 @@ control switch_primitivetype_56 {
   else if(meta_primitive_state.primitive6 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_56();
   }
+  else if(meta_primitive_state.primitive6 == A_BIT_XOR) {
+    do_bit_xor_56();
+  }
 }
 
 control switch_primitivetype_57 {
@@ -1266,6 +1393,9 @@ control switch_primitivetype_57 {
   }
   else if(meta_primitive_state.primitive7 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_57();
+  }
+  else if(meta_primitive_state.primitive7 == A_BIT_XOR) {
+    do_bit_xor_57();
   }
 }
 
@@ -1296,6 +1426,9 @@ control switch_primitivetype_58 {
   else if(meta_primitive_state.primitive8 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_58();
   }
+  else if(meta_primitive_state.primitive8 == A_BIT_XOR) {
+    do_bit_xor_58();
+  }
 }
 
 control switch_primitivetype_59 {
@@ -1324,5 +1457,8 @@ control switch_primitivetype_59 {
   }
   else if(meta_primitive_state.primitive9 == A_MODIFY_FIELD_RNG_U) {
     do_modify_field_rng_59();
+  }
+  else if(meta_primitive_state.primitive9 == A_BIT_XOR) {
+    do_bit_xor_59();
   }
 }
