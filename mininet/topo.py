@@ -107,6 +107,7 @@ class ChainTestTopo(Topo):
 
     for a, b in links:
       self.addLink(a, b)
+      #sleep(1)
 
 class ArpTestTopo(Topo):
   def __init__(self, sw_path, json_path, nb_hosts, nb_switches, links, seed, **opts):

@@ -59,24 +59,24 @@ table t_virtnet {
 control ingress {
   setup();
 
-  if (meta_ctrl.stage == NORM) { // 15
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { // 16|117|218|...
+  if (meta_ctrl.stage == NORM) { // 15?
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 1) { // ?|?|?|...
       stage1(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) { // 16|117|218|...
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 2) { // ?|?|?|...
       stage2(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) { // 16|117|218|...
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 3) { // ?|?|?|...
       stage3(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) { // 16|117|218|...
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 4) { // ?|?|?|...
       stage4(); // stages.p4
     }
 
-    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // 16|117|218|...
+    if (meta_ctrl.next_table != DONE and meta_ctrl.next_stage == 5) { // ?|?|?|...
       stage5(); // stages.p4
     }
     if (meta_ctrl.dropped == 0) {
@@ -84,48 +84,6 @@ control ingress {
     }
   }
 }
-
-//table thp4_egress_filter_case1 {
-//  reads {
-//    meta_ctrl.vdev_ID : exact;
-//  }
-//  actions {
-//    _no_op;
-//    a_drop;
-//  }
-//}
-
-//table thp4_egress_filter_case2 {
-//  reads {
-//    meta_ctrl.vdev_ID : exact;
-//  }
-//  actions {
-//    _no_op;
-//    a_drop;
-//  }
-//}
-
-//field_list fl_virtnet {
-//  meta_ctrl.vdev_ID;
-//  meta_ctrl.virt_egress_port;
-//  standard_metadata;
-//}
-
-//action a_virtnet_forward(next_vdev) {
-//  modify_field(meta_ctrl.vdev_ID, next_vdev);
-//  recirculate(fl_virtnet);
-//}
-
-//table thp4_out_virtnet {
-//  reads {
-//    meta_ctrl.vdev_ID : exact;
-//    meta_ctrl.virt_egress_port : exact;
-//  }
-//  actions {
-//    _no_op;
-//    a_virtnet_forward;
-//  }
-//}
 
 field_list fl_recirc {
   standard_metadata;
@@ -193,37 +151,24 @@ table t_egr_virtnet {
 table egress_filter { actions { a_drop; } }
 
 control egress {
-  // egress filtering, recirculation
-  //if(standard_metadata.egress_port == standard_metadata.ingress_port) {
-  //  if(meta_ctrl.virt_egress_port == 0) {
-  //    apply(thp4_egress_filter_case1);
-  //  }
-  //  else {
-  //    apply(thp4_out_virtnet);
-  //  }
-  //}
-  //if(meta_ctrl.virt_egress_port == meta_ctrl.virt_ingress_port) {
-  //  if(standard_metadata.egress_spec == standard_metadata.ingress_port) {
-  //    apply(thp4_egress_filter_case2);
-  //  }
-  //}
-  if(meta_ctrl.virt_fwd_flag == 1) { // 724
+
+  if(meta_ctrl.virt_fwd_flag == 1) { // 850
     apply(t_egr_virtnet); // recirculate, maybe clone_e2e
   }
 
   else if((standard_metadata.egress_port == standard_metadata.ingress_port) and
-          (meta_ctrl.efilter == 1)) { // 725
+          (meta_ctrl.efilter == 1)) { // 851
     apply(egress_filter);
   }
 
   apply(t_checksum);          // checksums.p4
   apply(t_resize_pr);         // resize_pr.p4
-  if(parse_ctrl.numbytes < 40) {
+  if(parse_ctrl.numbytes < 40) { // 852
     apply(t_prep_deparse_00_38);  // deparse_prep.p4
   }
   else {
     apply(t_prep_deparse_SEB);
-    if(parse_ctrl.numbytes > 40) { //
+    if(parse_ctrl.numbytes > 40) { // 853
       apply(t_prep_deparse_40_59);
       if(parse_ctrl.numbytes > 60) {
         apply(t_prep_deparse_60_79);
