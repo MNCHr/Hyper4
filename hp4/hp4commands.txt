@@ -1,3 +1,4 @@
+mirroring_add 0 0
 mirroring_add 1 1
 mirroring_add 2 2
 mirroring_add 3 3
