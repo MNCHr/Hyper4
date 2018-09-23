@@ -8,4 +8,4 @@ PROJ=${PWD##*/}
 
 CLI_PATH=$BMV2_PATH/targets/simple_switch/sswitch_CLI
 
-$CLI_PATH $PROJ.json $1
+$CLI_PATH $THIS_DIR/hp4.json $1
