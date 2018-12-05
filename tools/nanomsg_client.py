@@ -492,4 +492,4 @@ def main():
     recv_msgs(socket_addr, client)
 
 if __name__ == "__main__":
-main()
+    main()
